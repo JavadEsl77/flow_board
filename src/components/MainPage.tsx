@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {Box, Grid, Typography} from "@mui/material";
 import Lottie from "react-lottie";
-import mainAnimation from "../assets/lotties/main2Animation.json";
+import mainAnimation from "../assets/lotties/mainAnimation.json";
 import MyButton from "../modules/buttons/MyButton";
 import AboutUsItem from "../modules/items/AboutUsItem";
 import LoginModal from "./modals/LoginModal";
