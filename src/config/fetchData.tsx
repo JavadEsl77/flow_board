@@ -1,4 +1,5 @@
 import axios, {AxiosInstance, AxiosRequestConfig, AxiosResponse} from 'axios';
+import {promises} from "dns";
 
 const baseURL = 'http://185.208.79.133:6070/api';
 
@@ -83,6 +84,13 @@ export const getReport = async (): Promise<AxiosResponse> => {
 
 export const deleteTodo = async (id: any): Promise<AxiosResponse> => {
     return axiosInstanceConfig(`/todo/${id}`, 'DELETE')
+}
+export const getProjects = async (): Promise<AxiosResponse> => {
+    return axiosInstanceConfig('/project','GET')
+}
+
+export const  getProjectInfo = async (projectId:any): Promise<AxiosResponse> =>{
+    return axiosInstanceConfig(`project/${projectId}`,'GET')
 }
 
 

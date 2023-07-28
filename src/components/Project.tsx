@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {useParams} from "react-router-dom";
 import {Box, Typography} from "@mui/material";
 import ToolBar from "../modules/toolbar/ToolBar";
@@ -7,19 +7,44 @@ import Diversity2OutlinedIcon from '@mui/icons-material/Diversity2Outlined';
 import TroubleshootOutlinedIcon from '@mui/icons-material/TroubleshootOutlined';
 import BordersItem from "../modules/items/BordersItem";
 import NewBorderItem from "../modules/items/NewBorderItem";
+import {getProjectInfo} from "../config/fetchData";
 
 
 const Project = () => {
     const {projectId} = useParams();
     const getRandomColor = () => {
-        const randomR = Math.floor(Math.random() * 120) + 150;
-        const randomG = Math.floor(Math.random() * 120) + 150;
-        const randomB = Math.floor(Math.random() * 120) + 150;
+        const randomR = Math.floor(Math.random() * 80) + 220;
+        const randomG = Math.floor(Math.random() * 80) + 150;
+        const randomB = Math.floor(Math.random() * 80) + 150;
         return `rgb(${randomR}, ${randomG}, ${randomB})`;
     };
 
-    const assignUsers = ["ali", "javad", "aref"]
+    const [isInfoLoading, setIsInfoLoading] = useState<boolean>(false);
+    const [infoError, setInfoError] = useState('');
+    const [projectInfo,setProjectInfo] =useState<any>(null)
+
     const borders = ["open", "in progress", "done", "new"]
+
+    const requestGetProjectInfo = async () => {
+        setInfoError('')
+        setIsInfoLoading(true)
+        try {
+            const response = await getProjectInfo(projectId)
+            if (response.status === 200) {
+                setProjectInfo(response.data)
+                setIsInfoLoading(false)
+            }
+        } catch (error: any) {
+            setInfoError(error)
+        }
+
+    }
+
+    useEffect(() => {
+        requestGetProjectInfo().then(() =>{} )
+    }, [projectId])
+
+
     return (
         <Box sx={{display: "flex", flexDirection: "column"}}>
             <Box sx={{width: "100%", position: "relative", paddingBottom: "1.5em"}}>
@@ -54,28 +79,25 @@ const Project = () => {
                             color: 'white',
                             fontWeight: 'bold',
                             textTransform: 'uppercase',
-                        }}><p> {"title".charAt(0)}</p></Box>
+                        }}><p> {projectInfo && projectInfo.name.charAt(0)}</p></Box>
                         <Box sx={{display: "flex", flexDirection: "column", marginLeft: "0.8em", flex: 1}}>
                             <Typography sx={{
                                 fontSize: "1.5rem",
                                 color: "rgba(255,255,255,0.8)",
                                 fontWeight: "bold"
-                            }}>title</Typography>
+                            }}>{projectInfo && projectInfo.name}</Typography>
                             <Typography sx={{
                                 fontSize: "1rem",
                                 width: "80%",
                                 color: "rgba(255,255,255,0.6)",
-                            }}>Description is the pattern of narrative development that aims to make vivid a place,
-                                object, character, or group. Description is one of four rhetorical modes, along with
-                                exposition, argumentation, and narration. In practice it would be difficult to write
-                                literature that drew on just</Typography>
+                            }}>{projectInfo && projectInfo.description}</Typography>
                         </Box>
                     </Box>
 
                     <Box sx={{display: "flex", flex: 1, flexDirection: "column", marginTop: {xs: "3em", md: "unset"}}}>
 
                         <Box sx={{display: "flex", alignItems: "center", marginBottom: "1em"}}>
-                            <AccessTimeIcon sx={{color: "rgba(94,94,94,0.3)"}}/>
+                            <AccessTimeIcon sx={{color: "rgba(255,255,255,0.5)"}}/>
                             <Box sx={{display: "flex", flex: 1, flexDirection: "row", marginLeft: "0.8rem"}}>
                                 <Typography sx={{
                                     flex: 1,
@@ -85,13 +107,13 @@ const Project = () => {
                                 <Typography sx={{
                                     flex: 1,
                                     fontSize: "0.9rem",
-                                    color: "rgba(255,255,255,0.6)",
-                                }}>2023/10/15 12:50</Typography>
+                                    color: "rgba(255,255,255,0.5)",
+                                }}>{projectInfo && projectInfo.created_at}</Typography>
 
                             </Box>
                         </Box>
                         <Box sx={{display: "flex", alignItems: "center", marginBottom: "1em"}}>
-                            <TroubleshootOutlinedIcon sx={{color: "rgba(94,94,94,0.3)"}}/>
+                            <TroubleshootOutlinedIcon sx={{color: "rgba(255,255,255,0.5)"}}/>
                             <Box sx={{display: "flex", flex: 1, flexDirection: "row", marginLeft: "0.8rem"}}>
                                 <Typography sx={{
                                     flex: 1,
@@ -101,13 +123,13 @@ const Project = () => {
                                 <Typography sx={{
                                     flex: 1,
                                     fontSize: "0.9rem",
-                                    color: "rgba(255,255,255,0.6)",
-                                }}>2023/10/15 12:50</Typography>
+                                    color: "rgba(255,255,255,0.5)",
+                                }}>{projectInfo && projectInfo.status}</Typography>
 
                             </Box>
                         </Box>
                         <Box sx={{display: "flex", alignItems: "center", marginBottom: "0em"}}>
-                            <Diversity2OutlinedIcon sx={{color: "rgba(94,94,94,0.3)"}}/>
+                            <Diversity2OutlinedIcon sx={{color: "rgba(255,255,255,0.5)"}}/>
                             <Box sx={{display: "flex", flex: 1, flexDirection: "row", marginLeft: "0.8rem"}}>
                                 <Typography sx={{
                                     flex: 1,
@@ -115,23 +137,23 @@ const Project = () => {
                                     color: "rgb(255,255,255)",
                                 }}>Assign</Typography>
 
-                                <Box sx={{display: "flex", flex: 1}}>
-                                    {assignUsers.map((item: any) => {
-                                        return <Box sx={{
-                                            borderRadius: '0.5em',
-                                            padding: "0 1em",
-                                            marginLeft: "0.2em",
-                                            display: 'flex',
-                                            backgroundColor: "rgba(94,94,94,0.2)",
-                                            justifyContent: 'center',
-                                            alignItems: 'center',
-                                            color: 'white',
-                                            fontSize: "0.9em",
-                                        }}><p> @{item}</p></Box>
-                                    })}
-                                </Box>
-
-
+                                {!isInfoLoading && projectInfo && (
+                                    <Box sx={{display: "flex", flex: 1}}>
+                                        {projectInfo.members.slice(0,2).map((item: any) => {
+                                            return <Box sx={{
+                                                borderRadius: '0.5em',
+                                                padding: "0 1em",
+                                                marginLeft: "0.2em",
+                                                display: 'flex',
+                                                backgroundColor: "rgba(94,94,94,0.2)",
+                                                justifyContent: 'center',
+                                                alignItems: 'center',
+                                                color: 'white',
+                                                fontSize: "0.9em",
+                                            }}><p> @{item.name}</p></Box>
+                                        })}
+                                    </Box>
+                                )}
                             </Box>
                         </Box>
 
@@ -147,7 +169,7 @@ const Project = () => {
                 {borders.map((item: any, index: number) => {
 
                     if (item === 'new') {
-                        return  <NewBorderItem/>
+                        return <NewBorderItem/>
                     } else {
                         return <BordersItem item={item}/>
                     }

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Box, Divider, Grid, IconButton, InputBase, Typography} from "@mui/material";
 import ToolBar from "../modules/toolbar/ToolBar";
 import SearchIcon from "@mui/icons-material/Search";
@@ -7,11 +7,15 @@ import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
 import ProjectsItem from "../modules/items/ProjectsItem";
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
 import AddProjectModal from "./modals/AddProjectModal";
+import {getProjects} from "../config/fetchData";
 
 const Dashboard = () => {
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [error, setError] = useState('');
     const [searchValue, setSearchValue] = useState<string>("");
     const [clearSearchIcon, setClearSearchIcon] = useState<boolean>(false);
     const [showModalAddProject, setShowModalAddProject] = useState<boolean>(false)
+    const [projectList , setProjectList] = useState<any>(null)
     const handlerChange = (event: any) => {
         event.preventDefault();
         setSearchValue(event.target.value)
@@ -20,11 +24,25 @@ const Dashboard = () => {
         setSearchValue("")
     }
 
-    const projects = [
-        {id: "11", title: "ArchTech", description: "small and concise headline", status: "active"},
-        {id: "12", title: "Flower Shop", description: "small and concise headline", status: "deactive"},
-        {id: "13", title: "Orixon", description: "small and concise headline", status: "deactive"},
-        {id: "14", title: "Gamer Boy", description: "small and concise headline", status: "active"}]
+    const requestGetProjectsList = async () => {
+        setIsLoading(true);
+        setError('');
+        try {
+            const response = await getProjects()
+            if (response.status == 200) {
+                setProjectList(response.data)
+                setIsLoading(false)
+            }
+        } catch (error: any) {
+            setError(error.message);
+        }
+    }
+
+    useEffect(() => {
+        requestGetProjectsList().then(() => {
+        })
+    }, [])
+
     return (
         <Box sx={{display: "flex", flexDirection: "column"}}>
             <Box sx={{height: "400px", width: "100%", position: "relative"}}>
@@ -114,7 +132,7 @@ const Dashboard = () => {
                     <AccountTreeOutlinedIcon sx={{color: "secondary.main"}}/>
                     <Typography
                         sx={{marginLeft: "0.5em", fontWeight: "bold", fontSize: "1rem"}}>YourProjects
-                        | {projects.length} items</Typography>
+                        | {projectList && projectList.length} items</Typography>
 
                     <span style={{flex: 1}}/>
 
@@ -134,15 +152,20 @@ const Dashboard = () => {
                 </Box>
                 <Divider sx={{marginTop: "0.8em", marginBottom: "0.8em"}}/>
 
-                <Grid container spacing={2}>
-                    {projects.map((item: any, index: number) => {
-                        return <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
-                            <ProjectsItem itemValue={item}/>
-                        </Grid>
-                    })}
+                {!isLoading && projectList && (
+                    <Grid container spacing={2}>
+                        {projectList.map((item: any, index: number) => {
+                            return <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+                                <ProjectsItem itemValue={item}/>
+                            </Grid>
+                        })}
 
-                </Grid>
+                    </Grid>
+                )}
 
+                {isLoading &&(
+                    <p>is Loading</p>
+                )}
             </Box>
 
             {showModalAddProject && (

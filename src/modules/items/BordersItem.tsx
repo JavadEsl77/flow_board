@@ -16,8 +16,6 @@ const BordersItem = ({item}: propsT) => {
         <Box sx={{
             margin: 'auto',
             width: "100%",
-            // marginRight: "0.5em",
-            // marginTop: "1em",
             padding: "1em",
             display: "flex",
             flexDirection: "column",
