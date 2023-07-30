@@ -6,7 +6,7 @@ const NewBorderItem = () => {
     return (
         <Box sx={{
             margin: 'auto',
-            width: "500px",
+            width: "100%",
             // marginRight: "0.5em",
             // marginTop: "1em",
             padding: "1em",

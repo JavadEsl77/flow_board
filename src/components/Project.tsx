@@ -1,13 +1,13 @@
 import React, {useEffect, useState} from 'react';
 import {useParams} from "react-router-dom";
-import {Box, Typography} from "@mui/material";
+import {Box, Grid, Typography} from "@mui/material";
 import ToolBar from "../modules/toolbar/ToolBar";
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import Diversity2OutlinedIcon from '@mui/icons-material/Diversity2Outlined';
 import TroubleshootOutlinedIcon from '@mui/icons-material/TroubleshootOutlined';
 import BordersItem from "../modules/items/BordersItem";
 import NewBorderItem from "../modules/items/NewBorderItem";
-import {getProjectInfo} from "../config/fetchData";
+import {getBorders, getProjectInfo} from "../config/fetchData";
 
 
 const Project = () => {
@@ -21,9 +21,11 @@ const Project = () => {
 
     const [isInfoLoading, setIsInfoLoading] = useState<boolean>(false);
     const [infoError, setInfoError] = useState('');
-    const [projectInfo,setProjectInfo] =useState<any>(null)
+    const [projectInfo, setProjectInfo] = useState<any>(null)
 
-    const borders = ["open", "in progress", "done", "new"]
+    const [isBorderLoading, setIsBorderLoading] = useState<boolean>(false);
+    const [borderError, setBorderError] = useState('');
+    const [borderList, setBorderList] = useState<any>(null)
 
     const requestGetProjectInfo = async () => {
         setInfoError('')
@@ -40,8 +42,33 @@ const Project = () => {
 
     }
 
+    const requestGetBorders = async () => {
+        setIsBorderLoading(true)
+        setBorderError('')
+        try {
+            const response = await getBorders(projectId)
+            if (response.status === 200) {
+                setBorderList(response.data)
+                setIsBorderLoading(false)
+            }
+        } catch (error: any) {
+            setBorderError(error)
+        }
+    }
+
     useEffect(() => {
-        requestGetProjectInfo().then(() =>{} )
+        requestGetBorders().then(() => {
+            if (borderList?.length>0){
+                setBorderList((prevContent: any) => [...prevContent, "new"])
+            }else {
+                setBorderList('new')
+            }
+        })
+    }, [projectInfo])
+
+    useEffect(() => {
+        requestGetProjectInfo().then(() => {
+        })
     }, [projectId])
 
 
@@ -136,10 +163,9 @@ const Project = () => {
                                     fontSize: "1rem",
                                     color: "rgb(255,255,255)",
                                 }}>Assign</Typography>
-
                                 {!isInfoLoading && projectInfo && (
                                     <Box sx={{display: "flex", flex: 1}}>
-                                        {projectInfo.members.slice(0,2).map((item: any) => {
+                                        {projectInfo.members.slice(0, 2).map((item: any) => {
                                             return <Box sx={{
                                                 borderRadius: '0.5em',
                                                 padding: "0 1em",
@@ -156,24 +182,30 @@ const Project = () => {
                                 )}
                             </Box>
                         </Box>
-
-
                     </Box>
                 </Box>
 
             </Box>
 
             <Box sx={{
-                display: 'flex', flexWrap: 'nowrap', overflowX: 'auto'
+                display: 'flex'
             }}>
-                {borders.map((item: any, index: number) => {
 
-                    if (item === 'new') {
-                        return <NewBorderItem/>
-                    } else {
-                        return <BordersItem item={item}/>
-                    }
-                })}
+                {borderList && (
+                    <Grid container spacing={2}>
+                        {borderList.map((item: any) => {
+                            if (item === 'new') {
+                                return <Grid item xs={12} sm={6} md={4} lg={3}>
+                                    <NewBorderItem/>
+                                </Grid>
+                            } else {
+                                return <Grid item xs={12} sm={6} md={4} lg={3}>
+                                    <BordersItem projectId={projectId} borderName={item.name} bordId={item.id}/>
+                                </Grid>
+                            }
+                        })}
+                    </Grid>
+                )}
             </Box>
 
         </Box>

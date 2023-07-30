@@ -1,5 +1,4 @@
 import axios, {AxiosInstance, AxiosRequestConfig, AxiosResponse} from 'axios';
-import {promises} from "dns";
 
 const baseURL = 'http://185.208.79.133:6070/api';
 
@@ -74,7 +73,7 @@ export const getTodoList = async (status: string): Promise<AxiosResponse> => {
     return axiosInstanceConfig(`/todo?status=${status}&per_page=10000&sort=updated_at:desc`, 'GET')
 }
 
-export const getTodoSearch = async (status: string,searchValue:string): Promise<AxiosResponse> => {
+export const getTodoSearch = async (status: string, searchValue: string): Promise<AxiosResponse> => {
     return axiosInstanceConfig(`/todo?status=${status}&per_page=10000&sort=updated_at:desc&title=${searchValue}`, 'GET')
 }
 
@@ -86,12 +85,21 @@ export const deleteTodo = async (id: any): Promise<AxiosResponse> => {
     return axiosInstanceConfig(`/todo/${id}`, 'DELETE')
 }
 export const getProjects = async (): Promise<AxiosResponse> => {
-    return axiosInstanceConfig('/project','GET')
+    return axiosInstanceConfig('/project', 'GET')
 }
 
-export const  getProjectInfo = async (projectId:any): Promise<AxiosResponse> =>{
-    return axiosInstanceConfig(`project/${projectId}`,'GET')
+export const getProjectInfo = async (projectId: any): Promise<AxiosResponse> => {
+    return axiosInstanceConfig(`project/${projectId}`, 'GET')
 }
+
+export const getBorders = async (projectId: any): Promise<AxiosResponse> => {
+    return axiosInstanceConfig(`project/${projectId}/board`, 'GET')
+}
+
+export const getTasks = async (projectId: any , borderId:any): Promise<AxiosResponse> => {
+    return axiosInstanceConfig(`project/${projectId}/board/${borderId}/task`, 'GET')
+}
+
 
 
 
