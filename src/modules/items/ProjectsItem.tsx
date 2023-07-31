@@ -1,10 +1,11 @@
-import React from 'react';
-import {Box, Tooltip, Typography} from "@mui/material";
+import React, {useState} from 'react';
+import {Box, IconButton, Tooltip, Typography} from "@mui/material";
 import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined';
 import {useNavigate} from "react-router-dom";
 import WorkspacePremiumIcon from '@mui/icons-material/WorkspacePremium';
 import Diversity2OutlinedIcon from "@mui/icons-material/Diversity2Outlined";
 import TroubleshootOutlinedIcon from '@mui/icons-material/TroubleshootOutlined';
+import TodoItemMenuOptions from "../../components/menu/TodoItemMenuOptions";
 
 interface userType {
     id: number
@@ -49,6 +50,19 @@ const ProjectsItem = ({itemValue}: propsT) => {
         return `rgb(${randomR}, ${randomG}, ${randomB})`;
     };
 
+    const [showItemOption, setShowItemOption] = useState<boolean>(false)
+    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+
+    const handlerShowOption = (event: any) => {
+        setShowItemOption(!showItemOption)
+        setAnchorEl(event.currentTarget)
+    }
+    const handleCloseShowOption = () => {
+        setAnchorEl(null);
+        setShowItemOption(!showItemOption)
+        // setShowEditModal(false)
+        // setShowDeleteModal(false)
+    };
     const navigate = useNavigate()
 
     return (
@@ -62,7 +76,8 @@ const ProjectsItem = ({itemValue}: propsT) => {
             border: 2,
             borderColor: "white",
             ":hover": {border: 2, borderColor: getRandomBrightColor(), borderRadius: "0.5em"}
-        }} onClick={() => {
+        }} onClick={(e) => {
+            e.stopPropagation()
             navigate(`/dashboard/project/${itemValue.id}`)
         }}>
 
@@ -153,9 +168,35 @@ const ProjectsItem = ({itemValue}: propsT) => {
                     }}>{itemValue.description + " ..."} </Typography>
                 </Box>
 
-                <MoreHorizOutlinedIcon sx={{alignSelf: "start", color: "grey.600"}}/>
+                <IconButton sx={{zIndex:1000,alignSelf: "start"}} size={"small"} onClick={(e)=>{
+                    e.stopPropagation()
+                    handlerShowOption(e)
+                }}>
+                    <MoreHorizOutlinedIcon sx={{ fontSize:"16px", color: "grey.600"}}/>
+                </IconButton>
+
 
             </Box>
+
+
+            <TodoItemMenuOptions
+                status={itemValue.status}
+                handlerChangeStatus={(status: string) => {
+                    // updateItemStatus(status)
+                }}
+                handlerChangeTodoInfo={() => {
+                    setShowItemOption(false)
+                    // setShowEditModal(true)
+                }}
+
+                handlerDeleteTodo={()=>{
+                    setShowItemOption(false)
+                    // setShowDeleteModal(true)
+                }}
+                color={itemValue?.status === "active" ? "#41afc5" : "#00B388"}
+                event={anchorEl}
+                handleCloseMenu={handleCloseShowOption}
+                showOption={showItemOption}/>
 
         </Box>
     );

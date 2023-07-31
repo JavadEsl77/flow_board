@@ -25,7 +25,7 @@ const Project = () => {
 
     const [isBorderLoading, setIsBorderLoading] = useState<boolean>(false);
     const [borderError, setBorderError] = useState('');
-    const [borderList, setBorderList] = useState<any>(null)
+    const [borderList, setBorderList] = useState<any[]>([])
 
     const requestGetProjectInfo = async () => {
         setInfoError('')
@@ -58,11 +58,11 @@ const Project = () => {
 
     useEffect(() => {
         requestGetBorders().then(() => {
-            if (borderList?.length>0){
-                setBorderList((prevContent: any) => [...prevContent, "new"])
-            }else {
-                setBorderList('new')
-            }
+            // if (borderList?.length > 0) {
+            //     setBorderList((prevContent: any) => [...prevContent, "new"])
+            // } else {
+            //     setBorderList(['new'])
+            // }
         })
     }, [projectInfo])
 
@@ -191,7 +191,7 @@ const Project = () => {
                 display: 'flex'
             }}>
 
-                {borderList && (
+                {borderList && borderList.length > 0 && (
                     <Grid container spacing={2}>
                         {borderList.map((item: any) => {
                             if (item === 'new') {

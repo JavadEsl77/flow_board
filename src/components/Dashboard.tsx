@@ -8,6 +8,9 @@ import ProjectsItem from "../modules/items/ProjectsItem";
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
 import AddProjectModal from "./modals/AddProjectModal";
 import {getProjects} from "../config/fetchData";
+import emptyList from "../assets/lotties/empty_list.json";
+import loadingList from "../assets/lotties/loading.json";
+import Lottie from "react-lottie";
 
 const Dashboard = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -15,7 +18,19 @@ const Dashboard = () => {
     const [searchValue, setSearchValue] = useState<string>("");
     const [clearSearchIcon, setClearSearchIcon] = useState<boolean>(false);
     const [showModalAddProject, setShowModalAddProject] = useState<boolean>(false)
-    const [projectList , setProjectList] = useState<any>(null)
+    const [projectList, setProjectList] = useState<any>(null)
+    const [newRecord, setNewRecord] = useState<boolean>(false)
+
+
+    const defaultOptions = {
+        loop: true,
+        autoplay: true,
+        animationData: !isLoading ? emptyList : loadingList,
+        rendererSettings: {
+            preserveAspectRatio: "xMidYMid slice"
+        }
+    };
+
     const handlerChange = (event: any) => {
         event.preventDefault();
         setSearchValue(event.target.value)
@@ -32,6 +47,7 @@ const Dashboard = () => {
             if (response.status == 200) {
                 setProjectList(response.data)
                 setIsLoading(false)
+
             }
         } catch (error: any) {
             setError(error.message);
@@ -40,8 +56,9 @@ const Dashboard = () => {
 
     useEffect(() => {
         requestGetProjectsList().then(() => {
+
         })
-    }, [])
+    }, [newRecord])
 
     return (
         <Box sx={{display: "flex", flexDirection: "column"}}>
@@ -159,18 +176,41 @@ const Dashboard = () => {
                                 <ProjectsItem itemValue={item}/>
                             </Grid>
                         })}
-
                     </Grid>
                 )}
 
-                {isLoading &&(
-                    <p>is Loading</p>
+                {!isLoading && projectList?.length === 0 && (
+                    <Box sx={{display: "flex", flexDirection: "column", marginTop: "5em" , justifyContent:"center"}}>
+                        <Lottie style={{margin: "-40px"}}
+                                options={defaultOptions}
+                                height={150}
+                                width={150}
+                        />
+                        <Typography sx={{marginTop: "1.5em", color: "grey.500", fontSize: "1em"}}>Not Result
+                            Found</Typography>
+                        <Typography sx={{marginTop: "0.5em", color: "grey.400", fontSize: "0.7em"}}>create your todo
+                            ...</Typography>
+                    </Box>
+
                 )}
+
+                {isLoading && (
+                    <Box sx={{display: "flex", marginTop: "5em", justifyContent:"center"}}>
+                        <Lottie style={{margin: "-40px"}}
+                                options={defaultOptions}
+                                height={150}
+                                width={150}
+                        />
+                    </Box>
+                )}
+
             </Box>
+
 
             {showModalAddProject && (
                 <AddProjectModal openModal={showModalAddProject} closeModal={() => setShowModalAddProject(false)}
-                                 onAddProject={() => {
+                                 onAddProject={(done) => {
+                                     setNewRecord(done)
                                  }}/>
             )}
 

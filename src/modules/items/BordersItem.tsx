@@ -58,9 +58,9 @@ const BordersItem = ({bordId,borderName, projectId}: propsT) => {
                 return <TasksItem item={item.name}/>
             })}
 
-            {taskList.length === 0 && (
-                <Typography>Empty</Typography>
-            )}
+            {/*{taskList.length === 0 && (*/}
+            {/*    <Typography>Empty</Typography>*/}
+            {/*)}*/}
 
         </Box>
     );

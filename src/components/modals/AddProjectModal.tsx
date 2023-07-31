@@ -1,22 +1,23 @@
 import React, {useEffect, useState} from 'react';
-import {Box, Button, CircularProgress, Modal, SnackbarOrigin, TextField, Typography} from "@mui/material";
+import {Box, Button, CircularProgress, Modal, TextField, Typography} from "@mui/material";
 import PlaylistAddCheckCircleRoundedIcon from '@mui/icons-material/PlaylistAddCheckCircleRounded';
+import {setProject} from "../../config/fetchData";
 
 interface props {
     openModal: boolean,
     closeModal: () => void,
-    onAddProject: (done:boolean) => void,
+    onAddProject: (done: boolean) => void,
 }
 
 const AddProjectModal = ({openModal, closeModal, onAddProject}: props) => {
     const [title, setTitle] = useState<string>("")
     const [description, setDescription] = useState<string>("")
 
-    useEffect(()=>{
+    useEffect(() => {
         setTitle("")
         setDescription("")
         setError("")
-    },[closeModal])
+    }, [closeModal])
 
     const style = {
         position: 'absolute' as 'absolute',
@@ -26,7 +27,7 @@ const AddProjectModal = ({openModal, closeModal, onAddProject}: props) => {
         display: "flex",
         flexDirection: "column",
         borderRadius: "1em",
-        width: {xs:"90%",md:500},
+        width: {xs: "90%", md: 500},
         bgcolor: 'background.paper',
         boxShadow: 10,
         p: 3,
@@ -43,9 +44,26 @@ const AddProjectModal = ({openModal, closeModal, onAddProject}: props) => {
     }
 
 
-    const handlerCreateProject = (newState: SnackbarOrigin) => {
-        if (title !== "" && description !== "") {
+    const requestSetProject = async () => {
+        setError('')
+        setIsLoading(true)
+        try {
+            const response = await setProject(title, description, "active")
+            if (response.status === 201){
+                setIsLoading(false)
+                closeModal()
+                onAddProject(true)
+            }
+        } catch (error: any) {
+            setIsLoading(false)
+            setError(error)
+        }
+    }
+
+    const handlerCreateProject = () => {
+        if (title.trim() !== "" && description.trim() !== "") {
             setError("")
+            requestSetProject().then(()=>{})
         } else {
             setError("Enter a title and description !")
         }
@@ -88,8 +106,14 @@ const AddProjectModal = ({openModal, closeModal, onAddProject}: props) => {
                                placeholder={" Preferably in three lines"} onChange={handlerChangeDescription}
                                multiline/>
 
-                    {error && <Typography sx={{fontSize:"0.8rem" , color:"red" ,marginLeft:"0.5em",marginTop: "1.5em", fontWeight:"bold" }}>{'- '+ error}</Typography>}
-                    <Box sx={{display: "flex", marginTop: error ? "0.2em" :"2em"}}>
+                    {error && <Typography sx={{
+                        fontSize: "0.8rem",
+                        color: "red",
+                        marginLeft: "0.5em",
+                        marginTop: "1.5em",
+                        fontWeight: "bold"
+                    }}>{'- ' + error}</Typography>}
+                    <Box sx={{display: "flex", marginTop: error ? "0.2em" : "2em"}}>
                         <Button sx={{
                             textTransform: "unset",
                             fontSize: "0.8rem",
@@ -104,13 +128,13 @@ const AddProjectModal = ({openModal, closeModal, onAddProject}: props) => {
                                 fontSize: "0.8rem",
                                 backgroundColor: "secondary.main",
                                 marginLeft: "1em",
-                                color:"white",
+                                color: "white",
                                 marginRight: "0.5em",
                                 boxShadow: 0,
                                 '&:hover': {
                                     boxShadow: 0
                                 }
-                            }} variant="contained" onClick={()=>onAddProject}>Create</Button>
+                            }} variant="contained" onClick={handlerCreateProject}>Create</Button>
                             {isLoading && <CircularProgress size={20}/>}
                         </Box>
 

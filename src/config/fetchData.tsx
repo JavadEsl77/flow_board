@@ -100,6 +100,10 @@ export const getTasks = async (projectId: any , borderId:any): Promise<AxiosResp
     return axiosInstanceConfig(`project/${projectId}/board/${borderId}/task`, 'GET')
 }
 
+export const setProject = async (name:string , description:string , status:string): Promise<AxiosResponse> => {
+    return axiosInstanceConfig(`project`, 'POST' ,{name,description,status})
+}
+
 
 
 
