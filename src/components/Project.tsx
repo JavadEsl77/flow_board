@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {useParams} from "react-router-dom";
-import {Box, Grid, Typography} from "@mui/material";
+import {Box, Button, Grid, Typography} from "@mui/material";
 import ToolBar from "../modules/toolbar/ToolBar";
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import Diversity2OutlinedIcon from '@mui/icons-material/Diversity2Outlined';
@@ -8,15 +8,17 @@ import TroubleshootOutlinedIcon from '@mui/icons-material/TroubleshootOutlined';
 import BordersItem from "../modules/items/BordersItem";
 import NewBorderItem from "../modules/items/NewBorderItem";
 import {getBorders, getProjectInfo} from "../config/fetchData";
+import AddIcon from '@mui/icons-material/Add';
+import AddBordModal from "./modals/AddBordModal";
 
 
 const Project = () => {
     const {projectId} = useParams();
     const getRandomColor = () => {
-        const randomR = Math.floor(Math.random() * 80) + 220;
-        const randomG = Math.floor(Math.random() * 80) + 150;
-        const randomB = Math.floor(Math.random() * 80) + 150;
-        return `rgb(${randomR}, ${randomG}, ${randomB})`;
+        const randomR = Math.floor(Math.random() * 50) + 180;
+        const randomG = Math.floor(Math.random() * 50) + 80;
+        const randomB = Math.floor(Math.random() * 200) + 100;
+        return `rgba(${randomR}, ${randomG}, ${randomB},0.4)`;
     };
 
     const [isInfoLoading, setIsInfoLoading] = useState<boolean>(false);
@@ -26,6 +28,8 @@ const Project = () => {
     const [isBorderLoading, setIsBorderLoading] = useState<boolean>(false);
     const [borderError, setBorderError] = useState('');
     const [borderList, setBorderList] = useState<any[]>([])
+
+    const [showAddNewBordModal, setShowAddNewBordModal] = useState<boolean>(false)
 
     const requestGetProjectInfo = async () => {
         setInfoError('')
@@ -42,27 +46,20 @@ const Project = () => {
 
     }
 
-    const requestGetBorders = async () => {
+    const requestGetBord = async () => {
         setIsBorderLoading(true)
         setBorderError('')
-        try {
-            const response = await getBorders(projectId)
+        return await getBorders(projectId);
+    }
+
+    useEffect(() => {
+        requestGetBord().then((response) => {
             if (response.status === 200) {
                 setBorderList(response.data)
                 setIsBorderLoading(false)
             }
-        } catch (error: any) {
+        }).catch((error) => {
             setBorderError(error)
-        }
-    }
-
-    useEffect(() => {
-        requestGetBorders().then(() => {
-            // if (borderList?.length > 0) {
-            //     setBorderList((prevContent: any) => [...prevContent, "new"])
-            // } else {
-            //     setBorderList(['new'])
-            // }
         })
     }, [projectInfo])
 
@@ -71,15 +68,23 @@ const Project = () => {
         })
     }, [projectId])
 
+    const handlerAddNewBord = () => {
+        setShowAddNewBordModal(!showAddNewBordModal)
+    }
 
     return (
         <Box sx={{display: "flex", flexDirection: "column"}}>
             <Box sx={{width: "100%", position: "relative", paddingBottom: "1.5em"}}>
+
+                <img style={{width: "100%", height: "100%", objectFit: "cover", position: "absolute"}}
+                     src={"https://marketplace.canva.com/EAENvqzqoT0/1/0/1600w/canva-corporate-work-linkedin-banner-YjnYKO7wUkE.jpg"}
+                     alt={"banner"}/>
                 <Box sx={{
                     background: `linear-gradient(45deg, ${getRandomColor()} 50%, ${getRandomColor()} 90%)`,
                     height: "100%", width: "100%", position: "absolute", top: "0",
                     left: "0"
                 }}/>
+
                 <ToolBar toolbarTitle={"Project"}/>
 
                 <Box sx={{
@@ -127,7 +132,7 @@ const Project = () => {
                             <AccessTimeIcon sx={{color: "rgba(255,255,255,0.5)"}}/>
                             <Box sx={{display: "flex", flex: 1, flexDirection: "row", marginLeft: "0.8rem"}}>
                                 <Typography sx={{
-                                    flex: 1,
+                                    flex: 0.5,
                                     fontSize: "1rem",
                                     color: "rgb(255,255,255)",
                                 }}>Created at</Typography>
@@ -143,7 +148,7 @@ const Project = () => {
                             <TroubleshootOutlinedIcon sx={{color: "rgba(255,255,255,0.5)"}}/>
                             <Box sx={{display: "flex", flex: 1, flexDirection: "row", marginLeft: "0.8rem"}}>
                                 <Typography sx={{
-                                    flex: 1,
+                                    flex: 0.5,
                                     fontSize: "1rem",
                                     color: "rgb(255,255,255)",
                                 }}>status</Typography>
@@ -159,12 +164,12 @@ const Project = () => {
                             <Diversity2OutlinedIcon sx={{color: "rgba(255,255,255,0.5)"}}/>
                             <Box sx={{display: "flex", flex: 1, flexDirection: "row", marginLeft: "0.8rem"}}>
                                 <Typography sx={{
-                                    flex: 1,
+                                    flex: 0.5,
                                     fontSize: "1rem",
                                     color: "rgb(255,255,255)",
                                 }}>Assign</Typography>
                                 {!isInfoLoading && projectInfo && (
-                                    <Box sx={{display: "flex", flex: 1}}>
+                                    <Box sx={{display: "flex", flex: 1, alignItems: "center"}}>
                                         {projectInfo.members.slice(0, 2).map((item: any) => {
                                             return <Box sx={{
                                                 borderRadius: '0.5em',
@@ -178,14 +183,52 @@ const Project = () => {
                                                 fontSize: "0.9em",
                                             }}><p> @{item.name}</p></Box>
                                         })}
+
+                                        {projectInfo.member_count === 0 && (
+                                            <Box sx={{borderRadius: "0.5em"}}>
+                                                <Typography sx={{
+                                                    fontWeight: "bold",
+                                                    fontSize: "1rem",
+                                                    color: "rgba(255,255,255,0.5)",
+                                                    alignSelf: "center"
+                                                }}>No
+                                                    member</Typography>
+                                            </Box>
+                                        )}
+
+                                        <Box sx={{
+                                            cursor: "pointer",
+                                            marginInlineStart: "0.5em",
+                                            textAlign: "center",
+                                            backdropFilter: "blur(4px)",
+                                            padding: "0.25em",
+                                            borderRadius: "0.2em",
+                                            width: "24px",
+                                            ":hover": {backgroundColor: "rgba(0,0,0,0.25)"}
+                                        }}>
+                                            <AddIcon sx={{fontSize: "0.8rem", color: "white"}}/>
+                                        </Box>
                                     </Box>
                                 )}
+
                             </Box>
                         </Box>
                     </Box>
                 </Box>
 
             </Box>
+
+            <Button variant={"contained"} startIcon={<AddIcon/>} onClick={handlerAddNewBord}
+                    sx={{
+                        alignSelf: "start",
+                        textTransform: "unset",
+                        color: "white",
+                        marginX: "1.5em",
+                        marginY: "1em",
+                        width: "fit-content"
+                    }}>
+                <Typography sx={{fontSize: "1rem"}}>New Bord</Typography>
+            </Button>
 
             <Box sx={{
                 display: 'flex'
@@ -207,6 +250,10 @@ const Project = () => {
                     </Grid>
                 )}
             </Box>
+
+            {showAddNewBordModal && (
+                <AddBordModal openModal={showAddNewBordModal} closeModal={()=>setShowAddNewBordModal(false)} onAddBord={()=>{}}/>
+            )}
 
         </Box>
     );
