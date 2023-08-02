@@ -9,7 +9,7 @@ import BordersItem from "../modules/items/BordersItem";
 import NewBorderItem from "../modules/items/NewBorderItem";
 import {getBorders, getProjectInfo} from "../config/fetchData";
 import AddIcon from '@mui/icons-material/Add';
-import AddBordModal from "./modals/AddBordModal";
+import AddBoardModal from "./modals/AddBoardModal";
 
 
 const Project = () => {
@@ -26,10 +26,10 @@ const Project = () => {
     const [projectInfo, setProjectInfo] = useState<any>(null)
 
     const [isBorderLoading, setIsBorderLoading] = useState<boolean>(false);
-    const [borderError, setBorderError] = useState('');
-    const [borderList, setBorderList] = useState<any[]>([])
+    const [boardError, setBoardError] = useState('');
+    const [boardList, setBoardList] = useState<any[]>([])
 
-    const [showAddNewBordModal, setShowAddNewBordModal] = useState<boolean>(false)
+    const [showAddNewBoardModal, setShowAddNewBoardModal] = useState<boolean>(false)
 
     const requestGetProjectInfo = async () => {
         setInfoError('')
@@ -46,21 +46,24 @@ const Project = () => {
 
     }
 
-    const requestGetBord = async () => {
+    const requestGetBoard = async () => {
         setIsBorderLoading(true)
-        setBorderError('')
+        setBoardError('')
         return await getBorders(projectId);
     }
 
-    useEffect(() => {
-        requestGetBord().then((response) => {
+    const handlerGetBoard = () => {
+        requestGetBoard().then((response) => {
             if (response.status === 200) {
-                setBorderList(response.data)
+                setBoardList(response.data)
                 setIsBorderLoading(false)
             }
         }).catch((error) => {
-            setBorderError(error)
+            setBoardError(error)
         })
+    }
+    useEffect(() => {
+        handlerGetBoard()
     }, [projectInfo])
 
     useEffect(() => {
@@ -68,8 +71,8 @@ const Project = () => {
         })
     }, [projectId])
 
-    const handlerAddNewBord = () => {
-        setShowAddNewBordModal(!showAddNewBordModal)
+    const handlerAddNewBoard = () => {
+        setShowAddNewBoardModal(!showAddNewBoardModal)
     }
 
     return (
@@ -218,7 +221,7 @@ const Project = () => {
 
             </Box>
 
-            <Button variant={"contained"} startIcon={<AddIcon/>} onClick={handlerAddNewBord}
+            <Button variant={"contained"} startIcon={<AddIcon/>} onClick={handlerAddNewBoard}
                     sx={{
                         alignSelf: "start",
                         textTransform: "unset",
@@ -227,16 +230,16 @@ const Project = () => {
                         marginY: "1em",
                         width: "fit-content"
                     }}>
-                <Typography sx={{fontSize: "1rem"}}>New Bord</Typography>
+                <Typography sx={{fontSize: "1rem"}}>New Board</Typography>
             </Button>
 
             <Box sx={{
                 display: 'flex'
             }}>
 
-                {borderList && borderList.length > 0 && (
+                {boardList && boardList.length > 0 && (
                     <Grid container spacing={2}>
-                        {borderList.map((item: any) => {
+                        {boardList.map((item: any) => {
                             if (item === 'new') {
                                 return <Grid item xs={12} sm={6} md={4} lg={3}>
                                     <NewBorderItem/>
@@ -251,8 +254,12 @@ const Project = () => {
                 )}
             </Box>
 
-            {showAddNewBordModal && (
-                <AddBordModal openModal={showAddNewBordModal} closeModal={()=>setShowAddNewBordModal(false)} onAddBord={()=>{}}/>
+            {showAddNewBoardModal && (
+                <AddBoardModal
+                    projectId={projectId}
+                    openModal={showAddNewBoardModal}
+                    closeModal={() => setShowAddNewBoardModal(false)}
+                    onAddBord={() => handlerGetBoard()}/>
             )}
 
         </Box>

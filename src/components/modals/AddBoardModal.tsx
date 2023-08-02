@@ -1,15 +1,16 @@
 import React, {useState} from 'react';
 import {Box, Button, CircularProgress, Modal, TextField, Typography} from "@mui/material";
 import PlaylistAddCheckCircleRoundedIcon from "@mui/icons-material/PlaylistAddCheckCircleRounded";
-
+import {setBoard} from "../../config/fetchData";
 
 interface props {
     openModal: boolean,
     closeModal: () => void,
     onAddBord: (done: boolean) => void,
+    projectId: any
 }
 
-const AddBordModal = ({openModal, closeModal, onAddBord}: props) => {
+const AddBoardModal = ({openModal, closeModal, onAddBord, projectId}: props) => {
     const [title, setTitle] = useState<string>("")
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -32,9 +33,24 @@ const AddBordModal = ({openModal, closeModal, onAddBord}: props) => {
         setTitle(event.target.value)
     }
 
+    const requestSetBord = async () => {
+        setError("")
+        setIsLoading(true)
+        return await setBoard(projectId, title, 9999, "active")
+    }
+
     const handlerCreateBord = () => {
         if (title.trim() !== "") {
             setError("")
+            requestSetBord().then((response) => {
+                if (response.status === 201) {
+                    setIsLoading(false)
+                    closeModal()
+                    onAddBord(true)
+                }
+            }).catch((error: any) => {
+                setError(error)
+            })
         } else {
             setError("Enter title !")
         }
@@ -50,10 +66,10 @@ const AddBordModal = ({openModal, closeModal, onAddBord}: props) => {
                 <Box sx={style}>
                     <PlaylistAddCheckCircleRoundedIcon sx={{fontSize: "48px", color: "secondary.main"}}/>
                     <Typography sx={{marginTop: "0.5em", marginLeft: "0.5em", fontSize: "1rem", fontWeight: "bold"}}>
-                        Add Bord Information
+                        Add Board Information
                     </Typography>
                     <Typography sx={{marginTop: "0.2em", marginLeft: "0.5em", fontSize: "0.8rem", color: "grey.400"}}>
-                        Completion of information Bord ...
+                        Completion of information Board ...
                     </Typography>
 
 
@@ -96,7 +112,7 @@ const AddBordModal = ({openModal, closeModal, onAddBord}: props) => {
                                 '&:hover': {
                                     boxShadow: 0
                                 }
-                            }} variant="contained" onClick={handlerCreateBord}>Create Bord</Button>
+                            }} variant="contained" onClick={handlerCreateBord}>Create Board</Button>
                             {isLoading && <CircularProgress size={20}/>}
                         </Box>
                     </Box>
@@ -107,4 +123,4 @@ const AddBordModal = ({openModal, closeModal, onAddBord}: props) => {
     );
 };
 
-export default AddBordModal;
+export default AddBoardModal;

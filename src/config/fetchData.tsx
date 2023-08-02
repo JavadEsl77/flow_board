@@ -93,7 +93,7 @@ export const getProjectInfo = async (projectId: any): Promise<AxiosResponse> => 
 }
 
 export const getBorders = async (projectId: any): Promise<AxiosResponse> => {
-    return axiosInstanceConfig(`project/${projectId}/board`, 'GET')
+    return axiosInstanceConfig(`project/${projectId}/board?sort=updated_at:asc`, 'GET')
 }
 
 export const getTasks = async (projectId: any , borderId:any): Promise<AxiosResponse> => {
@@ -103,6 +103,11 @@ export const getTasks = async (projectId: any , borderId:any): Promise<AxiosResp
 export const setProject = async (name:string , description:string , status:string): Promise<AxiosResponse> => {
     return axiosInstanceConfig(`project`, 'POST' ,{name,description,status})
 }
+
+export const setBoard = async (id:any,name:string , order:number , status:string): Promise<AxiosResponse> => {
+    return axiosInstanceConfig(`project/${id}/board`, 'POST' ,{name,order,status})
+}
+
 
 
 
