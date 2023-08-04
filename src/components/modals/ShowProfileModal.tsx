@@ -52,7 +52,7 @@ const ShowProfileModal = ({openModal, closeModal, userInfo}: props) => {
             if (response.status === 204) {
                 localStorage.setItem('access_token', '')
                 auth.logout(() => {
-                    navigate('/login');
+                    navigate('/');
                 })
             }
         } catch (error: any) {

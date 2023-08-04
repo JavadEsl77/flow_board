@@ -85,25 +85,12 @@ const AddProjectModal = ({openModal, closeModal, onAddProject}: props) => {
                     </Typography>
 
 
-                    <Typography sx={{
-                        marginTop: "2em",
-                        marginLeft: "0.2em",
-                        marginBottom: "0.1em",
-                        fontSize: "1rem",
-                        color: "grey.400"
-                    }}>title</Typography>
-                    <TextField sx={{fontSize: ".8rem"}} onChange={handlerChangeTitle} value={title} size="small"
-                               placeholder={"Project title"}/>
 
-                    <Typography sx={{
-                        marginTop: "1em",
-                        marginLeft: "0.2em",
-                        marginBottom: "0.1em",
-                        fontSize: "1rem",
-                        color: "grey.400"
-                    }}>description</Typography>
-                    <TextField sx={{fontSize: ".8rem", maxLines: "3"}} rows={3} maxRows={3} size="small"
-                               placeholder={" Preferably in three lines"} onChange={handlerChangeDescription}
+                    <TextField sx={{fontSize: ".8rem" , marginTop:"1rem"}} onChange={handlerChangeTitle} value={title} size="small"
+                               label={"Project title"}/>
+
+                    <TextField sx={{fontSize: ".8rem", maxLines: "3" , marginTop:"1rem"}} rows={3} maxRows={3} size="small"
+                               label={" Preferably in three lines"} onChange={handlerChangeDescription}
                                multiline/>
 
                     {error && <Typography sx={{
@@ -134,7 +121,7 @@ const AddProjectModal = ({openModal, closeModal, onAddProject}: props) => {
                                 '&:hover': {
                                     boxShadow: 0
                                 }
-                            }} variant="contained" onClick={handlerCreateProject}>Create</Button>
+                            }} variant="contained" onClick={handlerCreateProject}>Create new project</Button>
                             {isLoading && <CircularProgress size={20}/>}
                         </Box>
 

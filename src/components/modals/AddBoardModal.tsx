@@ -105,7 +105,7 @@ const AddBoardModal = ({openModal, closeModal, onAddBord, projectId}: props) => 
                                 '&:hover': {
                                     boxShadow: 0
                                 }
-                            }} variant="contained" onClick={handlerCreateBord}>Create Board</Button>
+                            }} variant="contained" onClick={handlerCreateBord}>Create new board</Button>
                             {isLoading && <CircularProgress size={20}/>}
                         </Box>
                     </Box>

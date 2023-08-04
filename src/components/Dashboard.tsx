@@ -1,11 +1,10 @@
 import React, {useEffect, useState} from 'react';
-import {Box, Divider, Grid, IconButton, InputBase, Typography} from "@mui/material";
+import {Box, Button, Divider, Grid, IconButton, InputBase, Typography} from "@mui/material";
 import ToolBar from "../modules/toolbar/ToolBar";
 import SearchIcon from "@mui/icons-material/Search";
 import ClearIcon from '@mui/icons-material/Clear';
 import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
 import ProjectsItem from "../modules/items/ProjectsItem";
-import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
 import AddProjectModal from "./modals/AddProjectModal";
 import {getProjects} from "../config/fetchData";
 import emptyList from "../assets/lotties/empty_list.json";
@@ -19,7 +18,6 @@ const Dashboard = () => {
     const [clearSearchIcon, setClearSearchIcon] = useState<boolean>(false);
     const [showModalAddProject, setShowModalAddProject] = useState<boolean>(false)
     const [projectList, setProjectList] = useState<any>(null)
-    const [newRecord, setNewRecord] = useState<boolean>(false)
 
 
     const defaultOptions = {
@@ -54,11 +52,15 @@ const Dashboard = () => {
         }
     }
 
-    useEffect(() => {
+    const handlerGetProjectList = () => {
         requestGetProjectsList().then(() => {
 
         })
-    }, [newRecord])
+    }
+
+    useEffect(() => {
+        handlerGetProjectList()
+    }, [])
 
     return (
         <Box sx={{display: "flex", flexDirection: "column"}}>
@@ -153,18 +155,21 @@ const Dashboard = () => {
 
                     <span style={{flex: 1}}/>
 
-                    <IconButton sx={{
-                        width: "40px",
-                        height: "40px",
-                        color: "white",
-                        '&:hover': {
-                            backgroundColor: 'secondary.dark'
-                        },
-                        backgroundColor: "secondary.main"
-                    }}
-                                onClick={() => setShowModalAddProject(true)}>
-                        <AddOutlinedIcon/>
-                    </IconButton>
+                    <Button variant={"contained"}
+                            sx={{
+                                alignSelf: "start",
+                                textTransform: "unset",
+                                color: "white",
+                                width: "fit-content",
+                                '&:hover': {
+                                    backgroundColor: 'secondary.dark'
+                                },
+                                backgroundColor: "secondary.main"
+
+                            }}
+                            onClick={() => setShowModalAddProject(true)}>
+                        <Typography sx={{fontSize: "0.8rem"}}>New Project</Typography>
+                    </Button>
 
                 </Box>
                 <Divider sx={{marginTop: "0.8em", marginBottom: "0.8em"}}/>
@@ -180,7 +185,13 @@ const Dashboard = () => {
                 )}
 
                 {!isLoading && projectList?.length === 0 && (
-                    <Box sx={{display: "flex", flexDirection: "column", marginTop: "5em" , justifyContent:"center"}}>
+                    <Box sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        marginTop: "5em",
+                        justifyContent: "center",
+                        alignSelf: "center"
+                    }}>
                         <Lottie style={{margin: "-40px"}}
                                 options={defaultOptions}
                                 height={150}
@@ -195,7 +206,7 @@ const Dashboard = () => {
                 )}
 
                 {isLoading && (
-                    <Box sx={{display: "flex", marginTop: "5em", justifyContent:"center"}}>
+                    <Box sx={{display: "flex", marginTop: "5em", justifyContent: "center"}}>
                         <Lottie style={{margin: "-40px"}}
                                 options={defaultOptions}
                                 height={150}
@@ -210,7 +221,7 @@ const Dashboard = () => {
             {showModalAddProject && (
                 <AddProjectModal openModal={showModalAddProject} closeModal={() => setShowModalAddProject(false)}
                                  onAddProject={(done) => {
-                                     setNewRecord(done)
+                                     handlerGetProjectList()
                                  }}/>
             )}
 

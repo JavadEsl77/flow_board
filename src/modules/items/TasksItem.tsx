@@ -10,7 +10,7 @@ const TasksItem = ({item}: propsT) => {
     return (
         <Box sx={{
             display: "flex",
-            flexDirection:"column",
+            flexDirection: "column",
             marginTop: "0.5rem",
             padding: "1em",
             borderRadius: "0.8rem",
@@ -19,17 +19,25 @@ const TasksItem = ({item}: propsT) => {
             border: '1px solid #d6d6d6',
         }}>
             <Typography
-                sx={{fontWeight: "bold",
-                    fontSize: "1.2rem",
-                    color: "grey.600"}}>{item.name}</Typography>
+                sx={{
+                    fontWeight: "bold",
+                    fontSize: "1rem",
+                    color: "grey.600"
+                }}>{item.name}</Typography>
 
             <Typography
                 sx={{
                     fontSize: "0.8rem",
-                    color: "grey.600"}}>{item.description}</Typography>
+                    color: "grey.600",
+                    display: '-webkit-box',
+                    '-webkit-line-clamp': '3',
+                    '-webkit-box-orient': 'vertical',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                }}>{item.description}</Typography>
 
 
-            <Typography sx={{fontSize:"0.8rem", color: "grey.500" , marginTop:"1.5rem"}}>{item.created_at}</Typography>
+            <Typography sx={{fontSize: "0.8rem", color: "grey.500", marginTop: "1.5rem"}}>{item.created_at}</Typography>
         </Box>
     );
 };

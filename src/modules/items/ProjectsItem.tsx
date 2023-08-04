@@ -41,7 +41,7 @@ const ProjectsItem = ({itemValue}: propsT) => {
     const getRandomBrightColor = () => {
         // Generate random RGB values between 150 and 255
         const randomR = Math.floor(Math.random() * 50) + 180;
-        const randomG = Math.floor(Math.random() * 50) + 80;
+        const randomG = Math.floor(Math.random() * 50) + 180;
         const randomB = Math.floor(Math.random() * 200) + 100;
 
         // Return a string with the random RGB values
@@ -57,11 +57,11 @@ const ProjectsItem = ({itemValue}: propsT) => {
             flexDirection: "column",
             backgroundColor: "white",
             padding: "0.5em",
-            borderRadius: "0.5em",
             border: 2,
-            borderColor: "white",
+            borderRadius: "0.8em",
+            borderColor: "grey.200",
             ":hover": {border: 2, borderColor: getRandomBrightColor(), borderRadius: "0.5em"}
-        }} onClick={(e) => {
+        }} onClick={() => {
             navigate(`/dashboard/project/${itemValue.id}`)
         }}>
 
@@ -69,7 +69,7 @@ const ProjectsItem = ({itemValue}: propsT) => {
                 position: "relative",
                 width: '100%',
                 height: '100px',
-                borderRadius: "0.5em",
+                borderRadius: "0.8em",
                 marginBottom: "0.5em",
                 background: `linear-gradient(45deg, ${getRandomBrightColor()} 30%, ${getRandomBrightColor()} 90%)`
             }}>
@@ -77,13 +77,17 @@ const ProjectsItem = ({itemValue}: propsT) => {
                     <Tooltip placement={"top"} arrow title={"Owner"}>
                         <WorkspacePremiumIcon sx={{
                             position: "absolute",
-                            bottom: 0, right: 0, marginRight: "0.5em", marginBottom: "0.5em", color: "rgba(68,68,68,0.66)"
+                            bottom: 0,
+                            right: 0,
+                            marginRight: "0.5em",
+                            marginBottom: "0.5em",
+                            color: "rgba(68,68,68,0.66)"
                         }}/>
                     </Tooltip>
 
                 )}
 
-                <Box sx={{position:"absolute",left: 0,  bottom: 0,display:"flex"}}>
+                <Box sx={{position: "absolute", left: 0, bottom: 0, display: "flex"}}>
 
                     <Box sx={{
                         display: "flex",
@@ -142,9 +146,11 @@ const ProjectsItem = ({itemValue}: propsT) => {
                     <Typography sx={{
                         fontSize: "0.7rem",
                         color: "grey.400",
-                        overflow: "hidden",
-                        WebkitLineClamp: 2,
-                        height: "calc(1.2 * 2 * 12px)"
+                        display: '-webkit-box',
+                        '-webkit-line-clamp': '1',
+                        '-webkit-box-orient': 'vertical',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
                     }}>{itemValue.description + " ..."} </Typography>
                 </Box>
 

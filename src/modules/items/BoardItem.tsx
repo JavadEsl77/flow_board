@@ -72,6 +72,7 @@ const BoardItem = ({boardId, borderName, projectId, onBoardChange}: propsT) => {
             width: "100%",
             padding: "1em",
             display: "flex",
+            backgroundColor:"white",
             flexDirection: "column",
             borderRadius: "0.8em"
         }}>
@@ -81,10 +82,10 @@ const BoardItem = ({boardId, borderName, projectId, onBoardChange}: propsT) => {
                 width: "100%",
                 backgroundColor: "white",
                 borderRadius: "0.8rem",
-                padding: "0.8rem 1rem"
+                padding: "0.5rem 1rem"
             }}>
                 <Typography
-                    sx={{fontSize: "1rem", flex: 1, fontWeight: "bold", color: "grey.500"}}>{borderName}</Typography>
+                    sx={{fontSize: "1.2rem", flex: 1, fontWeight: "bold", color: "grey.600"}}>{borderName}</Typography>
                 <MoreHorizIcon onClick={handlerShowTaskMenu}
                                sx={{cursor: "pointer", color: "primary.main", marginInlineEnd: "0.5rem"}}/>
                 <AddBoxRoundedIcon onClick={handlerShowAddTaskModal} sx={{cursor: "pointer", color: "primary.main"}}/>

@@ -69,21 +69,7 @@ export const updateTodoInfo = async (id: any, title: string, description: string
     return axiosInstanceConfig(`/todo/${id}`, 'POST', {title, description, status})
 }
 
-export const getTodoList = async (status: string): Promise<AxiosResponse> => {
-    return axiosInstanceConfig(`/todo?status=${status}&per_page=10000&sort=updated_at:desc`, 'GET')
-}
 
-export const getTodoSearch = async (status: string, searchValue: string): Promise<AxiosResponse> => {
-    return axiosInstanceConfig(`/todo?status=${status}&per_page=10000&sort=updated_at:desc&title=${searchValue}`, 'GET')
-}
-
-export const getReport = async (): Promise<AxiosResponse> => {
-    return axiosInstanceConfig('/report/todo/statics', 'GET')
-}
-
-export const deleteTodo = async (id: any): Promise<AxiosResponse> => {
-    return axiosInstanceConfig(`/todo/${id}`, 'DELETE')
-}
 export const getProjects = async (): Promise<AxiosResponse> => {
     return axiosInstanceConfig('/project', 'GET')
 }
@@ -123,6 +109,14 @@ export const deleteBoard = async (projectId: any, boardId: any): Promise<AxiosRe
 
 export const updateBoard = async (projectId: any,boardId:any, name: string, order: number, status: string): Promise<AxiosResponse> => {
     return axiosInstanceConfig(`project/${projectId}/board/${boardId}`, 'POST', {name, order, status})
+}
+
+export const updateProjectInfo = async (projectId: any, name: string, description: string, status: string): Promise<AxiosResponse> => {
+    return axiosInstanceConfig(`/project/${projectId}`, 'POST', {name, description, status})
+}
+
+export const deleteProject = async (projectId: any): Promise<AxiosResponse> => {
+    return axiosInstanceConfig(`/project/${projectId}`, 'DELETE')
 }
 
 

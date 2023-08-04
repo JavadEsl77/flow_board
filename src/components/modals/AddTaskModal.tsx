@@ -131,7 +131,7 @@ const AddTaskModal = ({onAddTask, openModal, closeModal, projectId, boardId}: pr
                                 '&:hover': {
                                     boxShadow: 0
                                 }
-                            }} variant="contained" onClick={handlerCreateTask}>Create Board</Button>
+                            }} variant="contained" onClick={handlerCreateTask}>Create new task</Button>
                             {isLoading && <CircularProgress size={20}/>}
                         </Box>
                     </Box>
