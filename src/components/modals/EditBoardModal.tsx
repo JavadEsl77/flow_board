@@ -1,17 +1,19 @@
 import React, {useState} from 'react';
 import {Box, Button, CircularProgress, Modal, TextField, Typography} from "@mui/material";
 import PlaylistAddCheckCircleRoundedIcon from "@mui/icons-material/PlaylistAddCheckCircleRounded";
-import {setBoard} from "../../config/fetchData";
+import {updateBoard} from "../../config/fetchData";
 
 interface props {
     openModal: boolean,
     closeModal: () => void,
-    onAddBord: (done: boolean) => void,
+    onUpdateBoard: (done: boolean) => void,
     projectId: any
+    boardName: string
+    boardId: any
 }
 
-const AddBoardModal = ({openModal, closeModal, onAddBord, projectId}: props) => {
-    const [title, setTitle] = useState<string>("")
+const EditBoardModal = ({boardName, boardId, projectId, openModal, closeModal, onUpdateBoard}: props) => {
+    const [name, setName] = useState<string>(boardName)
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
 
@@ -30,26 +32,26 @@ const AddBoardModal = ({openModal, closeModal, onAddBord, projectId}: props) => 
     };
 
     const handlerChangeTitle = (event: any) => {
-        setTitle(event.target.value)
+        setName(event.target.value)
     }
 
-    const requestSetBord = async () => {
+    const requestUpdateBoard = async () => {
         setError("")
         setIsLoading(true)
-        return await setBoard(projectId, title, 9999, "active")
+        return await updateBoard(projectId,boardId, name, 9999, "active")
     }
 
-    const handlerCreateBord = () => {
-        if (title.trim() !== "") {
-            setError("")
-            requestSetBord().then((response) => {
-                if (response.status === 201) {
+    const handlerUpdateBoard = () => {
+        if (name.trim() !== "") {
+            requestUpdateBoard().then((response) => {
+                if (response.status === 200) {
                     setIsLoading(false)
                     closeModal()
-                    onAddBord(true)
+                    onUpdateBoard(true)
                 }
             }).catch((error: any) => {
                 setError(error)
+                setIsLoading(false)
             })
         } else {
             setError("Enter title !")
@@ -66,14 +68,14 @@ const AddBoardModal = ({openModal, closeModal, onAddBord, projectId}: props) => 
                 <Box sx={style}>
                     <PlaylistAddCheckCircleRoundedIcon sx={{fontSize: "48px", color: "secondary.main"}}/>
                     <Typography sx={{marginTop: "0.5em", marginLeft: "0.5em", fontSize: "1rem", fontWeight: "bold"}}>
-                        Add Board Information
+                        Edit Board Information
                     </Typography>
 
                     <TextField
                         label={"Board name"}
-                        sx={{fontSize: ".8rem" , marginTop:"1rem"}}
+                        sx={{fontSize: ".8rem", marginTop: "1rem"}}
                         onChange={handlerChangeTitle}
-                        value={title}
+                        value={name}
                         size="small"/>
 
 
@@ -105,7 +107,7 @@ const AddBoardModal = ({openModal, closeModal, onAddBord, projectId}: props) => 
                                 '&:hover': {
                                     boxShadow: 0
                                 }
-                            }} variant="contained" onClick={handlerCreateBord}>Create Board</Button>
+                            }} variant="contained" onClick={handlerUpdateBoard}>Update Board</Button>
                             {isLoading && <CircularProgress size={20}/>}
                         </Box>
                     </Box>
@@ -116,4 +118,4 @@ const AddBoardModal = ({openModal, closeModal, onAddBord, projectId}: props) => 
     );
 };
 
-export default AddBoardModal;
+export default EditBoardModal;

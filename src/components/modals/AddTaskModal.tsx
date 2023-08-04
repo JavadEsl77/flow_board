@@ -1,17 +1,21 @@
 import React, {useState} from 'react';
 import {Box, Button, CircularProgress, Modal, TextField, Typography} from "@mui/material";
 import PlaylistAddCheckCircleRoundedIcon from "@mui/icons-material/PlaylistAddCheckCircleRounded";
-import {setBoard} from "../../config/fetchData";
+import {setTask} from "../../config/fetchData";
+
 
 interface props {
     openModal: boolean,
     closeModal: () => void,
-    onAddBord: (done: boolean) => void,
+    onAddTask: (done: boolean) => void,
     projectId: any
+    boardId: any
 }
 
-const AddBoardModal = ({openModal, closeModal, onAddBord, projectId}: props) => {
+const AddTaskModal = ({onAddTask, openModal, closeModal, projectId, boardId}: props) => {
     const [title, setTitle] = useState<string>("")
+    const [description, setDescription] = useState<string>("")
+
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
 
@@ -29,30 +33,45 @@ const AddBoardModal = ({openModal, closeModal, onAddBord, projectId}: props) => 
         p: 3,
     };
 
+
     const handlerChangeTitle = (event: any) => {
         setTitle(event.target.value)
     }
 
-    const requestSetBord = async () => {
-        setError("")
-        setIsLoading(true)
-        return await setBoard(projectId, title, 9999, "active")
+    const handlerChangeDescription = (event: any) => {
+        setDescription(event.target.value)
     }
 
-    const handlerCreateBord = () => {
-        if (title.trim() !== "") {
-            setError("")
-            requestSetBord().then((response) => {
+    // const handleWorkLogChange = (event: any) => {
+    //     const value = event.target.value;
+    //     if (/^\d+[hm]$/.test(value)) {
+    //         setWorkLog(value);
+    //         setWorkLogError('')
+    //     } else {
+    //         setWorkLogError('Invalid input! Please use the format "5h" or "30m".')
+    //     }
+    // };
+
+    const requestSetTask = async () => {
+        setError('')
+        setIsLoading(true)
+        return await setTask(boardId, projectId, title, description, "", "active")
+    }
+
+    const handlerCreateTask = () => {
+        if (title.trim() !== "" && description.trim() !== "") {
+            requestSetTask().then((response) => {
                 if (response.status === 201) {
                     setIsLoading(false)
+                    onAddTask(true)
                     closeModal()
-                    onAddBord(true)
                 }
-            }).catch((error: any) => {
+            }).catch((error) => {
                 setError(error)
+                setIsLoading(false)
             })
         } else {
-            setError("Enter title !")
+            setError('Complete all the required items !')
         }
     }
 
@@ -64,17 +83,23 @@ const AddBoardModal = ({openModal, closeModal, onAddBord, projectId}: props) => 
                 onClose={closeModal}
             >
                 <Box sx={style}>
+
                     <PlaylistAddCheckCircleRoundedIcon sx={{fontSize: "48px", color: "secondary.main"}}/>
                     <Typography sx={{marginTop: "0.5em", marginLeft: "0.5em", fontSize: "1rem", fontWeight: "bold"}}>
-                        Add Board Information
+                        Add Task Information
                     </Typography>
 
                     <TextField
-                        label={"Board name"}
-                        sx={{fontSize: ".8rem" , marginTop:"1rem"}}
+                        label={"Task title"}
+                        sx={{fontSize: ".8rem", marginTop: "1rem"}}
                         onChange={handlerChangeTitle}
                         value={title}
                         size="small"/>
+
+                    <TextField sx={{marginTop: "1rem", fontSize: ".8rem", maxLines: "3"}} rows={3} maxRows={3}
+                               size="small"
+                               label={" Description in three lines"} onChange={handlerChangeDescription}
+                               multiline/>
 
 
                     {error && <Typography sx={{
@@ -84,6 +109,7 @@ const AddBoardModal = ({openModal, closeModal, onAddBord, projectId}: props) => 
                         marginTop: "1.5em",
                         fontWeight: "bold"
                     }}>{'- ' + error}</Typography>}
+
                     <Box sx={{display: "flex", marginTop: error ? "0.2em" : "2em"}}>
                         <Button sx={{
                             textTransform: "unset",
@@ -105,15 +131,17 @@ const AddBoardModal = ({openModal, closeModal, onAddBord, projectId}: props) => 
                                 '&:hover': {
                                     boxShadow: 0
                                 }
-                            }} variant="contained" onClick={handlerCreateBord}>Create Board</Button>
+                            }} variant="contained" onClick={handlerCreateTask}>Create Board</Button>
                             {isLoading && <CircularProgress size={20}/>}
                         </Box>
                     </Box>
-                </Box>
 
+                </Box>
             </Modal>
+
         </Box>
-    );
+    )
+        ;
 };
 
-export default AddBoardModal;
+export default AddTaskModal;

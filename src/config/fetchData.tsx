@@ -96,17 +96,36 @@ export const getBorders = async (projectId: any): Promise<AxiosResponse> => {
     return axiosInstanceConfig(`project/${projectId}/board?sort=updated_at:asc`, 'GET')
 }
 
-export const getTasks = async (projectId: any , borderId:any): Promise<AxiosResponse> => {
+export const getTasks = async (projectId: any, borderId: any): Promise<AxiosResponse> => {
     return axiosInstanceConfig(`project/${projectId}/board/${borderId}/task`, 'GET')
 }
 
-export const setProject = async (name:string , description:string , status:string): Promise<AxiosResponse> => {
-    return axiosInstanceConfig(`project`, 'POST' ,{name,description,status})
+export const setProject = async (name: string, description: string, status: string): Promise<AxiosResponse> => {
+    return axiosInstanceConfig(`project`, 'POST', {name, description, status})
 }
 
-export const setBoard = async (id:any,name:string , order:number , status:string): Promise<AxiosResponse> => {
-    return axiosInstanceConfig(`project/${id}/board`, 'POST' ,{name,order,status})
+export const setBoard = async (id: any, name: string, order: number, status: string): Promise<AxiosResponse> => {
+    return axiosInstanceConfig(`project/${id}/board`, 'POST', {name, order, status})
 }
+
+export const setTask = async (bordId: any, projectId: any, name: string, description: string, work_log: string, status: string): Promise<AxiosResponse> => {
+    return axiosInstanceConfig(`project/${projectId}/board/${bordId}/task`, 'POST', {
+        name,
+        description,
+        status,
+        work_log
+    })
+}
+
+export const deleteBoard = async (projectId: any, boardId: any): Promise<AxiosResponse> => {
+    return axiosInstanceConfig(`/project/${projectId}/board/${boardId}`, 'DELETE')
+}
+
+export const updateBoard = async (projectId: any,boardId:any, name: string, order: number, status: string): Promise<AxiosResponse> => {
+    return axiosInstanceConfig(`project/${projectId}/board/${boardId}`, 'POST', {name, order, status})
+}
+
+
 
 
 

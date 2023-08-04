@@ -1,32 +1,31 @@
 import React from 'react';
-import {Box, CircularProgress, Fade, Menu, Typography} from "@mui/material";
+import {Box, Fade, Menu, Typography} from "@mui/material";
 import EditIcon from '@mui/icons-material/Edit';
-import AssignmentTurnedInRoundedIcon from '@mui/icons-material/AssignmentTurnedInRounded';
 import DeleteSweepIcon from '@mui/icons-material/DeleteSweep';
 
 interface propsT {
-    handlerChangeStatus: (state: string) => void;
-    handlerChangeTodoInfo: () => void;
-    handlerDeleteTodo: () => void;
+    handlerUpdateBoard: () => void;
+    handlerDeleteBoard: () => void;
     color: string;
     event: any,
     handleCloseMenu: () => void,
     showOption: boolean;
-    status: string
-    statusIsLoading?: boolean;
+    projectId: any
+    boardId: any
 
 }
 
-const TodoItemMenuOptions = ({
-                                 handlerChangeStatus,
-                                 handlerChangeTodoInfo, handlerDeleteTodo,
-                                 color,
-                                 event,
-                                 handleCloseMenu,
-                                 status,
-                                 showOption,
-                                 statusIsLoading = false
-                             }: propsT) => {
+const BoardItemMenuOptions = ({
+
+                                  handlerUpdateBoard,
+                                  handlerDeleteBoard,
+                                  color,
+                                  event,
+                                  handleCloseMenu,
+                                  showOption,
+                              }: propsT) => {
+
+
     return (
         <div>
             <Menu
@@ -87,7 +86,7 @@ const TodoItemMenuOptions = ({
                         padding: "0.5em",
                         ':hover': {backgroundColor: "#eeeeee"},
                         borderRadius: "0.4em",
-                    }} onClick={handlerChangeTodoInfo}>
+                    }} onClick={handlerUpdateBoard}>
                         <EditIcon sx={{fontSize: "medium", color: "grey.500", marginRight: "0.5em"}}/>
                         <Typography sx={{
                             color: "grey.600",
@@ -95,35 +94,25 @@ const TodoItemMenuOptions = ({
                         }}>Edit</Typography>
                     </Box>
                     <Box sx={{
+                        width: "100%",
                         display: "flex",
                         alignItems: "center",
+                        justifyContent: "center",
                         cursor: "pointer",
                         padding: "0.5em",
                         ':hover': {backgroundColor: "#eeeeee"},
                         borderRadius: "0.4em",
-                    }} onClick={handlerDeleteTodo}>
-                        <DeleteSweepIcon sx={{fontSize: "medium", color: "grey.500", marginRight: "0.5em"}}/>
-                        <Typography sx={{
-                            color: "grey.600",
-                            fontSize: "0.8em",
-                        }}>Delete</Typography>
-                    </Box>
-                    <Box sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        cursor: "pointer",
-                        padding: "0.5em",
-                        ':hover': {backgroundColor: "#eeeeee"},
-                        borderRadius: "0.4em",
-                    }} onClick={() => handlerChangeStatus(status === "active" ? "deactive" : "active")}>
-                        <AssignmentTurnedInRoundedIcon
-                            sx={{fontSize: "medium", color: "grey.500", marginRight: "0.5em"}}/>
-                        <Typography sx={{
-                            color: "grey.600",
-                            fontSize: "0.8em",
-                        }}>{status === "active" ? "Complete" : "Todo"}</Typography>
+                    }} onClick={handlerDeleteBoard}>
+                        <Box sx={{
+                            display: "flex"
+                        }}>
+                            <DeleteSweepIcon sx={{fontSize: "medium", color: "grey.500", marginRight: "0.5em"}}/>
+                            <Typography sx={{
+                                color: "grey.600",
+                                fontSize: "0.8em",
+                            }}>Delete</Typography>
+                        </Box>
 
-                        {statusIsLoading && <CircularProgress sx={{marginLeft: "0.5em"}} size={20}/>}
                     </Box>
 
                 </Box>
@@ -134,4 +123,4 @@ const TodoItemMenuOptions = ({
     );
 };
 
-export default TodoItemMenuOptions;
+export default BoardItemMenuOptions;

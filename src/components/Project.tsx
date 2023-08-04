@@ -5,12 +5,16 @@ import ToolBar from "../modules/toolbar/ToolBar";
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import Diversity2OutlinedIcon from '@mui/icons-material/Diversity2Outlined';
 import TroubleshootOutlinedIcon from '@mui/icons-material/TroubleshootOutlined';
-import BordersItem from "../modules/items/BordersItem";
+import BoardItem from "../modules/items/BoardItem";
 import NewBorderItem from "../modules/items/NewBorderItem";
 import {getBorders, getProjectInfo} from "../config/fetchData";
 import AddIcon from '@mui/icons-material/Add';
 import AddBoardModal from "./modals/AddBoardModal";
-
+import Lottie from "react-lottie";
+import emptyList from "../assets/lotties/empty_list.json";
+import loadingList from "../assets/lotties/loading.json";
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import EditIcon from '@mui/icons-material/Edit';
 
 const Project = () => {
     const {projectId} = useParams();
@@ -30,6 +34,17 @@ const Project = () => {
     const [boardList, setBoardList] = useState<any[]>([])
 
     const [showAddNewBoardModal, setShowAddNewBoardModal] = useState<boolean>(false)
+
+
+    const defaultOptions = {
+        loop: true,
+        autoplay: true,
+        animationData: !isBorderLoading ? emptyList : loadingList,
+        rendererSettings: {
+            preserveAspectRatio: "xMidYMid slice"
+        }
+    };
+
 
     const requestGetProjectInfo = async () => {
         setInfoError('')
@@ -60,11 +75,13 @@ const Project = () => {
             }
         }).catch((error) => {
             setBoardError(error)
+            setIsInfoLoading(false)
         })
     }
+
     useEffect(() => {
         handlerGetBoard()
-    }, [projectInfo])
+    }, [])
 
     useEffect(() => {
         requestGetProjectInfo().then(() => {
@@ -76,7 +93,7 @@ const Project = () => {
     }
 
     return (
-        <Box sx={{display: "flex", flexDirection: "column"}}>
+        <Box sx={{display: "flex", flexDirection: "column" , backgroundColor:"white"}}>
             <Box sx={{width: "100%", position: "relative", paddingBottom: "1.5em"}}>
 
                 <img style={{width: "100%", height: "100%", objectFit: "cover", position: "absolute"}}
@@ -126,7 +143,38 @@ const Project = () => {
                                 width: "80%",
                                 color: "rgba(255,255,255,0.6)",
                             }}>{projectInfo && projectInfo.description}</Typography>
+                            <Box sx={{display:"flex" , marginTop:"1.5rem"}}>
+                                <Box sx={{
+                                    display:"flex",
+                                    cursor: "pointer",
+                                    backdropFilter: "blur(8px)",
+                                    borderRadius: "0.5em",
+                                    justifyContent:"center",
+                                    width: "30px",
+                                    height:"30px",
+                                    ":hover": {backgroundColor: "rgba(0,0,0,0.50)"}
+                                }}>
+                                    <DeleteOutlineIcon fontSize={"small"} sx={{alignSelf:"center", color: "white"}}/>
+                                </Box>
+
+                                <Box sx={{
+                                    display:"flex",
+                                    marginInlineStart:"0.5rem",
+                                    cursor: "pointer",
+                                    backdropFilter: "blur(8px)",
+                                    borderRadius: "0.5em",
+                                    justifyContent:"center",
+                                    width: "30px",
+                                    height:"30px",
+                                    ":hover": {backgroundColor: "rgba(0,0,0,0.50)"}
+                                }}>
+                                    <EditIcon fontSize={"small"} sx={{alignSelf:"center", color: "white"}}/>
+                                </Box>
+
+
+                            </Box>
                         </Box>
+
                     </Box>
 
                     <Box sx={{display: "flex", flex: 1, flexDirection: "column", marginTop: {xs: "3em", md: "unset"}}}>
@@ -176,7 +224,7 @@ const Project = () => {
                                         {projectInfo.members.slice(0, 2).map((item: any) => {
                                             return <Box sx={{
                                                 borderRadius: '0.5em',
-                                                padding: "0 1em",
+                                                padding: "0.3em 1em",
                                                 marginLeft: "0.2em",
                                                 display: 'flex',
                                                 backgroundColor: "rgba(94,94,94,0.2)",
@@ -184,7 +232,7 @@ const Project = () => {
                                                 alignItems: 'center',
                                                 color: 'white',
                                                 fontSize: "0.9em",
-                                            }}><p> @{item.name}</p></Box>
+                                            }}><p> @{item.username}</p></Box>
                                         })}
 
                                         {projectInfo.member_count === 0 && (
@@ -205,7 +253,7 @@ const Project = () => {
                                             textAlign: "center",
                                             backdropFilter: "blur(4px)",
                                             padding: "0.25em",
-                                            borderRadius: "0.2em",
+                                            borderRadius: "0.3em",
                                             width: "24px",
                                             ":hover": {backgroundColor: "rgba(0,0,0,0.25)"}
                                         }}>
@@ -227,30 +275,48 @@ const Project = () => {
                         textTransform: "unset",
                         color: "white",
                         marginX: "1.5em",
-                        marginY: "1em",
+                        marginTop: "1em",
                         width: "fit-content"
                     }}>
                 <Typography sx={{fontSize: "1rem"}}>New Board</Typography>
             </Button>
 
             <Box sx={{
-                display: 'flex'
+                display: 'flex',
+                backgroundColor:"#f9f9f9",
+                borderRadius:"0.8rem",
+                margin:"1rem"
             }}>
 
-                {boardList && boardList.length > 0 && (
-                    <Grid container spacing={2}>
+                {!isBorderLoading && boardList && boardList.length > 0 && (
+                    <Grid container>
                         {boardList.map((item: any) => {
                             if (item === 'new') {
                                 return <Grid item xs={12} sm={6} md={4} lg={3}>
                                     <NewBorderItem/>
                                 </Grid>
                             } else {
-                                return <Grid item xs={12} sm={6} md={4} lg={3}>
-                                    <BordersItem projectId={projectId} borderName={item.name} bordId={item.id}/>
+                                return <Grid item xs={12} sm={6} md={4}>
+                                    <BoardItem
+                                        projectId={projectId}
+                                        borderName={item.name}
+                                        boardId={item.id}
+                                        onBoardChange={()=>handlerGetBoard()}
+                                    />
                                 </Grid>
                             }
                         })}
                     </Grid>
+                )}
+
+                {isBorderLoading && (
+                    <Box sx={{display: "flex", width: "100%", justifyContent: "center"}}>
+                        <Lottie style={{margin: "0"}}
+                                options={defaultOptions}
+                                height={150}
+                                width={150}
+                        />
+                    </Box>
                 )}
             </Box>
 
