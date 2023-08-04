@@ -61,15 +61,6 @@ export const getUserInfo = async (): Promise<AxiosResponse> => {
     return axiosInstanceConfig("/user", 'POST')
 }
 
-export const setTodoInfo = async (title: string, description: string, status: string): Promise<AxiosResponse> => {
-    return axiosInstanceConfig('/todo', 'POST', {title, description, status})
-}
-
-export const updateTodoInfo = async (id: any, title: string, description: string, status: string): Promise<AxiosResponse> => {
-    return axiosInstanceConfig(`/todo/${id}`, 'POST', {title, description, status})
-}
-
-
 export const getProjects = async (): Promise<AxiosResponse> => {
     return axiosInstanceConfig('/project', 'GET')
 }
@@ -118,6 +109,11 @@ export const updateProjectInfo = async (projectId: any, name: string, descriptio
 export const deleteProject = async (projectId: any): Promise<AxiosResponse> => {
     return axiosInstanceConfig(`/project/${projectId}`, 'DELETE')
 }
+
+export const searchProjects = async (search:string): Promise<AxiosResponse> => {
+    return axiosInstanceConfig(`/project?search=${search}`, 'GET')
+}
+
 
 
 

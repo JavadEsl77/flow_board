@@ -6,7 +6,7 @@ import ClearIcon from '@mui/icons-material/Clear';
 import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
 import ProjectsItem from "../modules/items/ProjectsItem";
 import AddProjectModal from "./modals/AddProjectModal";
-import {getProjects} from "../config/fetchData";
+import {getProjects, searchProjects} from "../config/fetchData";
 import emptyList from "../assets/lotties/empty_list.json";
 import loadingList from "../assets/lotties/loading.json";
 import Lottie from "react-lottie";
@@ -29,38 +29,60 @@ const Dashboard = () => {
         }
     };
 
-    const handlerChange = (event: any) => {
-        event.preventDefault();
-        setSearchValue(event.target.value)
+    const handlerChangeSearchInput = (event: any) => {
+        // event.preventDefault();
+        // setSearchValue(event.target.value)
     }
     const handlerClearSearchInput = () => {
         setSearchValue("")
+        handlerGetProjectList()
+    }
+
+    const requestSearch = async () => {
+        setError('')
+        setIsLoading(true)
+        return await searchProjects(searchValue)
+    }
+    const handlerSearch = () => {
+        // requestSearch().then((response)=>{
+        //     if (response.status === 200){
+        //         setProjectList(response.data)
+        //         setIsLoading(false)
+        //     }
+        // }).catch((error)=>{
+        //     setError(error)
+        //     setIsLoading(false)
+        // })
     }
 
     const requestGetProjectsList = async () => {
         setIsLoading(true);
         setError('');
-        try {
-            const response = await getProjects()
+        return await getProjects()
+    }
+    const handlerGetProjectList = () => {
+        requestGetProjectsList().then((response) => {
             if (response.status == 200) {
                 setProjectList(response.data)
                 setIsLoading(false)
-
             }
-        } catch (error: any) {
-            setError(error.message);
-        }
-    }
-
-    const handlerGetProjectList = () => {
-        requestGetProjectsList().then(() => {
-
+        }).catch((error)=>{
+            setError(error)
+            setIsLoading(false)
         })
     }
 
     useEffect(() => {
         handlerGetProjectList()
     }, [])
+
+    useEffect(()=>{
+        if (searchValue!==""){
+            setClearSearchIcon(true)
+        }else {
+            setClearSearchIcon(false)
+        }
+    },[searchValue])
 
     return (
         <Box sx={{display: "flex", flexDirection: "column"}}>
@@ -108,7 +130,7 @@ const Dashboard = () => {
                             width: "100%",
                             fontSize: ".8em"
                         }}
-                                   onChange={handlerChange}
+                                   onChange={handlerChangeSearchInput}
                                    value={searchValue}
                                    placeholder={"searching todo title"}
                                    size="small"></InputBase>
@@ -134,8 +156,7 @@ const Dashboard = () => {
                             marginBottom: "0.1em",
                             color: "white",
                             ":hover": {backgroundColor: "primary.main"}
-                        }} onClick={() => {
-                        }}>
+                        }} onClick={() => handlerSearch()}>
                             <SearchIcon/>
                         </IconButton>
                     </Box>
