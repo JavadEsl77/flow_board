@@ -9,6 +9,7 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import BoardItemMenuOptions from "../../components/menu/BoardItemMenuOptions";
 import DeleteTodoModal from "../../components/modals/DeleteBoardModal";
 import EditBoardModal from "../../components/modals/EditBoardModal";
+import {Draggable, Droppable} from 'react-beautiful-dnd';
 
 
 interface propsT {
@@ -72,7 +73,7 @@ const BoardItem = ({boardId, borderName, projectId, onBoardChange}: propsT) => {
             width: "100%",
             padding: "1em",
             display: "flex",
-            backgroundColor:"white",
+            backgroundColor: "white",
             flexDirection: "column",
             borderRadius: "0.8em"
         }}>
@@ -91,13 +92,28 @@ const BoardItem = ({boardId, borderName, projectId, onBoardChange}: propsT) => {
                 <AddBoxRoundedIcon onClick={handlerShowAddTaskModal} sx={{cursor: "pointer", color: "primary.main"}}/>
             </Box>
 
-            {taskList && taskList.map((item: any) => {
-                return <TasksItem item={item}/>
-            })}
+            <Droppable droppableId={boardId.toString()}>
+                {(provided) => (
+                    <div {...provided.droppableProps} ref={provided.innerRef} className="task-list">
+                        {taskList && taskList.map((item: any, index: number) => {
+                            return <Draggable key={item.id} draggableId={item.id.toString()} index={index}>
+                                {(provided) => (
+                                    <div
+                                        {...provided.draggableProps}
+                                        {...provided.dragHandleProps}
+                                        ref={provided.innerRef}
+                                        className="task"
+                                    >
+                                        <TasksItem item={item}/>
+                                    </div>
+                                )}
+                            </Draggable>
+                        })}
+                        {provided.placeholder}
+                    </div>
+                )}
+            </Droppable>
 
-            {/*{taskList.length === 0 && (*/}
-            {/*    <Typography>Empty</Typography>*/}
-            {/*)}*/}
 
             {taskIsLoading && (
                 <Box sx={{textAlign: "center", width: "100%", marginTop: "0.5rem"}}>

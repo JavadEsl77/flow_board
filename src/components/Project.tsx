@@ -17,6 +17,7 @@ import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import EditIcon from '@mui/icons-material/Edit';
 import EditProjectModal from "./modals/EditProjectModal";
 import DeleteProjectModal from "./modals/DeleteProjectModal";
+import {DragDropContext} from 'react-beautiful-dnd';
 
 const Project = () => {
     const {projectId} = useParams();
@@ -116,6 +117,25 @@ const Project = () => {
     const handlerDeleteProject = () => {
 
     }
+
+
+    const handleDragEnd = (result: any) => {
+        if (!result.destination) return;
+
+        console.log(result.draggableId)
+        const updatedTasks = [...boardList];
+        console.log(updatedTasks)
+        const movedTask = updatedTasks.find((task) => task.id.toString === result.draggableId);
+        if (movedTask) {
+            console.log("dsfsdfsdfsdfsdf")
+            movedTask.status = boardList[result.destination.index];
+
+            // اگر نیاز به به روزرسانی تسک‌ها در سرور دارید، اینجا فراخوانی متدی برای به روزرسانی ارسال داده‌ها به سرور قرار دهید
+
+
+            setBoardList(updatedTasks);
+        }
+    };
 
     return (
         <Box sx={{display: "flex", flexDirection: "column", backgroundColor: "white"}}>
@@ -355,6 +375,7 @@ const Project = () => {
                 <Typography sx={{fontSize: "0.8rem"}}>New Board</Typography>
             </Button>
 
+            <DragDropContext onDragEnd={handleDragEnd}>
             <Box sx={{
                 display: 'flex',
                 backgroundColor: "#f9f9f9",
@@ -395,6 +416,7 @@ const Project = () => {
                     </Box>
                 )}
             </Box>
+            </DragDropContext>
 
             {showAddNewBoardModal && (
                 <AddBoardModal
