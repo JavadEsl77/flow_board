@@ -17,9 +17,10 @@ interface propsT {
     boardId: number
     projectId: any,
     onBoardChange: () => void
+    onChangeList: any
 }
 
-const BoardItem = ({boardId, borderName, projectId, onBoardChange}: propsT) => {
+const BoardItem = ({boardId, borderName, projectId, onBoardChange, onChangeList}: propsT) => {
 
 
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -57,6 +58,18 @@ const BoardItem = ({boardId, borderName, projectId, onBoardChange}: propsT) => {
         handlerGetTask()
     }, [])
 
+    useEffect(() => {
+        if (onChangeList != null) {
+            if (parseInt(onChangeList.destination.droppableId) === boardId) {
+                //add
+                console.log("add")
+                // setTaskList()
+            }else {
+                console.log("remove")
+                //remove
+            }
+        }
+    }, [onChangeList]);
 
     const handlerShowAddTaskModal = () => {
         setShowAddTaskModal(!showAddTaskModal)
@@ -92,7 +105,7 @@ const BoardItem = ({boardId, borderName, projectId, onBoardChange}: propsT) => {
                 <AddBoxRoundedIcon onClick={handlerShowAddTaskModal} sx={{cursor: "pointer", color: "primary.main"}}/>
             </Box>
 
-            <Droppable droppableId={boardId.toString()}>
+            <Droppable droppableId={boardId.toString() }>
                 {(provided) => (
                     <div {...provided.droppableProps} ref={provided.innerRef} className="task-list">
                         {taskList && taskList.map((item: any, index: number) => {

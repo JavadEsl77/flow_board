@@ -51,7 +51,6 @@ const Project = () => {
         }
     };
 
-
     const requestGetProjectInfo = async () => {
         setInfoError('')
         setIsInfoLoading(true)
@@ -71,7 +70,6 @@ const Project = () => {
         requestGetProjectInfo().then(() => {
         })
     }
-
 
     const requestGetBoard = async () => {
         setIsBorderLoading(true)
@@ -119,15 +117,18 @@ const Project = () => {
     }
 
 
+    const [changeList, setChangeList] = useState<any>(null)
+
+
+
     const handleDragEnd = (result: any) => {
         if (!result.destination) return;
-
-        console.log(result.draggableId)
         const updatedTasks = [...boardList];
-        console.log(updatedTasks)
+        setChangeList(result)
+
+        // console.log("update",updatedTasks)
         const movedTask = updatedTasks.find((task) => task.id.toString === result.draggableId);
         if (movedTask) {
-            console.log("dsfsdfsdfsdfsdf")
             movedTask.status = boardList[result.destination.index];
 
             // اگر نیاز به به روزرسانی تسک‌ها در سرور دارید، اینجا فراخوانی متدی برای به روزرسانی ارسال داده‌ها به سرور قرار دهید
@@ -376,46 +377,47 @@ const Project = () => {
             </Button>
 
             <DragDropContext onDragEnd={handleDragEnd}>
-            <Box sx={{
-                display: 'flex',
-                backgroundColor: "#f9f9f9",
-                height:"100%",
-                borderRadius: "0.8rem",
-                padding:"0.5rem",
-                margin: "1rem"
-            }}>
+                <Box sx={{
+                    display: 'flex',
+                    backgroundColor: "#f9f9f9",
+                    height: "100%",
+                    borderRadius: "0.8rem",
+                    padding: "0.5rem",
+                    margin: "1rem"
+                }}>
 
-                {!isBorderLoading && boardList && boardList.length > 0 && (
-                    <Grid container spacing={1}>
-                        {boardList.map((item: any) => {
-                            if (item === 'new') {
-                                return <Grid item xs={12} sm={6} md={4} lg={3}>
-                                    <NewBorderItem/>
-                                </Grid>
-                            } else {
-                                return <Grid item xs={12} sm={6} md={4}>
-                                    <BoardItem
-                                        projectId={projectId}
-                                        borderName={item.name}
-                                        boardId={item.id}
-                                        onBoardChange={() => handlerGetBoard()}
-                                    />
-                                </Grid>
-                            }
-                        })}
-                    </Grid>
-                )}
+                    {!isBorderLoading && boardList && boardList.length > 0 && (
+                        <Grid container spacing={1}>
+                            {boardList.map((item: any) => {
+                                if (item === 'new') {
+                                    return <Grid item xs={12} sm={6} md={4} lg={3}>
+                                        <NewBorderItem/>
+                                    </Grid>
+                                } else {
+                                    return <Grid item xs={12} sm={6} md={4}>
+                                        <BoardItem
+                                            onChangeList={changeList}
+                                            projectId={projectId}
+                                            borderName={item.name}
+                                            boardId={item.id}
+                                            onBoardChange={() => handlerGetBoard()}
+                                        />
+                                    </Grid>
+                                }
+                            })}
+                        </Grid>
+                    )}
 
-                {isBorderLoading && (
-                    <Box sx={{display: "flex", width: "100%", justifyContent: "center"}}>
-                        <Lottie style={{margin: "0"}}
-                                options={defaultOptions}
-                                height={150}
-                                width={150}
-                        />
-                    </Box>
-                )}
-            </Box>
+                    {isBorderLoading && (
+                        <Box sx={{display: "flex", width: "100%", justifyContent: "center"}}>
+                            <Lottie style={{margin: "0"}}
+                                    options={defaultOptions}
+                                    height={150}
+                                    width={150}
+                            />
+                        </Box>
+                    )}
+                </Box>
             </DragDropContext>
 
             {showAddNewBoardModal && (
