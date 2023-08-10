@@ -10,6 +10,7 @@ import BoardItemMenuOptions from "../../components/menu/BoardItemMenuOptions";
 import DeleteTodoModal from "../../components/modals/DeleteBoardModal";
 import EditBoardModal from "../../components/modals/EditBoardModal";
 import {Draggable, Droppable} from 'react-beautiful-dnd';
+import {log} from "util";
 
 
 interface propsT {
@@ -37,7 +38,6 @@ const BoardItem = ({boardId, borderName, projectId, onBoardChange, onChangeList,
     const [showEditBoardModal, setShowEditBoardModal] = useState<boolean>(false)
 
 
-
     const requestGetTasks = async () => {
         setTaskError('')
         setTaskIsLoading(true)
@@ -62,7 +62,7 @@ const BoardItem = ({boardId, borderName, projectId, onBoardChange, onChangeList,
 
     useEffect(() => {
         const result = taskList && taskList.find((item: any) => (item.id == taskId))
-        if(result!=undefined){
+        if (result != undefined) {
             localStorage.setItem('task_info', JSON.stringify(result));
             onTaskInfo(result)
         }
@@ -74,7 +74,7 @@ const BoardItem = ({boardId, borderName, projectId, onBoardChange, onChangeList,
         if (onChangeList != null) {
             if (parseInt(onChangeList.destination.droppableId) === boardId) {
                 const task = localStorage.getItem('task_info')
-                if (task && taskList){
+                if (task && taskList) {
                     const newItem = JSON.parse(task);
                     const existingItemIndex = taskList.findIndex((item: { id: any; }) => item.id === newItem.id);
                     if (existingItemIndex === -1) {
@@ -82,12 +82,19 @@ const BoardItem = ({boardId, borderName, projectId, onBoardChange, onChangeList,
                         updatedTaskList.splice(onChangeList.destination.index, 0, newItem);
                         setTaskList(updatedTaskList);
                         //serverRequestAdd
+                    } else {
+                        const taskIndex = onChangeList.source.index
+                        const targetIndex = onChangeList.destination.index
+                        const updatedTaskList = [...taskList];
+                        const [movedTask] = updatedTaskList.splice(taskIndex, 1);
+                        updatedTaskList.splice(targetIndex, 0, movedTask);
+                        setTaskList(updatedTaskList);
                     }
                 }
 
             } else {
                 if (parseInt(onChangeList.source.droppableId) === boardId) {
-                    if (taskList){
+                    if (taskList) {
                         const updatedTaskList = [...taskList];
                         updatedTaskList.splice(onChangeList.source.index, 1)
                         setTaskList(updatedTaskList)
