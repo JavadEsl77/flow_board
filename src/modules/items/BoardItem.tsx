@@ -17,11 +17,12 @@ interface propsT {
     boardId: number
     projectId: any,
     onBoardChange: () => void
+    onTaskInfo: (info: any | null) => void
     onChangeList: any
+    taskId: string | null
 }
 
-const BoardItem = ({boardId, borderName, projectId, onBoardChange, onChangeList}: propsT) => {
-
+const BoardItem = ({boardId, borderName, projectId, onBoardChange, onChangeList, taskId, onTaskInfo}: propsT) => {
 
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [taskList, setTaskList] = useState<any>(null)
@@ -34,6 +35,7 @@ const BoardItem = ({boardId, borderName, projectId, onBoardChange, onChangeList}
 
     const [showDeleteBoardModal, setShowDeleteBoardModal] = useState<boolean>(false)
     const [showEditBoardModal, setShowEditBoardModal] = useState<boolean>(false)
+
 
 
     const requestGetTasks = async () => {
@@ -59,14 +61,39 @@ const BoardItem = ({boardId, borderName, projectId, onBoardChange, onChangeList}
     }, [])
 
     useEffect(() => {
+        const result = taskList && taskList.find((item: any) => (item.id == taskId))
+        if(result!=undefined){
+            localStorage.setItem('task_info', JSON.stringify(result));
+            onTaskInfo(result)
+        }
+
+    }, [taskId])
+
+    useEffect(() => {
+
         if (onChangeList != null) {
             if (parseInt(onChangeList.destination.droppableId) === boardId) {
-                //add
-                console.log("add")
-                // setTaskList()
-            }else {
-                console.log("remove")
-                //remove
+                const task = localStorage.getItem('task_info')
+                if (task && taskList){
+                    const newItem = JSON.parse(task);
+                    const existingItemIndex = taskList.findIndex((item: { id: any; }) => item.id === newItem.id);
+                    if (existingItemIndex === -1) {
+                        const updatedTaskList = [...taskList];
+                        updatedTaskList.splice(onChangeList.destination.index, 0, newItem);
+                        setTaskList(updatedTaskList);
+                        //serverRequestAdd
+                    }
+                }
+
+            } else {
+                if (parseInt(onChangeList.source.droppableId) === boardId) {
+                    if (taskList){
+                        const updatedTaskList = [...taskList];
+                        updatedTaskList.splice(onChangeList.source.index, 1)
+                        setTaskList(updatedTaskList)
+                        //serverRequestRemove
+                    }
+                }
             }
         }
     }, [onChangeList]);
@@ -105,7 +132,7 @@ const BoardItem = ({boardId, borderName, projectId, onBoardChange, onChangeList}
                 <AddBoxRoundedIcon onClick={handlerShowAddTaskModal} sx={{cursor: "pointer", color: "primary.main"}}/>
             </Box>
 
-            <Droppable droppableId={boardId.toString() }>
+            <Droppable droppableId={boardId.toString()}>
                 {(provided) => (
                     <div {...provided.droppableProps} ref={provided.innerRef} className="task-list">
                         {taskList && taskList.map((item: any, index: number) => {
