@@ -89,6 +89,7 @@ const BoardItem = ({boardId, borderName, projectId, onBoardChange, onChangeList,
                         const [movedTask] = updatedTaskList.splice(taskIndex, 1);
                         updatedTaskList.splice(targetIndex, 0, movedTask);
                         setTaskList(updatedTaskList);
+                        //serverRequestAdd
                     }
                 }
 
