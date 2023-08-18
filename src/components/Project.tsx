@@ -17,6 +17,7 @@ import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import EditIcon from '@mui/icons-material/Edit';
 import EditProjectModal from "./modals/EditProjectModal";
 import DeleteProjectModal from "./modals/DeleteProjectModal";
+import {DragDropContext} from 'react-beautiful-dnd';
 
 const Project = () => {
     const {projectId} = useParams();
@@ -50,7 +51,6 @@ const Project = () => {
         }
     };
 
-
     const requestGetProjectInfo = async () => {
         setInfoError('')
         setIsInfoLoading(true)
@@ -70,7 +70,6 @@ const Project = () => {
         requestGetProjectInfo().then(() => {
         })
     }
-
 
     const requestGetBoard = async () => {
         setIsBorderLoading(true)
@@ -116,6 +115,21 @@ const Project = () => {
     const handlerDeleteProject = () => {
 
     }
+
+
+    const [changeList, setChangeList] = useState<any>(null)
+    const [taskId, setTaskId] = useState(null)
+
+    const handlerDragStart = (result: any) => {
+        setTaskId(result.draggableId)
+    }
+
+    const handleDragEnd = (result: any) => {
+        if (!result.destination) return;
+
+        setChangeList(result)
+
+    };
 
     return (
         <Box sx={{display: "flex", flexDirection: "column", backgroundColor: "white"}}>
@@ -355,77 +369,94 @@ const Project = () => {
                 <Typography sx={{fontSize: "0.8rem"}}>New Board</Typography>
             </Button>
 
-            <Box sx={{
-                display: 'flex',
-                backgroundColor: "#f9f9f9",
-                height:"100%",
-                borderRadius: "0.8rem",
-                padding:"0.5rem",
-                margin: "1rem"
-            }}>
+            <DragDropContext onDragStart={handlerDragStart} onDragEnd={handleDragEnd}>
+                <Box sx={{
+                    display: 'flex',
+                    backgroundColor: "#f9f9f9",
+                    height: "100%",
+                    borderRadius: "0.8rem",
+                    padding: "0.5rem",
+                    margin: "1rem"
+                }}>
 
-                {!isBorderLoading && boardList && boardList.length > 0 && (
-                    <Grid container spacing={1}>
-                        {boardList.map((item: any) => {
-                            if (item === 'new') {
-                                return <Grid item xs={12} sm={6} md={4} lg={3}>
-                                    <NewBorderItem/>
-                                </Grid>
-                            } else {
-                                return <Grid item xs={12} sm={6} md={4}>
-                                    <BoardItem
-                                        projectId={projectId}
-                                        borderName={item.name}
-                                        boardId={item.id}
-                                        onBoardChange={() => handlerGetBoard()}
-                                    />
-                                </Grid>
-                            }
-                        })}
-                    </Grid>
-                )}
+                    {!isBorderLoading && boardList && boardList.length > 0 && (
+                        <Grid container spacing={1}>
+                            {boardList.map((item: any) => {
+                                if (item === 'new') {
+                                    return <Grid item xs={12} sm={6} md={4} lg={3}>
+                                        <NewBorderItem/>
+                                    </Grid>
+                                } else {
+                                    return <Grid item xs={12} sm={6} md={4}>
+                                        <BoardItem
+                                            onTaskInfo={(info: any) => {
+                                                localStorage.setItem('taskInfo', info);
+                                            }}
+                                            taskId={taskId}
+                                            onChangeList={changeList}
+                                            projectId={projectId}
+                                            borderName={item.name}
+                                            boardId={item.id}
+                                            onBoardChange={() => handlerGetBoard()}
+                                        />
+                                    </Grid>
+                                }
+                            })}
+                        </Grid>
+                    )
+                    }
 
-                {isBorderLoading && (
-                    <Box sx={{display: "flex", width: "100%", justifyContent: "center"}}>
-                        <Lottie style={{margin: "0"}}
-                                options={defaultOptions}
-                                height={150}
-                                width={150}
-                        />
-                    </Box>
-                )}
-            </Box>
+                    {
+                        isBorderLoading && (
+                            <Box sx={{display: "flex", width: "100%", justifyContent: "center"}}>
+                                <Lottie style={{margin: "0"}}
+                                        options={defaultOptions}
+                                        height={150}
+                                        width={150}
+                                />
+                            </Box>
+                        )
+                    }
+                </Box>
+            </DragDropContext>
 
-            {showAddNewBoardModal && (
-                <AddBoardModal
-                    projectId={projectId}
-                    openModal={showAddNewBoardModal}
-                    closeModal={() => setShowAddNewBoardModal(false)}
-                    onAddBord={() => handlerGetBoard()}/>
-            )}
+            {
+                showAddNewBoardModal && (
+                    <AddBoardModal
+                        projectId={projectId}
+                        openModal={showAddNewBoardModal}
+                        closeModal={() => setShowAddNewBoardModal(false)}
+                        onAddBord={() => handlerGetBoard()}/>
+                )
+            }
 
-            {showEditProjectModal && (
-                <EditProjectModal
-                    openModal={showEditProjectModal}
-                    closeModal={() => setShowEditProjectModal(false)}
-                    onUpdateProject={() => handlerGetProject()}
-                    projectInfo={projectInfo}/>
-            )}
+            {
+                showEditProjectModal && (
+                    <EditProjectModal
+                        openModal={showEditProjectModal}
+                        closeModal={() => setShowEditProjectModal(false)}
+                        onUpdateProject={() => handlerGetProject()}
+                        projectInfo={projectInfo}/>
+                )
+            }
 
-            {showDeleteProjectModal && (
-                <DeleteProjectModal
-                    openModal={showDeleteProjectModal}
-                    closeModal={() => setShowDeleteProjectModal(false)}
-                    didUpdate={() => {
-                        //navigate to dashBoard
-                        navigate(`/dashboard`)
-                    }}
-                    projectId={projectId}/>
-            )}
+            {
+                showDeleteProjectModal && (
+                    <DeleteProjectModal
+                        openModal={showDeleteProjectModal}
+                        closeModal={() => setShowDeleteProjectModal(false)}
+                        didUpdate={() => {
+                            //navigate to dashBoard
+                            navigate(`/dashboard`)
+                        }}
+                        projectId={projectId}/>
+                )
+            }
 
 
         </Box>
-    );
+    )
+        ;
 };
 
 export default Project;

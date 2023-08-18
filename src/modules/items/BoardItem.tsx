@@ -2,13 +2,14 @@ import React, {useEffect, useState} from 'react';
 import {Box, Typography} from "@mui/material";
 import AddBoxRoundedIcon from '@mui/icons-material/AddBoxRounded';
 import TasksItem from "./TasksItem";
-import {getTasks} from "../../config/fetchData";
+import {getTasks, updateOrderingTask, updateTask} from "../../config/fetchData";
 import AddTaskModal from "../../components/modals/AddTaskModal";
 import BorderLinearProgress from "../progressBar/BorderLinearProgress";
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import BoardItemMenuOptions from "../../components/menu/BoardItemMenuOptions";
 import DeleteTodoModal from "../../components/modals/DeleteBoardModal";
 import EditBoardModal from "../../components/modals/EditBoardModal";
+import {Draggable, Droppable} from 'react-beautiful-dnd';
 
 
 interface propsT {
@@ -16,10 +17,12 @@ interface propsT {
     boardId: number
     projectId: any,
     onBoardChange: () => void
+    onTaskInfo: (info: any | null) => void
+    onChangeList: any
+    taskId: string | null
 }
 
-const BoardItem = ({boardId, borderName, projectId, onBoardChange}: propsT) => {
-
+const BoardItem = ({boardId, borderName, projectId, onBoardChange, onChangeList, taskId, onTaskInfo}: propsT) => {
 
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [taskList, setTaskList] = useState<any>(null)
@@ -56,6 +59,85 @@ const BoardItem = ({boardId, borderName, projectId, onBoardChange}: propsT) => {
         handlerGetTask()
     }, [])
 
+    useEffect(() => {
+        const result = taskList && taskList.find((item: any) => (item.id == taskId))
+        if (result != undefined) {
+            localStorage.setItem('task_info', JSON.stringify(result));
+            onTaskInfo(result)
+        }
+
+    }, [taskId])
+
+
+    const requestChangeTaskBoard = async (boardId: any, taskId: any) => {
+        const task = localStorage.getItem('task_info')
+        if (task) {
+            const item = JSON.parse(task);
+            return await updateTask(boardId, taskId, projectId, item.name, item.description, item.status, "")
+        }
+    }
+
+    const handlerChangeTask = (boardId: any, taskId: any) => {
+        requestChangeTaskBoard(boardId, taskId).then()
+    }
+
+    const requestChangeTaskOrdering = async (borderId: any, task_ids: any) => {
+        return await updateOrderingTask(projectId,borderId,task_ids)
+    }
+
+    const handlerChangeOrderTask = (borderId: any, task_ids: any)=>{
+        requestChangeTaskOrdering(borderId,task_ids).then()
+    }
+
+    useEffect(() => {
+
+        if (onChangeList != null) {
+            if (parseInt(onChangeList.destination.droppableId) === boardId) {
+                const task = localStorage.getItem('task_info')
+                if (task && taskList) {
+                    const newItem = JSON.parse(task);
+                    const existingItemIndex = taskList.findIndex((item: { id: any; }) => item.id === newItem.id);
+                    if (existingItemIndex === -1) {
+                        const updatedTaskList = [...taskList];
+                        updatedTaskList.splice(onChangeList.destination.index, 0, newItem);
+                        setTaskList(updatedTaskList);
+                        handlerChangeTask(boardId, newItem.id)
+
+                        let sortArray: any[] = []
+                        updatedTaskList.forEach((item: any) => {
+                            sortArray.push(item.id)
+                        })
+
+                        handlerChangeOrderTask(boardId,sortArray)
+
+                    } else {
+                        const taskIndex = onChangeList.source.index
+                        const targetIndex = onChangeList.destination.index
+                        const updatedTaskList = [...taskList];
+                        const [movedTask] = updatedTaskList.splice(taskIndex, 1);
+                        updatedTaskList.splice(targetIndex, 0, movedTask);
+                        setTaskList(updatedTaskList);
+
+                        let sortArray: any[] = []
+                        updatedTaskList.forEach((item: any) => {
+                            sortArray.push(item.id)
+                        })
+
+                        handlerChangeOrderTask(boardId,sortArray)
+                    }
+                }
+
+            } else {
+                if (parseInt(onChangeList.source.droppableId) === boardId) {
+                    if (taskList) {
+                        const updatedTaskList = [...taskList];
+                        updatedTaskList.splice(onChangeList.source.index, 1)
+                        setTaskList(updatedTaskList)
+                    }
+                }
+            }
+        }
+    }, [onChangeList]);
 
     const handlerShowAddTaskModal = () => {
         setShowAddTaskModal(!showAddTaskModal)
@@ -72,7 +154,7 @@ const BoardItem = ({boardId, borderName, projectId, onBoardChange}: propsT) => {
             width: "100%",
             padding: "1em",
             display: "flex",
-            backgroundColor:"white",
+            backgroundColor: "white",
             flexDirection: "column",
             borderRadius: "0.8em"
         }}>
@@ -91,13 +173,28 @@ const BoardItem = ({boardId, borderName, projectId, onBoardChange}: propsT) => {
                 <AddBoxRoundedIcon onClick={handlerShowAddTaskModal} sx={{cursor: "pointer", color: "primary.main"}}/>
             </Box>
 
-            {taskList && taskList.map((item: any) => {
-                return <TasksItem item={item}/>
-            })}
+            <Droppable droppableId={boardId.toString()}>
+                {(provided) => (
+                    <div {...provided.droppableProps} ref={provided.innerRef} className="task-list">
+                        {taskList && taskList.map((item: any, index: number) => {
+                            return <Draggable key={item.id} draggableId={item.id.toString()} index={index}>
+                                {(provided) => (
+                                    <div
+                                        {...provided.draggableProps}
+                                        {...provided.dragHandleProps}
+                                        ref={provided.innerRef}
+                                        className="task"
+                                    >
+                                        <TasksItem item={item}/>
+                                    </div>
+                                )}
+                            </Draggable>
+                        })}
+                        {provided.placeholder}
+                    </div>
+                )}
+            </Droppable>
 
-            {/*{taskList.length === 0 && (*/}
-            {/*    <Typography>Empty</Typography>*/}
-            {/*)}*/}
 
             {taskIsLoading && (
                 <Box sx={{textAlign: "center", width: "100%", marginTop: "0.5rem"}}>
