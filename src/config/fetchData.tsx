@@ -127,7 +127,17 @@ export const updateOrderingTask = async (projectId: any, boardId: any,task_ids:[
     return axiosInstanceConfig(`/project/${projectId}/board/${boardId}/task/ordering`, 'POST', {task_ids})
 }
 
+export const searchUser = async (search: string): Promise<AxiosResponse> => {
+    return axiosInstanceConfig(`/user?sort=updated_at:asc&search=${search}`, 'GET')
+}
 
+export const projectMemberAttach = async (projectId: any,user_id:any): Promise<AxiosResponse> => {
+    return axiosInstanceConfig(`/project/${projectId}/member/attach`, 'POST', {user_id})
+}
+
+export const projectMemberDetach = async (projectId: any,user_id:any): Promise<AxiosResponse> => {
+    return axiosInstanceConfig(`/project/${projectId}/member/detach`, 'POST', {user_id})
+}
 
 
 
