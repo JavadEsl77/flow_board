@@ -74,7 +74,7 @@ export const getBorders = async (projectId: any): Promise<AxiosResponse> => {
 }
 
 export const getTasks = async (projectId: any, borderId: any): Promise<AxiosResponse> => {
-    return axiosInstanceConfig(`project/${projectId}/board/${borderId}/task`, 'GET')
+    return axiosInstanceConfig(`project/${projectId}/board/${borderId}/task?sort=order:asc`, 'GET')
 }
 
 export const setProject = async (name: string, description: string, status: string): Promise<AxiosResponse> => {
@@ -98,7 +98,7 @@ export const deleteBoard = async (projectId: any, boardId: any): Promise<AxiosRe
     return axiosInstanceConfig(`/project/${projectId}/board/${boardId}`, 'DELETE')
 }
 
-export const updateBoard = async (projectId: any,boardId:any, name: string, order: number, status: string): Promise<AxiosResponse> => {
+export const updateBoard = async (projectId: any, boardId: any, name: string, order: number, status: string): Promise<AxiosResponse> => {
     return axiosInstanceConfig(`project/${projectId}/board/${boardId}`, 'POST', {name, order, status})
 }
 
@@ -110,10 +110,22 @@ export const deleteProject = async (projectId: any): Promise<AxiosResponse> => {
     return axiosInstanceConfig(`/project/${projectId}`, 'DELETE')
 }
 
-export const searchProjects = async (search:string): Promise<AxiosResponse> => {
+export const searchProjects = async (search: string): Promise<AxiosResponse> => {
     return axiosInstanceConfig(`/project?search=${search}`, 'GET')
 }
 
+export const updateTask = async (boardId: any, taskId: any, projectId: any, name: string, description: string, status: string, work_log: string): Promise<AxiosResponse> => {
+    return axiosInstanceConfig(`/project/${projectId}/board/${boardId}/task/${taskId}`, 'POST', {
+        name,
+        description,
+        status,
+        work_log
+    })
+}
+
+export const updateOrderingTask = async (projectId: any, boardId: any,task_ids:[]): Promise<AxiosResponse> => {
+    return axiosInstanceConfig(`/project/${projectId}/board/${boardId}/task/ordering`, 'POST', {task_ids})
+}
 
 
 

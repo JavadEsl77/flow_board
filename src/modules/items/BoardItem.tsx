@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {Box, Typography} from "@mui/material";
 import AddBoxRoundedIcon from '@mui/icons-material/AddBoxRounded';
 import TasksItem from "./TasksItem";
-import {getTasks} from "../../config/fetchData";
+import {getTasks, updateOrderingTask, updateTask} from "../../config/fetchData";
 import AddTaskModal from "../../components/modals/AddTaskModal";
 import BorderLinearProgress from "../progressBar/BorderLinearProgress";
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
@@ -10,7 +10,6 @@ import BoardItemMenuOptions from "../../components/menu/BoardItemMenuOptions";
 import DeleteTodoModal from "../../components/modals/DeleteBoardModal";
 import EditBoardModal from "../../components/modals/EditBoardModal";
 import {Draggable, Droppable} from 'react-beautiful-dnd';
-import {log} from "util";
 
 
 interface propsT {
@@ -69,6 +68,27 @@ const BoardItem = ({boardId, borderName, projectId, onBoardChange, onChangeList,
 
     }, [taskId])
 
+
+    const requestChangeTaskBoard = async (boardId: any, taskId: any) => {
+        const task = localStorage.getItem('task_info')
+        if (task) {
+            const item = JSON.parse(task);
+            return await updateTask(boardId, taskId, projectId, item.name, item.description, item.status, "")
+        }
+    }
+
+    const handlerChangeTask = (boardId: any, taskId: any) => {
+        requestChangeTaskBoard(boardId, taskId).then()
+    }
+
+    const requestChangeTaskOrdering = async (borderId: any, task_ids: any) => {
+        return await updateOrderingTask(projectId,borderId,task_ids)
+    }
+
+    const handlerChangeOrderTask = (borderId: any, task_ids: any)=>{
+        requestChangeTaskOrdering(borderId,task_ids).then()
+    }
+
     useEffect(() => {
 
         if (onChangeList != null) {
@@ -81,7 +101,15 @@ const BoardItem = ({boardId, borderName, projectId, onBoardChange, onChangeList,
                         const updatedTaskList = [...taskList];
                         updatedTaskList.splice(onChangeList.destination.index, 0, newItem);
                         setTaskList(updatedTaskList);
-                        //serverRequestAdd
+                        handlerChangeTask(boardId, newItem.id)
+
+                        let sortArray: any[] = []
+                        updatedTaskList.forEach((item: any) => {
+                            sortArray.push(item.id)
+                        })
+
+                        handlerChangeOrderTask(boardId,sortArray)
+
                     } else {
                         const taskIndex = onChangeList.source.index
                         const targetIndex = onChangeList.destination.index
@@ -89,7 +117,13 @@ const BoardItem = ({boardId, borderName, projectId, onBoardChange, onChangeList,
                         const [movedTask] = updatedTaskList.splice(taskIndex, 1);
                         updatedTaskList.splice(targetIndex, 0, movedTask);
                         setTaskList(updatedTaskList);
-                        //serverRequestAdd
+
+                        let sortArray: any[] = []
+                        updatedTaskList.forEach((item: any) => {
+                            sortArray.push(item.id)
+                        })
+
+                        handlerChangeOrderTask(boardId,sortArray)
                     }
                 }
 
@@ -99,7 +133,6 @@ const BoardItem = ({boardId, borderName, projectId, onBoardChange, onChangeList,
                         const updatedTaskList = [...taskList];
                         updatedTaskList.splice(onChangeList.source.index, 1)
                         setTaskList(updatedTaskList)
-                        //serverRequestRemove
                     }
                 }
             }
