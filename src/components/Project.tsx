@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {useNavigate, useParams} from "react-router-dom";
-import {Box, Button, CircularProgress, Grid, Typography} from "@mui/material";
+import {Box, Button, CircularProgress, Grid, Tooltip, Typography} from "@mui/material";
 import ToolBar from "../modules/toolbar/ToolBar";
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import Diversity2OutlinedIcon from '@mui/icons-material/Diversity2Outlined';
@@ -18,6 +18,8 @@ import EditIcon from '@mui/icons-material/Edit';
 import EditProjectModal from "./modals/EditProjectModal";
 import DeleteProjectModal from "./modals/DeleteProjectModal";
 import {DragDropContext} from 'react-beautiful-dnd';
+import AddProjectMemberMenu from "./menu/AddProjectMemberMenu";
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 
 const Project = () => {
     const {projectId} = useParams();
@@ -40,6 +42,9 @@ const Project = () => {
     const [showAddNewBoardModal, setShowAddNewBoardModal] = useState<boolean>(false)
     const [showEditProjectModal, setShowEditProjectModal] = useState<boolean>(false)
     const [showDeleteProjectModal, setShowDeleteProjectModal] = useState<boolean>(false)
+
+    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+    const [showAddMemberMenu, setShowAddMemberMenu] = useState<boolean>(false)
 
 
     const defaultOptions = {
@@ -111,11 +116,10 @@ const Project = () => {
         setShowDeleteProjectModal(!showDeleteProjectModal)
     }
 
-
-    const handlerDeleteProject = () => {
-
+    const handlerShowAddMemberMenu = (event: any) => {
+        setShowAddMemberMenu(!showAddMemberMenu)
+        setAnchorEl(event.currentTarget)
     }
-
 
     const [changeList, setChangeList] = useState<any>(null)
     const [taskId, setTaskId] = useState(null)
@@ -130,7 +134,7 @@ const Project = () => {
         setChangeList(result)
 
     };
-
+    console.log(projectInfo)
     return (
         <Box sx={{display: "flex", flexDirection: "column", backgroundColor: "white"}}>
             <Box sx={{width: "100%", position: "relative", paddingBottom: "1.5em"}}>
@@ -306,18 +310,24 @@ const Project = () => {
                                                 </Box>
                                             )}
 
-                                            <Box sx={{
-                                                cursor: "pointer",
-                                                marginInlineStart: "0.5em",
-                                                textAlign: "center",
-                                                backdropFilter: "blur(4px)",
-                                                padding: "0.25em",
-                                                borderRadius: "0.3em",
-                                                width: "24px",
-                                                ":hover": {backgroundColor: "rgba(0,0,0,0.25)"}
-                                            }}>
-                                                <AddIcon sx={{fontSize: "0.8rem", color: "white"}}/>
-                                            </Box>
+                                            <Tooltip arrow
+                                                     title={projectInfo.member_count <= 2 ? "add member" : "show more"}>
+                                                <Box sx={{
+                                                    cursor: "pointer",
+                                                    marginInlineStart: "0.5em",
+                                                    textAlign: "center",
+                                                    backdropFilter: "blur(4px)",
+                                                    padding: "0.25em",
+                                                    borderRadius: "0.3em",
+                                                    width: "24px",
+                                                    ":hover": {backgroundColor: "rgba(0,0,0,0.25)"}
+                                                }} onClick={handlerShowAddMemberMenu}>
+                                                    {projectInfo.member_count <= 2 ?
+                                                        <AddIcon sx={{fontSize: "0.8rem", color: "white"}}/> :
+                                                        <MoreHorizIcon sx={{fontSize: "0.8rem", color: "white"}}/>}
+
+                                                </Box>
+                                            </Tooltip>
                                         </Box>
                                     )}
 
@@ -453,10 +463,30 @@ const Project = () => {
                 )
             }
 
+            {
+                showAddMemberMenu && (
+                    <AddProjectMemberMenu
+                        projectId={projectId}
+                        members={projectInfo.members}
+                        showMenu={showAddMemberMenu}
+                        color={"#d6d6d6"}
+                        event={anchorEl}
+                        handleCloseMenu={(update) => {
+                            if (update) {
+                                handlerGetProject()
+                                setShowAddMemberMenu(!showAddMemberMenu)
+                            } else {
+                                setShowAddMemberMenu(!showAddMemberMenu)
+                            }
+
+                        }}
+                    />
+                )
+            }
+
 
         </Box>
-    )
-        ;
+    );
 };
 
 export default Project;
