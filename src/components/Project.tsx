@@ -382,7 +382,7 @@ const Project = () => {
                 <Box sx={{
                     display: 'flex',
                     height: "100%",
-                    width:"100%",
+
                     borderRadius: "0.8rem",
                     padding: "0.5rem",
                     margin: "1rem",
