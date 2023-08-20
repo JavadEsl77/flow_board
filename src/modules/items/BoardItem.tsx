@@ -181,10 +181,7 @@ const BoardItem = ({boardId, borderName, projectId, onBoardChange, onChangeList,
                             return <Draggable key={item.id} draggableId={item.id.toString()} index={index}>
                                 {(provided) => (
                                     <div
-                                        style={{ display: 'flex',
-                                            flexDirection: 'row',
-                                            overflowX: 'auto',
-                                        }}
+
                                         {...provided.draggableProps}
                                         {...provided.dragHandleProps}
                                         ref={provided.innerRef}
