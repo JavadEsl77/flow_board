@@ -82,11 +82,11 @@ const BoardItem = ({boardId, borderName, projectId, onBoardChange, onChangeList,
     }
 
     const requestChangeTaskOrdering = async (borderId: any, task_ids: any) => {
-        return await updateOrderingTask(projectId,borderId,task_ids)
+        return await updateOrderingTask(projectId, borderId, task_ids)
     }
 
-    const handlerChangeOrderTask = (borderId: any, task_ids: any)=>{
-        requestChangeTaskOrdering(borderId,task_ids).then()
+    const handlerChangeOrderTask = (borderId: any, task_ids: any) => {
+        requestChangeTaskOrdering(borderId, task_ids).then()
     }
 
     useEffect(() => {
@@ -108,7 +108,7 @@ const BoardItem = ({boardId, borderName, projectId, onBoardChange, onChangeList,
                             sortArray.push(item.id)
                         })
 
-                        handlerChangeOrderTask(boardId,sortArray)
+                        handlerChangeOrderTask(boardId, sortArray)
 
                     } else {
                         const taskIndex = onChangeList.source.index
@@ -123,7 +123,7 @@ const BoardItem = ({boardId, borderName, projectId, onBoardChange, onChangeList,
                             sortArray.push(item.id)
                         })
 
-                        handlerChangeOrderTask(boardId,sortArray)
+                        handlerChangeOrderTask(boardId, sortArray)
                     }
                 }
 
@@ -150,16 +150,17 @@ const BoardItem = ({boardId, borderName, projectId, onBoardChange, onChangeList,
 
     return (
         <Box sx={{
-            margin: 'auto',
             width: "100%",
             padding: "1em",
+            marginInline:"0.5rem",
             display: "flex",
-            backgroundColor: "white",
+            backgroundColor: "#f9f9f9",
             flexDirection: "column",
             borderRadius: "0.8em"
         }}>
 
             <Box sx={{
+                minWidth:"400px",
                 display: "flex",
                 width: "100%",
                 backgroundColor: "white",
@@ -180,6 +181,10 @@ const BoardItem = ({boardId, borderName, projectId, onBoardChange, onChangeList,
                             return <Draggable key={item.id} draggableId={item.id.toString()} index={index}>
                                 {(provided) => (
                                     <div
+                                        style={{ display: 'flex',
+                                            flexDirection: 'row',
+                                            overflowX: 'auto',
+                                        }}
                                         {...provided.draggableProps}
                                         {...provided.dragHandleProps}
                                         ref={provided.innerRef}

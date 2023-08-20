@@ -134,7 +134,6 @@ const Project = () => {
         setChangeList(result)
 
     };
-    console.log(projectInfo)
     return (
         <Box sx={{display: "flex", flexDirection: "column", backgroundColor: "white"}}>
             <Box sx={{width: "100%", position: "relative", paddingBottom: "1.5em"}}>
@@ -382,7 +381,6 @@ const Project = () => {
             <DragDropContext onDragStart={handlerDragStart} onDragEnd={handleDragEnd}>
                 <Box sx={{
                     display: 'flex',
-                    backgroundColor: "#f9f9f9",
                     height: "100%",
                     borderRadius: "0.8rem",
                     padding: "0.5rem",
@@ -390,31 +388,24 @@ const Project = () => {
                 }}>
 
                     {!isBorderLoading && boardList && boardList.length > 0 && (
-                        <Grid container spacing={1}>
-                            {boardList.map((item: any) => {
-                                if (item === 'new') {
-                                    return <Grid item xs={12} sm={6} md={4} lg={3}>
-                                        <NewBorderItem/>
-                                    </Grid>
-                                } else {
-                                    return <Grid item xs={12} sm={6} md={4}>
-                                        <BoardItem
-                                            onTaskInfo={(info: any) => {
-                                                localStorage.setItem('taskInfo', info);
-                                            }}
-                                            taskId={taskId}
-                                            onChangeList={changeList}
-                                            projectId={projectId}
-                                            borderName={item.name}
-                                            boardId={item.id}
-                                            onBoardChange={() => handlerGetBoard()}
-                                        />
-                                    </Grid>
-                                }
-                            })}
-                        </Grid>
-                    )
-                    }
+                        boardList.map((item: any) => {
+                            if (item === 'new') {
+                                return <NewBorderItem/>
+                            } else {
+                                return <BoardItem
+                                    onTaskInfo={(info: any) => {
+                                        localStorage.setItem('taskInfo', info);
+                                    }}
+                                    taskId={taskId}
+                                    onChangeList={changeList}
+                                    projectId={projectId}
+                                    borderName={item.name}
+                                    boardId={item.id}
+                                    onBoardChange={() => handlerGetBoard()}
+                                />
+                            }
+                        })
+                    )}
 
                     {
                         isBorderLoading && (
