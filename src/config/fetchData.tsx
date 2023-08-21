@@ -70,7 +70,7 @@ export const getProjectInfo = async (projectId: any): Promise<AxiosResponse> => 
 }
 
 export const getBorders = async (projectId: any): Promise<AxiosResponse> => {
-    return axiosInstanceConfig(`project/${projectId}/board?sort=updated_at:asc`, 'GET')
+    return axiosInstanceConfig(`project/${projectId}/board?sort=order:asc`, 'GET')
 }
 
 export const getTasks = async (projectId: any, borderId: any): Promise<AxiosResponse> => {

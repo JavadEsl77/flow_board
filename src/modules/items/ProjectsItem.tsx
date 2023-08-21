@@ -68,7 +68,7 @@ const ProjectsItem = ({itemValue}: propsT) => {
             <Box sx={{
                 position: "relative",
                 width: '100%',
-                height: '100px',
+                height: '200px',
                 borderRadius: "0.8em",
                 marginBottom: "0.5em",
                 background: `linear-gradient(45deg, ${getRandomBrightColor()} 30%, ${getRandomBrightColor()} 90%)`
