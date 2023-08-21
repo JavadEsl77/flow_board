@@ -22,6 +22,8 @@ const TasksItem = ({item}: propsT) => {
                 sx={{
                     fontWeight: "bold",
                     fontSize: "1rem",
+                    direction:"rtl",
+                    textAlign:"end",
                     color: "grey.600"
                 }}>{item.name}</Typography>
 
@@ -29,6 +31,8 @@ const TasksItem = ({item}: propsT) => {
                 sx={{
                     fontSize: "0.8rem",
                     color: "grey.600",
+                    direction:"rtl",
+                    textAlign:"end",
                     display: '-webkit-box',
                     '-webkit-line-clamp': '3',
                     '-webkit-box-orient': 'vertical',

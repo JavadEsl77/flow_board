@@ -91,12 +91,18 @@ const AddTaskModal = ({onAddTask, openModal, closeModal, projectId, boardId}: pr
 
                     <TextField
                         label={"Task title"}
-                        sx={{fontSize: ".8rem", marginTop: "1rem"}}
+                        sx={{
+                            fontSize: ".8rem", marginTop: "1rem", direction: "rtl",
+                            textAlignLast: "end",
+                        }}
                         onChange={handlerChangeTitle}
                         value={title}
                         size="small"/>
 
-                    <TextField sx={{marginTop: "1rem", fontSize: ".8rem", maxLines: "3"}} rows={3} maxRows={3}
+                    <TextField sx={{
+                        marginTop: "1rem", fontSize: ".8rem", maxLines: "3", direction: "rtl",
+                        textAlignLast: "end",
+                    }} rows={9} maxRows={9}
                                size="small"
                                label={" Description in three lines"} onChange={handlerChangeDescription}
                                multiline/>
@@ -140,8 +146,7 @@ const AddTaskModal = ({onAddTask, openModal, closeModal, projectId, boardId}: pr
             </Modal>
 
         </Box>
-    )
-        ;
+    );
 };
 
 export default AddTaskModal;
