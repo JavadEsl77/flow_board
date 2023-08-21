@@ -4,6 +4,7 @@ const baseURL = 'http://185.208.79.133:6070/api';
 
 
 function axiosInstanceConfig(url: string, method: string, data?: any) {
+
     const config: AxiosRequestConfig = {
         url: url,
         method: method,
@@ -19,6 +20,12 @@ function axiosInstanceConfig(url: string, method: string, data?: any) {
     });
 
     try {
+        axiosInstanceRequest(config).catch((res) => {
+            if (res.response.status == 401) {
+                localStorage.setItem('access_token', '')
+                window.location.assign('/')
+            }
+        })
         return axiosInstanceRequest(config)
     } catch (error) {
         throw error
@@ -123,7 +130,7 @@ export const updateTask = async (boardId: any, taskId: any, projectId: any, name
     })
 }
 
-export const updateOrderingTask = async (projectId: any, boardId: any,task_ids:[]): Promise<AxiosResponse> => {
+export const updateOrderingTask = async (projectId: any, boardId: any, task_ids: []): Promise<AxiosResponse> => {
     return axiosInstanceConfig(`/project/${projectId}/board/${boardId}/task/ordering`, 'POST', {task_ids})
 }
 
@@ -131,11 +138,11 @@ export const searchUser = async (search: string): Promise<AxiosResponse> => {
     return axiosInstanceConfig(`/user?sort=updated_at:asc&search=${search}`, 'GET')
 }
 
-export const projectMemberAttach = async (projectId: any,user_id:any): Promise<AxiosResponse> => {
+export const projectMemberAttach = async (projectId: any, user_id: any): Promise<AxiosResponse> => {
     return axiosInstanceConfig(`/project/${projectId}/member/attach`, 'POST', {user_id})
 }
 
-export const projectMemberDetach = async (projectId: any,user_id:any): Promise<AxiosResponse> => {
+export const projectMemberDetach = async (projectId: any, user_id: any): Promise<AxiosResponse> => {
     return axiosInstanceConfig(`/project/${projectId}/member/detach`, 'POST', {user_id})
 }
 

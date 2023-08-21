@@ -13,7 +13,7 @@ const Routs = () => {
                 <Routes>
                     <Route path={"/"} element={<MainPage/>}/>
                     <Route path={"/dashboard"} element={<RequireAuth><Dashboard/></RequireAuth>}/>
-                    <Route path={"/dashboard/project/:projectId"} element={<Project/>}/>
+                    <Route path={"/dashboard/project/:projectId"} element={<RequireAuth><Project/></RequireAuth>}/>
                 </Routes>
             </BrowserRouter>
         </AuthProvider>

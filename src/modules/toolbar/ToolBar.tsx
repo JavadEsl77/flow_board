@@ -2,15 +2,19 @@ import React, {useEffect, useState} from 'react';
 import {Box, CircularProgress, Divider, IconButton, Typography} from "@mui/material";
 import {getUserInfo} from "../../config/fetchData";
 import ShowProfileModal from "../../components/modals/ShowProfileModal";
+import {useNavigate} from "react-router-dom";
 
-interface propsT{
-    toolbarTitle:string
+interface propsT {
+    toolbarTitle: string
 }
-const ToolBar = ({toolbarTitle}:propsT) => {
+
+const ToolBar = ({toolbarTitle}: propsT) => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
     const [isUserLoading, setIsUserLoading] = useState(false);
     const [userInfo, setUserInfo] = useState<any>(null)
+
+    const navigate = useNavigate()
 
     const [showProfileModal, setShowProfileModal] = useState<boolean>(false)
 
@@ -41,6 +45,10 @@ const ToolBar = ({toolbarTitle}:propsT) => {
         getUserInfoRequest()
     }, [])
 
+    const handlerRedirectDashboard = () => {
+        navigate(`/dashboard`)
+    }
+
     return (
         <div>
             <Box sx={{
@@ -58,7 +66,7 @@ const ToolBar = ({toolbarTitle}:propsT) => {
             }}>
 
                 <Box sx={{display: "flex", height: "100%"}}>
-                    <Box sx={{height: {xs:"50%",sm:"70%" , alignSelf: "center"}}}>
+                    <Box sx={{height: {xs: "50%", sm: "70%", alignSelf: "center"}}}>
                         <img style={{height: "100%"}}
                              src={"https://assets.ifttt.com/images/channels/1192573238/icons/monochrome_large.png"}
                              alt={""}/>
@@ -76,12 +84,14 @@ const ToolBar = ({toolbarTitle}:propsT) => {
                         }
                     }}>
 
-                        <Typography sx={{
-                            alignSelf: "center",
-                            fontSize: {xs: "1.2rem", sm: "2rem"},
-                            fontWeight: "bold",
-                            color: "white"
-                        }}>FlowBoard </Typography>
+                        <Typography
+                            sx={{
+                                alignSelf: "center",
+                                fontSize: {xs: "1.2rem", sm: "2rem"},
+                                fontWeight: "bold",
+                                color: "white",
+                                cursor: "pointer",
+                            }} onClick={handlerRedirectDashboard}>FlowBoard </Typography>
 
                         <Divider sx={{
                             height: "0.1em",
@@ -109,13 +119,21 @@ const ToolBar = ({toolbarTitle}:propsT) => {
 
                 </Box>
 
-                <Box sx={{display: "flex", flexDirection:"column",alignItems: "center"}}>
+                <Box sx={{display: "flex", flexDirection: "column", alignItems: "center"}}>
 
-                    <Typography sx={{color:"rgba(255,255,255,0.6)" , fontSize:{xs:"0.8rem",md:"1rem"} , marginBottom:"0.5em"}}>Welcome Back</Typography>
+                    <Typography sx={{
+                        color: "rgba(255,255,255,0.6)",
+                        fontSize: {xs: "0.8rem", md: "1rem"},
+                        marginBottom: "0.5em"
+                    }}>Welcome Back</Typography>
 
                     <Box sx={{display: "flex", alignItems: "center"}}>
                         <IconButton
-                            sx={{borderRadius: "2em", backgroundColor: "rgba(255,255,255,0.6)", padding: {xs:"0.1em 0.5em",sm:".2em 1em"}}}
+                            sx={{
+                                borderRadius: "2em",
+                                backgroundColor: "rgba(255,255,255,0.6)",
+                                padding: {xs: "0.1em 0.5em", sm: ".2em 1em"}
+                            }}
                             onClick={handlerLoadProfile}>
                             {isUserLoading && (
                                 <CircularProgress size={20}/>
@@ -130,7 +148,6 @@ const ToolBar = ({toolbarTitle}:propsT) => {
                         {isLoading && <CircularProgress size={20}/>}
                     </Box>
                 </Box>
-
 
 
             </Box>

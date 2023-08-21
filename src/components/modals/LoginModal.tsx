@@ -103,7 +103,7 @@ const LoginModal = ({onClose}: propsT) => {
                             }}>
                                 <Typography sx={{color: "rgba(255,255,255,0.8)", fontSize: ".8em"}}>Empower your
                                     productivity
-                                    journey by logging in to our Todo List platform and unleash the potential of
+                                    journey by logging in to our FlowBoard platform and unleash the potential of
                                     efficient task
                                     management.</Typography>
 
@@ -135,13 +135,12 @@ const LoginModal = ({onClose}: propsT) => {
 
                             <Typography sx={{fontSize: "1.6em", fontWeight: 'bold', color: "black"}}>Login</Typography>
                             <Box sx={{display: "flex", flexDirection: "column", alignItems: "left"}}>
-                                <Typography sx={{fontSize: "0.8em", color: "black"}}>Don't have an account?
-                                    .. </Typography>
+                                <Typography sx={{fontSize: "1rem", color: "black"}}>Don't have an account?</Typography>
                                 <Typography sx={{
-                                    fontSize: "0.8em",
+                                    fontSize: "1rem",
                                     fontWeight: 'bold',
                                     color: "primary.main",
-                                }}>No problem, we will make it for you</Typography>
+                                }}>No problem, we will make it for you baby</Typography>
                             </Box>
 
                             <Box sx={{
@@ -165,13 +164,14 @@ const LoginModal = ({onClose}: propsT) => {
                                 <Box
                                     sx={{display: "flex", alignItems: "center", marginTop: error ? "0.2em" : "1.5em",}}>
                                     <Button onClick={handleLogin} variant={"contained"} sx={{
-                                        fontSize: "0.7em",
+                                        textTransform: "unset",
+                                        fontSize: "0.875rem",
                                         width: "13em",
-                                        padding: "1em",
+                                        padding: "0.5rem",
                                         color: "white",
                                         marginRight: "0.5em",
                                         backgroundColor: "primary.main",
-                                        borderRadius: "1em"
+                                        borderRadius: "0.5em"
 
                                     }}>Create account</Button>
                                     {isLoading && <CircularProgress size={20}/>}
