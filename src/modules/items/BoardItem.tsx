@@ -152,15 +152,16 @@ const BoardItem = ({boardId, borderName, projectId, onBoardChange, onChangeList,
         <Box sx={{
             width: "100%",
             padding: "1em",
-            marginInline:"0.5rem",
+            marginInline: "0.5rem",
+            marginBottom:"0.5rem",
             display: "flex",
             backgroundColor: "#f9f9f9",
             flexDirection: "column",
-            borderRadius: "0.8em"
+            borderRadius: "0.875em"
         }}>
 
             <Box sx={{
-                minWidth:"400px",
+                minWidth: "400px",
                 display: "flex",
                 width: "100%",
                 backgroundColor: "white",
@@ -174,14 +175,15 @@ const BoardItem = ({boardId, borderName, projectId, onBoardChange, onChangeList,
                 <AddBoxRoundedIcon onClick={handlerShowAddTaskModal} sx={{cursor: "pointer", color: "primary.main"}}/>
             </Box>
 
+
             <Droppable droppableId={boardId.toString()}>
                 {(provided) => (
-                    <div {...provided.droppableProps} ref={provided.innerRef} className="task-list">
+                    <div style={{flex:1}} {...provided.droppableProps} ref={provided.innerRef}
+                         className="task-list">
                         {taskList && taskList.map((item: any, index: number) => {
                             return <Draggable key={item.id} draggableId={item.id.toString()} index={index}>
                                 {(provided) => (
                                     <div
-
                                         {...provided.draggableProps}
                                         {...provided.dragHandleProps}
                                         ref={provided.innerRef}

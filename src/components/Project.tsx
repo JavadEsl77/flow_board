@@ -380,14 +380,13 @@ const Project = () => {
 
             <DragDropContext onDragStart={handlerDragStart} onDragEnd={handleDragEnd}>
                 <Box sx={{
+                    overflowX: 'auto',
+                    overflowY: 'hidden',
                     display: 'flex',
-                    height: "100%",
-
                     borderRadius: "0.8rem",
-                    padding: "0.5rem",
                     margin: "1rem",
                     flexDirection: 'row',
-                    overflowX: 'auto',
+
                 }}>
 
                     {!isBorderLoading && boardList && boardList.length > 0 && (

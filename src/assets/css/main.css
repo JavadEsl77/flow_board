@@ -179,7 +179,8 @@ body {
 
 
 ::-webkit-scrollbar {
-    width: 8px;
+    height: 2px;              /* height of horizontal scrollbar ← You're missing this */
+    width: 4px;
 
 }
 ::-webkit-scrollbar-track {
