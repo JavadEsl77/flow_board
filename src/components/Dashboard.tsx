@@ -10,6 +10,7 @@ import {getProjects, searchProjects} from "../config/fetchData";
 import emptyList from "../assets/lotties/empty_list.json";
 import loadingList from "../assets/lotties/loading.json";
 import Lottie from "react-lottie";
+import bannerImage from '../assets/img/banner.jpg'
 
 const Dashboard = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -30,8 +31,8 @@ const Dashboard = () => {
     };
 
     const handlerChangeSearchInput = (event: any) => {
-        // event.preventDefault();
-        // setSearchValue(event.target.value)
+        event.preventDefault();
+        setSearchValue(event.target.value)
     }
     const handlerClearSearchInput = () => {
         setSearchValue("")
@@ -44,15 +45,15 @@ const Dashboard = () => {
         return await searchProjects(searchValue)
     }
     const handlerSearch = () => {
-        // requestSearch().then((response)=>{
-        //     if (response.status === 200){
-        //         setProjectList(response.data)
-        //         setIsLoading(false)
-        //     }
-        // }).catch((error)=>{
-        //     setError(error)
-        //     setIsLoading(false)
-        // })
+        requestSearch().then((response)=>{
+            if (response.status === 200){
+                setProjectList(response.data)
+                setIsLoading(false)
+            }
+        }).catch((error)=>{
+            setError(error)
+            setIsLoading(false)
+        })
     }
 
     const requestGetProjectsList = async () => {
@@ -96,7 +97,7 @@ const Dashboard = () => {
                 <ToolBar toolbarTitle={"Dashboard"}/>
 
                 <img style={{width: "100%", height: "100%", objectFit: "cover"}}
-                     src={"https://marketplace.canva.com/EAENvqzqoT0/1/0/1600w/canva-corporate-work-linkedin-banner-YjnYKO7wUkE.jpg"}
+                     src={bannerImage}
                      alt={"banner"}/>
 
                 <Box sx={{
@@ -128,7 +129,8 @@ const Dashboard = () => {
                     }}>
                         <InputBase sx={{
                             width: "100%",
-                            fontSize: ".8em"
+                            height:"100%",
+                            fontSize: "1rem",
                         }}
                                    onChange={handlerChangeSearchInput}
                                    value={searchValue}

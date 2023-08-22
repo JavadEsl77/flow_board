@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {Box, Tooltip, Typography} from "@mui/material";
 import {useNavigate} from "react-router-dom";
 import WorkspacePremiumIcon from '@mui/icons-material/WorkspacePremium';
@@ -38,15 +38,20 @@ interface propsT {
 }
 
 const ProjectsItem = ({itemValue}: propsT) => {
-    const getRandomBrightColor = () => {
-        // Generate random RGB values between 150 and 255
-        const randomR = Math.floor(Math.random() * 50) + 180;
-        const randomG = Math.floor(Math.random() * 50) + 180;
-        const randomB = Math.floor(Math.random() * 200) + 100;
+    const [bgColor, setBgColor] = useState('')
 
-        // Return a string with the random RGB values
-        return `rgb(${randomR}, ${randomG}, ${randomB})`;
-    };
+    useEffect(() => {
+        const getRandomBrightColor = () => {
+            // Generate random RGB values between 150 and 255
+            const randomR = Math.floor(Math.random() * 50) + 180;
+            const randomG = Math.floor(Math.random() * 50) + 180;
+            const randomB = Math.floor(Math.random() * 200) + 100;
+
+            // Return a string with the random RGB values
+            return `rgb(${randomR}, ${randomG}, ${randomB})`;
+        };
+        setBgColor(getRandomBrightColor())
+    }, []);
 
     const navigate = useNavigate()
 
@@ -60,7 +65,7 @@ const ProjectsItem = ({itemValue}: propsT) => {
             border: 2,
             borderRadius: "0.8em",
             borderColor: "grey.200",
-            ":hover": {border: 2, borderColor: getRandomBrightColor(), borderRadius: "0.5em"}
+            ":hover": {border: 2, borderColor: bgColor, borderRadius: "0.5em"}
         }} onClick={() => {
             navigate(`/dashboard/project/${itemValue.id}`)
         }}>
@@ -71,7 +76,7 @@ const ProjectsItem = ({itemValue}: propsT) => {
                 height: '200px',
                 borderRadius: "0.8em",
                 marginBottom: "0.5em",
-                background: `linear-gradient(45deg, ${getRandomBrightColor()} 30%, ${getRandomBrightColor()} 90%)`
+                background: bgColor
             }}>
                 {itemValue.own && (
                     <Tooltip placement={"top"} arrow title={"Owner"}>
@@ -132,7 +137,7 @@ const ProjectsItem = ({itemValue}: propsT) => {
                     width: '40px',
                     height: '40px',
                     borderRadius: '50%',
-                    background: getRandomBrightColor(),
+                    background: bgColor,
                     display: 'flex',
                     justifyContent: 'center',
                     alignItems: 'center',

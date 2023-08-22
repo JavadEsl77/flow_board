@@ -20,16 +20,11 @@ import DeleteProjectModal from "./modals/DeleteProjectModal";
 import {DragDropContext} from 'react-beautiful-dnd';
 import AddProjectMemberMenu from "./menu/AddProjectMemberMenu";
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import bannerImage from '../assets/img/banner.jpg'
 
 const Project = () => {
     const {projectId} = useParams();
     const navigate = useNavigate()
-    // const getRandomColor = () => {
-    //     const randomR = Math.floor(Math.random() * 50) + 180;
-    //     const randomG = Math.floor(Math.random() * 50) + 80;
-    //     const randomB = Math.floor(Math.random() * 200) + 100;
-    //     return `rgba(${randomR}, ${randomG}, ${randomB},0.4)`;
-    // };
 
     const [isInfoLoading, setIsInfoLoading] = useState<boolean>(false);
     const [infoError, setInfoError] = useState('');
@@ -139,7 +134,7 @@ const Project = () => {
             <Box sx={{width: "100%", position: "relative", paddingBottom: "1.5em"}}>
 
                 <img style={{width: "100%", height: "100%", objectFit: "cover", position: "absolute"}}
-                     src={"https://marketplace.canva.com/EAENvqzqoT0/1/0/1600w/canva-corporate-work-linkedin-banner-YjnYKO7wUkE.jpg"}
+                     src={bannerImage}
                      alt={"banner"}/>
                 <Box sx={{
                     height: "100%", width: "100%", position: "absolute", top: "0",
