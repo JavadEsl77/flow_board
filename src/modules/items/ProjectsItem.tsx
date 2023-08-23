@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Box, Grow, Tooltip, Typography} from "@mui/material";
+import {Box, Tooltip, Typography} from "@mui/material";
 import {useNavigate} from "react-router-dom";
 import WorkspacePremiumIcon from '@mui/icons-material/WorkspacePremium';
 import Diversity2OutlinedIcon from "@mui/icons-material/Diversity2Outlined";
@@ -56,7 +56,6 @@ const ProjectsItem = ({itemValue}: propsT) => {
     const navigate = useNavigate()
 
     return (
-        <Grow in={true}>
             <Box sx={{
                 cursor: "pointer",
                 display: "flex",
@@ -66,7 +65,15 @@ const ProjectsItem = ({itemValue}: propsT) => {
                 border: 2,
                 borderRadius: "0.8em",
                 borderColor: "grey.200",
-                ":hover": {border: 2, borderColor: bgColor, borderRadius: "0.5em"}
+                ":hover": {
+                    boxShadow: "rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px",
+                    border: 2,
+                    borderColor: bgColor,
+                    borderRadius: "0.8em",
+                },
+                boxShadow: "rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px",
+                transition: "box-shadow 0.3s ease-in-out"
+
             }} onClick={() => {
                 navigate(`/dashboard/project/${itemValue.id}`)
             }}>
@@ -163,7 +170,6 @@ const ProjectsItem = ({itemValue}: propsT) => {
                 </Box>
 
             </Box>
-        </Grow>
     );
 };
 

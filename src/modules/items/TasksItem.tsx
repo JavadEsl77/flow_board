@@ -16,7 +16,11 @@ const TasksItem = ({item}: propsT) => {
             borderRadius: "0.8rem",
             backgroundColor: "white",
             alignItems: "top",
-            border: '1px solid #d6d6d6',
+            ":hover":{
+                boxShadow: "rgba(0, 0, 0, 0.16) 0px 10px 30px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px",
+            },
+            boxShadow: "rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px",
+            transition: "box-shadow 0.3s ease-in-out"
         }}>
             <Typography
                 sx={{

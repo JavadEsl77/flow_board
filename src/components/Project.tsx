@@ -190,6 +190,7 @@ const Project = () => {
                                         justifyContent: "center",
                                         width: "30px",
                                         height: "30px",
+                                        transition: "background-color 0.3s ease-in-out",
                                         ":hover": {backgroundColor: "rgba(0,0,0,0.50)"}
                                     }} onClick={handlerShowDeleteProject}>
                                         {isInfoLoading && (
@@ -211,6 +212,7 @@ const Project = () => {
                                         justifyContent: "center",
                                         width: "30px",
                                         height: "30px",
+                                        transition: "background-color 0.3s ease-in-out",
                                         ":hover": {backgroundColor: "rgba(0,0,0,0.50)"}
                                     }} onClick={handlerShowEditProjectModal}>
 
@@ -314,6 +316,7 @@ const Project = () => {
                                                     padding: "0.25em",
                                                     borderRadius: "0.3em",
                                                     width: "24px",
+                                                    transition: "background-color 0.3s ease-in-out",
                                                     ":hover": {backgroundColor: "rgba(0,0,0,0.25)"}
                                                 }} onClick={handlerShowAddMemberMenu}>
                                                     {projectInfo.member_count <= 2 ?
