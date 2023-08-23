@@ -371,7 +371,14 @@ const Project = () => {
                         color: "white",
                         marginX: "1.5em",
                         marginTop: "1em",
-                        width: "fit-content"
+                        padding:"0.7rem 1rem",
+                        borderRadius:"0.7rem",
+                        width: "fit-content",
+                        ":hover":{
+                            boxShadow: "rgba(0, 0, 0, 0.1) 0px 8px 8px;",
+                        },
+                        boxShadow: "rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px",
+                        transition: "box-shadow 0.3s ease-in-out"
                     }}>
                 <Typography sx={{fontSize: "0.8rem"}}>New Board</Typography>
             </Button>
