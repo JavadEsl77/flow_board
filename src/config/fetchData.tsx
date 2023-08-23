@@ -8,7 +8,15 @@ function axiosInstanceConfig(url: string, method: string, data?: any) {
     const config: AxiosRequestConfig = {
         url: url,
         method: method,
-        data: data
+        data: data,
+        validateStatus: (status: number) => {
+                if (status == 401) {
+                    localStorage.setItem('access_token', '')
+                    window.location.assign('/')
+                }
+                return true
+        },
+
     }
     const axiosInstanceRequest: AxiosInstance = axios.create({
         baseURL,
@@ -20,17 +28,10 @@ function axiosInstanceConfig(url: string, method: string, data?: any) {
     });
 
     try {
-        axiosInstanceRequest(config).catch((res) => {
-            if (res.response.status == 401) {
-                localStorage.setItem('access_token', '')
-                window.location.assign('/')
-            }
-        })
         return axiosInstanceRequest(config)
     } catch (error) {
         throw error
     }
-
 }
 
 export const login = async (username: string, password: string): Promise<AxiosResponse> => {
