@@ -29,7 +29,7 @@ const BoardItemMenuOptions = ({
     return (
         <div>
             <Menu
-                sx={{borderRadius: "0.4em", boxShadow: "0"}}
+                sx={{borderRadius: "0.8em", boxShadow: "0"}}
                 id="fade-menu"
                 MenuListProps={{
                     'aria-labelledby': 'fade-button',
@@ -37,17 +37,11 @@ const BoardItemMenuOptions = ({
                 PaperProps={{
                     elevation: 2,
                     sx: {
-                        borderRadius: "0.4em",
+                        borderRadius: "0.8em",
                         overflow: 'visible',
                         backgroundColor: color,
-                        filter: `drop-shadow(0px 0px 4px rgba(0,0,0,5%))`,
+                        boxShadow: "rgba(0, 0, 0, 0.2) 0px 18px 50px -10px",
                         mt: 1.5,
-                        '& .MuiAvatar-root': {
-                            width: 32,
-                            height: 32,
-                            ml: -0.5,
-                            mr: 1,
-                        },
                         '&:before': {
                             content: '""',
                             display: 'block',
@@ -68,11 +62,12 @@ const BoardItemMenuOptions = ({
                 open={showOption}
                 onClose={handleCloseMenu}
                 TransitionComponent={Fade}
+                transitionDuration={500}
             >
                 <Box sx={{
                     display: "flex",
                     flexDirection: "column",
-                    borderRadius: "0.4em",
+                    borderRadius: "0.7em",
                     padding: "0.5em",
                     textAlign: "left",
                     marginBottom: "-0.5em",

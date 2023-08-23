@@ -96,197 +96,193 @@ const AddProjectMemberMenu = ({showMenu, color, event, handleCloseMenu, members,
     }
 
     return (
-        <div>
-            <Menu
-                sx={{borderRadius: "0.4em", boxShadow: "0", maxWidth: "560px"}}
-                id="fade-menu"
-                MenuListProps={{
-                    'aria-labelledby': 'fade-button',
-                }}
-                PaperProps={{
-                    elevation: 2,
-                    sx: {
-                        borderRadius: "0.4em",
-                        overflow: 'visible',
-                        backgroundColor: color,
-                        filter: `drop-shadow(0px 0px 4px rgba(0,0,0,5%))`,
-                        mt: 1.5,
-                        '& .MuiAvatar-root': {
-                            width: 32,
-                            height: 32,
-                            ml: -0.5,
-                            mr: 1,
+            <div>
+                <Menu
+                    sx={{borderRadius: "0.8em", boxShadow: "0", maxWidth: "560px"}}
+                    id="fade-menu"
+                    MenuListProps={{
+                        'aria-labelledby': 'fade-button',
+                    }}
+                    PaperProps={{
+                        elevation: 2,
+                        sx: {
+                            borderRadius: "0.8em",
+                            overflow: 'visible',
+                            backgroundColor: color,
+                            boxShadow: "rgba(0, 0, 0, 0.2) 0px 18px 50px -10px",
+                            mt: 1.5,
+                            '&:before': {
+                                content: '""',
+                                display: 'block',
+                                position: 'absolute',
+                                top: 0,
+                                right: 14,
+                                width: 10,
+                                height: 10,
+                                bgcolor: color,
+                                transform: 'translateY(-50%) rotate(45deg)',
+                                zIndex: 0,
+                            },
                         },
-                        '&:before': {
-                            content: '""',
-                            display: 'block',
-                            position: 'absolute',
-                            top: 0,
-                            right: 14,
-                            width: 10,
-                            height: 10,
-                            bgcolor: color,
-                            transform: 'translateY(-50%) rotate(45deg)',
-                            zIndex: 0,
-                        },
-                    },
-                }}
-                transformOrigin={{horizontal: 'right', vertical: 'top'}}
-                anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
-                anchorEl={event}
-                open={showMenu}
-                onClose={() => handleCloseMenu(didUpdate)}
-                TransitionComponent={Fade}
-            >
-                <Box sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    borderRadius: "0.4em",
-                    padding: "0.8em",
-                    textAlign: "left",
-                    marginBottom: "-0.5em",
-                    backgroundColor: "white"
-                }}>
+                    }}
+                    transformOrigin={{horizontal: 'right', vertical: 'top'}}
+                    anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
+                    anchorEl={event}
+                    open={showMenu}
+                    onClose={() => handleCloseMenu(didUpdate)}
+                    TransitionComponent={Fade}
+                    transitionDuration={500}
+                >
+                    <Box sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        borderRadius: "0.8em",
+                        padding: "0.8em",
+                        textAlign: "left",
+                        marginBottom: "-0.5em",
+                        backgroundColor: "white"
+                    }}>
 
-                    <Typography sx={{
-                        fontSize: ".875rem",
-                        color: "grey.500",
-                        marginInlineStart: "0.5rem",
-                        fontWeight: "bold"
-                    }}>Members</Typography>
+                        <Typography sx={{
+                            fontSize: ".875rem",
+                            color: "grey.500",
+                            marginInlineStart: "0.5rem",
+                            fontWeight: "bold"
+                        }}>Members</Typography>
 
 
-                    <Box sx={{marginTop: "0.5rem", marginBottom: addUserError !== '' ? "unset" : "1.5rem"}}>
+                        <Box sx={{marginTop: "0.5rem", marginBottom: addUserError !== '' ? "unset" : "1.5rem"}}>
+
+                            <Grid sx={{
+                                overflowY: "auto",
+                            }} container spacing={0.5}>
+                                {memberList.length > 0 && (
+                                    memberList.map((item: any) => {
+                                        return <Grid item>
+                                            <Chip
+                                                sx={{fontSize: "0.875rem"}}
+                                                avatar={<Avatar/>}
+                                                label={item.username}
+                                                onDelete={() => handlerDeleteAttachUser(item.id)}
+                                            />
+                                        </Grid>
+                                    })
+                                )}
+                            </Grid>
+
+
+                            {memberList.length == 0 && (
+                                <Box sx={{
+                                    width: "100%",
+                                    display: "flex",
+                                    borderRadius: "0.3rem",
+                                    padding: "0.5rem",
+                                    justifyContent: "center",
+                                    alignItems: "center"
+                                }}>
+                                    <AdminPanelSettingsOutlinedIcon
+                                        sx={{color: "grey.500", marginInlineEnd: "0.5rem"}}/>
+                                    <Typography sx={{textAlign: "center", color: "grey.500"}}>User not
+                                        registered!</Typography>
+
+                                </Box>
+                            )}
+
+
+                        </Box>
+
+                        {addUserError !== '' && (<Typography sx={{
+                            marginBottom: ".5rem",
+                            marginTop: "0.5rem",
+                            fontSize: "0.875rem",
+                            marginInlineStart: "0.5rem",
+                            color: "red",
+                            fontWeight: "bold"
+                        }}>- {addUserError}</Typography>)}
+
+                        {isLoading && (
+                            <BorderLinearProgress sx={{
+                                marginBottom: "0.5rem",
+                                marginTop: addUserError == '' ? "-1rem" : "unset",
+                                marginX: "0.5rem"
+                            }}/>
+                        )}
+
+                        <Divider sx={{marginBottom: "1.5rem"}}/>
+
+
+                        <Typography sx={{fontSize: ".875rem", fontWeight: "bold", marginInlineStart: "0.5rem"}}>Add new
+                            member</Typography>
+
+
+                        <Box sx={{
+                            width: {xs: "260px", md: "500px"},
+                            height: "35px",
+                            display: "flex",
+                            marginBottom: ".5rem",
+                            backgroundColor: "grey.100",
+                            borderRadius: "0.3rem",
+                            marginTop: "0.5rem",
+                            paddingInline: "1rem"
+                        }}>
+
+                            <InputBase sx={{
+                                width: "100%",
+                                fontSize: ".8em"
+                            }}
+                                       onChange={handlerChangeSearchInput}
+                                       value={searchValue}
+                                       placeholder={"searching username ..."}
+                                       size="small"></InputBase>
+
+                        </Box>
+
+                        {/*<Divider sx={{marginTop:"0.5rem" , marginBottom:"0.2rem" , marginInlineStart:"-.7rem" , marginInlineEnd:"1rem"}}/>*/}
+
+                        {searchLoading && (
+                            <BorderLinearProgress sx={{marginX: "0.5rem", marginBottom: "0.5rem"}}/>
+                        )}
 
                         <Grid sx={{
                             overflowY: "auto",
+                            maxHeight: {xs: "250px", md: "500px"},
                         }} container spacing={0.5}>
-                            {memberList.length > 0 && (
-                                memberList.map((item: any) => {
+                            {!searchLoading && newUserList.length > 0 && (
+                                newUserList.map((item: any) => {
                                     return <Grid item>
                                         <Chip
                                             sx={{fontSize: "0.875rem"}}
                                             avatar={<Avatar/>}
                                             label={item.username}
-                                            onDelete={() => handlerDeleteAttachUser(item.id)}
+                                            deleteIcon={<AddCircleRoundedIcon sx={{color: "primary.main"}}/>}
+                                            onDelete={() => handlerAttachUser(item.id, item.username)}
                                         />
+
                                     </Grid>
                                 })
                             )}
                         </Grid>
 
+                        {/*{newUserList.length == 0 && searchValue !=='' && (*/}
+                        {/*    <Box sx={{*/}
+                        {/*        width: "100%",*/}
+                        {/*        display: "flex",*/}
+                        {/*        borderRadius: "0.3rem",*/}
+                        {/*        padding: "0.5rem",*/}
+                        {/*        justifyContent: "center",*/}
+                        {/*        alignItems: "center"*/}
+                        {/*    }}>*/}
+                        {/*        <SearchOffOutlinedIcon sx={{color: "grey.500", marginInlineEnd: "0.5rem"}}/>*/}
+                        {/*        <Typography sx={{textAlign: "center", color: "grey.500"}}>User with this username was not found!</Typography>*/}
 
-                        {memberList.length == 0 && (
-                            <Box sx={{
-                                width: "100%",
-                                display: "flex",
-                                borderRadius: "0.3rem",
-                                padding: "0.5rem",
-                                justifyContent: "center",
-                                alignItems: "center"
-                            }}>
-                                <AdminPanelSettingsOutlinedIcon sx={{color: "grey.500", marginInlineEnd: "0.5rem"}}/>
-                                <Typography sx={{textAlign: "center", color: "grey.500"}}>User not
-                                    registered!</Typography>
-
-                            </Box>
-                        )}
-
+                        {/*    </Box>*/}
+                        {/*)}*/}
 
                     </Box>
 
-                    {addUserError !== '' && (<Typography sx={{
-                        marginBottom: ".5rem",
-                        marginTop: "0.5rem",
-                        fontSize: "0.875rem",
-                        marginInlineStart: "0.5rem",
-                        color: "red",
-                        fontWeight: "bold"
-                    }}>- {addUserError}</Typography>)}
+                </Menu>
 
-                    {isLoading && (
-                        <BorderLinearProgress sx={{
-                            marginBottom: "0.5rem",
-                            marginTop: addUserError == '' ? "-1rem" : "unset",
-                            marginX: "0.5rem"
-                        }}/>
-                    )}
-
-                    <Divider sx={{marginBottom: "1.5rem"}}/>
-
-
-                    <Typography sx={{fontSize: ".875rem", fontWeight: "bold", marginInlineStart: "0.5rem"}}>Add new
-                        member</Typography>
-
-
-                    <Box sx={{
-                        width: {xs: "260px", md: "500px"},
-                        height: "35px",
-                        display: "flex",
-                        marginBottom: ".5rem",
-                        backgroundColor: "grey.100",
-                        borderRadius: "0.3rem",
-                        marginTop: "0.5rem",
-                        paddingInline: "1rem"
-                    }}>
-
-                        <InputBase sx={{
-                            width: "100%",
-                            fontSize: ".8em"
-                        }}
-                                   onChange={handlerChangeSearchInput}
-                                   value={searchValue}
-                                   placeholder={"searching username ..."}
-                                   size="small"></InputBase>
-
-                    </Box>
-
-                    {/*<Divider sx={{marginTop:"0.5rem" , marginBottom:"0.2rem" , marginInlineStart:"-.7rem" , marginInlineEnd:"1rem"}}/>*/}
-
-                    {searchLoading && (
-                        <BorderLinearProgress sx={{marginX: "0.5rem", marginBottom: "0.5rem"}}/>
-                    )}
-
-                    <Grid sx={{
-                        overflowY: "auto",
-                        maxHeight: {xs: "250px", md: "500px"},
-                    }} container spacing={0.5}>
-                        {!searchLoading && newUserList.length > 0 && (
-                            newUserList.map((item: any) => {
-                                return <Grid item>
-                                    <Chip
-                                        sx={{fontSize: "0.875rem"}}
-                                        avatar={<Avatar/>}
-                                        label={item.username}
-                                        deleteIcon={<AddCircleRoundedIcon sx={{color: "primary.main"}}/>}
-                                        onDelete={() => handlerAttachUser(item.id, item.username)}
-                                    />
-
-                                </Grid>
-                            })
-                        )}
-                    </Grid>
-
-                    {/*{newUserList.length == 0 && searchValue !=='' && (*/}
-                    {/*    <Box sx={{*/}
-                    {/*        width: "100%",*/}
-                    {/*        display: "flex",*/}
-                    {/*        borderRadius: "0.3rem",*/}
-                    {/*        padding: "0.5rem",*/}
-                    {/*        justifyContent: "center",*/}
-                    {/*        alignItems: "center"*/}
-                    {/*    }}>*/}
-                    {/*        <SearchOffOutlinedIcon sx={{color: "grey.500", marginInlineEnd: "0.5rem"}}/>*/}
-                    {/*        <Typography sx={{textAlign: "center", color: "grey.500"}}>User with this username was not found!</Typography>*/}
-
-                    {/*    </Box>*/}
-                    {/*)}*/}
-
-                </Box>
-
-            </Menu>
-
-        </div>
+            </div>
     );
 };
 
