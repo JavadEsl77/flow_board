@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Box, CircularProgress, Divider, IconButton, Typography} from "@mui/material";
+import {Box, CircularProgress, Divider, Grow, IconButton, Slide, Typography} from "@mui/material";
 import {getUserInfo} from "../../config/fetchData";
 import ShowProfileModal from "../../components/modals/ShowProfileModal";
 import {useNavigate} from "react-router-dom";
@@ -155,6 +155,7 @@ const ToolBar = ({toolbarTitle}: propsT) => {
             <ShowProfileModal userInfo={userInfo} openModal={showProfileModal} closeModal={() => {
                 setShowProfileModal(false)
             }}/>
+
         </div>
     );
 };

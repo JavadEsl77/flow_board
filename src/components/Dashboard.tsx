@@ -45,12 +45,12 @@ const Dashboard = () => {
         return await searchProjects(searchValue)
     }
     const handlerSearch = () => {
-        requestSearch().then((response)=>{
-            if (response.status === 200){
+        requestSearch().then((response) => {
+            if (response.status === 200) {
                 setProjectList(response.data)
                 setIsLoading(false)
             }
-        }).catch((error)=>{
+        }).catch((error) => {
             setError(error)
             setIsLoading(false)
         })
@@ -67,7 +67,7 @@ const Dashboard = () => {
                 setProjectList(response.data)
                 setIsLoading(false)
             }
-        }).catch((error)=>{
+        }).catch((error) => {
             setError(error)
             setIsLoading(false)
         })
@@ -77,13 +77,13 @@ const Dashboard = () => {
         handlerGetProjectList()
     }, [])
 
-    useEffect(()=>{
-        if (searchValue!==""){
+    useEffect(() => {
+        if (searchValue !== "") {
             setClearSearchIcon(true)
-        }else {
+        } else {
             setClearSearchIcon(false)
         }
-    },[searchValue])
+    }, [searchValue])
 
     return (
         <Box sx={{display: "flex", flexDirection: "column"}}>
