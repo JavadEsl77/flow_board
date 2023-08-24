@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Box, Button, Divider, Grid, IconButton, InputBase, Typography} from "@mui/material";
+import {Box, Button, CircularProgress, Divider, Fade, Grid, IconButton, InputBase, Typography} from "@mui/material";
 import ToolBar from "../modules/toolbar/ToolBar";
 import SearchIcon from "@mui/icons-material/Search";
 import ClearIcon from '@mui/icons-material/Clear';
@@ -7,10 +7,10 @@ import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
 import ProjectsItem from "../modules/items/ProjectsItem";
 import AddProjectModal from "./modals/AddProjectModal";
 import {getProjects, searchProjects} from "../config/fetchData";
-import emptyList from "../assets/lotties/empty_list.json";
-import loadingList from "../assets/lotties/loading.json";
-import Lottie from "react-lottie";
 import bannerImage from '../assets/img/banner.jpg'
+import addProject from "../assets/img/add_project.svg";
+import notFound from "../assets/img/no_data.svg";
+import AddIcon from "@mui/icons-material/Add";
 
 const Dashboard = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -19,16 +19,8 @@ const Dashboard = () => {
     const [clearSearchIcon, setClearSearchIcon] = useState<boolean>(false);
     const [showModalAddProject, setShowModalAddProject] = useState<boolean>(false)
     const [projectList, setProjectList] = useState<any>(null)
+    const [searchEmptyChecking, setSearchEmptyChecking] = useState<boolean>(false)
 
-
-    const defaultOptions = {
-        loop: true,
-        autoplay: true,
-        animationData: !isLoading ? emptyList : loadingList,
-        rendererSettings: {
-            preserveAspectRatio: "xMidYMid slice"
-        }
-    };
 
     const handlerChangeSearchInput = (event: any) => {
         event.preventDefault();
@@ -36,6 +28,7 @@ const Dashboard = () => {
     }
     const handlerClearSearchInput = () => {
         setSearchValue("")
+        setSearchEmptyChecking(false)
         handlerGetProjectList()
     }
 
@@ -47,8 +40,14 @@ const Dashboard = () => {
     const handlerSearch = () => {
         requestSearch().then((response) => {
             if (response.status === 200) {
-                setProjectList(response.data)
+                if (response.data.length > 0) {
+                    setProjectList(response.data)
+                    setSearchEmptyChecking(false)
+                } else {
+                    setSearchEmptyChecking(true)
+                }
                 setIsLoading(false)
+
             }
         }).catch((error) => {
             setError(error)
@@ -129,7 +128,7 @@ const Dashboard = () => {
                     }}>
                         <InputBase sx={{
                             width: "100%",
-                            height:"100%",
+                            height: "100%",
                             fontSize: "1rem",
                         }}
                                    onChange={handlerChangeSearchInput}
@@ -170,32 +169,44 @@ const Dashboard = () => {
 
             <Box sx={{display: "flex", flexDirection: "column", padding: "1.5em"}}>
 
-                <Box sx={{display: "flex"}}>
-                    <AccountTreeOutlinedIcon sx={{color: "secondary.main"}}/>
-                    <Typography
-                        sx={{marginLeft: "0.5em", fontWeight: "bold", fontSize: "1rem"}}>YourProjects
-                        | {projectList && projectList.length} items</Typography>
+                {projectList && projectList.length > 0 && (
+                    <Fade in={true} timeout={700}>
+                        <Box>
+                            <Box sx={{display: "flex", alignItems: "center"}}>
+                                <AccountTreeOutlinedIcon sx={{color: "secondary.main"}}/>
+                                <Typography
+                                    sx={{marginLeft: "0.5em", fontWeight: "bold", fontSize: "1rem"}}>YourProjects
+                                    | {projectList && projectList.length} items</Typography>
 
-                    <span style={{flex: 1}}/>
+                                <span style={{flex: 1}}/>
 
-                    <Button variant={"contained"}
-                            sx={{
-                                alignSelf: "start",
-                                textTransform: "unset",
-                                color: "white",
-                                width: "fit-content",
-                                '&:hover': {
-                                    backgroundColor: 'secondary.dark'
-                                },
-                                backgroundColor: "secondary.main"
+                                <Button variant={"contained"} startIcon={<AddIcon/>}
+                                        sx={{
+                                            alignSelf: "start",
+                                            textTransform: "unset",
+                                            color: "white",
+                                            padding: "0.7rem 1rem",
+                                            borderRadius: "0.7rem",
+                                            width: "fit-content",
+                                            ":hover": {
+                                                boxShadow: "rgba(0, 0, 0, 0.2) 0 8px 15px",
+                                                backgroundColor: "secondary.main"
+                                            },
+                                            boxShadow: "rgba(0, 0, 0, 0.02) 0 1px 3px 0",
+                                            transition: "box-shadow 0.3s ease-in-out",
+                                            backgroundColor: "secondary.main"
 
-                            }}
-                            onClick={() => setShowModalAddProject(true)}>
-                        <Typography sx={{fontSize: "0.8rem"}}>New Project</Typography>
-                    </Button>
+                                        }}
+                                        onClick={() => setShowModalAddProject(true)}>
+                                    <Typography sx={{fontSize: "0.8rem"}}>New Project</Typography>
+                                </Button>
 
-                </Box>
-                <Divider sx={{marginTop: "0.8em", marginBottom: "0.8em"}}/>
+                            </Box>
+                            <Divider sx={{marginTop: "0.8em", marginBottom: "0.8em"}}/>
+                        </Box>
+                    </Fade>
+                )}
+
 
                 {!isLoading && projectList && (
                     <Grid container spacing={2}>
@@ -207,35 +218,95 @@ const Dashboard = () => {
                     </Grid>
                 )}
 
-                {!isLoading && projectList?.length === 0 && (
-                    <Box sx={{
-                        display: "flex",
-                        flexDirection: "column",
-                        marginTop: "5em",
-                        justifyContent: "center",
-                        alignSelf: "center"
-                    }}>
-                        <Lottie style={{margin: "-40px"}}
-                                options={defaultOptions}
-                                height={150}
-                                width={150}
-                        />
-                        <Typography sx={{marginTop: "1.5em", color: "grey.500", fontSize: "1em"}}>Not Result
-                            Found</Typography>
-                        <Typography sx={{marginTop: "0.5em", color: "grey.400", fontSize: "0.7em"}}>create your todo
-                            ...</Typography>
-                    </Box>
+                {!isLoading && !searchEmptyChecking && projectList && projectList.length == 0 && (
+                    <Fade in={true} timeout={700}>
+                        <Box sx={{
+                            width: "100%",
+                            height: "60vh",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            display: "flex",
+                            flexDirection: "column"
+                        }}>
 
+                            <Box sx={{maxWidth: {xs: "130px", md: "200px"}}}>
+                                <img style={{width: "100%", height: "100%", objectFit: "contain"}} src={addProject}
+                                     alt="empty Image"/>
+                            </Box>
+                            <Typography
+                                sx={{marginTop: "1.5rem", color: "black", fontSize: {xs: "1rem", md: "1.2rem"}}}>No
+                                project has been created yet</Typography>
+                            <Typography sx={{
+                                marginTop: ".5rem",
+                                color: "grey.400",
+                                fontSize: {xs: "0.875rem", md: "1rem"}
+                            }}>looks
+                                like you don`t have any Project in your account</Typography>
+                            <Button variant={"contained"} startIcon={<AddIcon/>}
+                                    onClick={() => setShowModalAddProject(true)}
+                                    sx={{
+                                        textTransform: "unset",
+                                        color: "white",
+                                        fontSize: "1rem",
+                                        marginTop: {xs: "1.5rem", md: "2rem"},
+                                        padding: "0.7rem 1rem",
+                                        borderRadius: "0.7rem",
+                                        backgroundColor: "secondary.main",
+                                        width: "fit-content",
+                                        ":hover": {
+                                            boxShadow: "rgba(0, 0, 0, 0.2) 0 8px 15px",
+                                            backgroundColor: "secondary.main"
+                                        },
+                                        boxShadow: "rgba(0, 0, 0, 0.02) 0 1px 3px 0",
+                                        transition: "box-shadow 0.3s ease-in-out"
+                                    }}>
+                                <Typography sx={{fontSize: "0.8rem"}}>New Project</Typography>
+                            </Button>
+                        </Box>
+                    </Fade>
                 )}
 
+                {!isLoading && searchEmptyChecking && projectList && projectList.length == 0 && (
+                    <Fade in={true} timeout={700}>
+                        <Box sx={{
+                            width: "100%",
+                            height: "60vh",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            display: "flex",
+                            flexDirection: "column"
+                        }}>
+
+                            <Box sx={{maxWidth: {xs: "130px", md: "200px"}}}>
+                                <img style={{width: "100%", height: "100%", objectFit: "contain"}} src={notFound}
+                                     alt="empty Image"/>
+                            </Box>
+                            <Typography
+                                sx={{marginTop: "1.5rem", color: "black", fontSize: {xs: "1rem", md: "1.2rem"}}}>
+                                Oops! No project found</Typography>
+                        </Box>
+                    </Fade>
+                )}
+
+
                 {isLoading && (
-                    <Box sx={{display: "flex", marginTop: "5em", justifyContent: "center"}}>
-                        <Lottie style={{margin: "-40px"}}
-                                options={defaultOptions}
-                                height={150}
-                                width={150}
-                        />
-                    </Box>
+                    <Fade in={true} timeout={700}><Box
+                        sx={{display: "flex", width: "100%", height: "50vh", justifyContent: "center"}}>
+                        <Box sx={{
+                            display: "flex",
+                            alignSelf: "center",
+                            justifyContent: "center",
+                            borderRadius: "1em",
+                            padding: "1.5em",
+                            boxShadow: "rgba(50, 50, 93, 0.25) 0px 30px 60px -12px, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px",
+                            backdropFilter: "blur(4px)",
+                            backgroundColor: "rgba(0,0,0,0.4)",
+                        }}>
+
+                            <CircularProgress disableShrink sx={{color: "#ffffff"}}/>
+
+                        </Box>
+                    </Box></Fade>
                 )}
 
             </Box>

@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {useNavigate, useParams} from "react-router-dom";
-import {Box, Button, CircularProgress, Tooltip, Typography} from "@mui/material";
+import {Box, Button, CircularProgress, Fade, Tooltip, Typography} from "@mui/material";
 import ToolBar from "../modules/toolbar/ToolBar";
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import Diversity2OutlinedIcon from '@mui/icons-material/Diversity2Outlined';
@@ -10,7 +10,6 @@ import NewBorderItem from "../modules/items/NewBorderItem";
 import {getBorders, getProjectInfo} from "../config/fetchData";
 import AddIcon from '@mui/icons-material/Add';
 import AddBoardModal from "./modals/AddBoardModal";
-import Lottie from "react-lottie";
 import emptyList from "../assets/lotties/empty_list.json";
 import loadingList from "../assets/lotties/loading.json";
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
@@ -21,6 +20,7 @@ import {DragDropContext} from 'react-beautiful-dnd';
 import AddProjectMemberMenu from "./menu/AddProjectMemberMenu";
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import bannerImage from '../assets/img/banner.jpg'
+import emptyIcon from '../assets/img/add_notes.svg';
 
 const Project = () => {
     const {projectId} = useParams();
@@ -40,17 +40,7 @@ const Project = () => {
 
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [showAddMemberMenu, setShowAddMemberMenu] = useState<boolean>(false)
-
-
-    const defaultOptions = {
-        loop: true,
-        autoplay: true,
-        animationData: !isBorderLoading ? emptyList : loadingList,
-        rendererSettings: {
-            preserveAspectRatio: "xMidYMid slice"
-        }
-    };
-
+    
     const requestGetProjectInfo = async () => {
         setInfoError('')
         setIsInfoLoading(true)
@@ -339,24 +329,6 @@ const Project = () => {
                                 </Box>
                             </Box>
                         </Box>
-
-                        {isInfoLoading && (
-                            <Box sx={{
-                                position: "absolute",
-                                display: "flex",
-                                alignSelf: "center",
-                                right: "50%",
-                                top: "20%",
-                                borderRadius: "0.8em",
-                                padding: "1.5em",
-                                backdropFilter: "blur(4px)",
-                                backgroundColor: "rgba(0,0,0,0.09)",
-                            }}>
-
-                                <CircularProgress sx={{color: "#d6d6d6"}}/>
-
-                            </Box>
-                        )}
                     </Box>
 
                 </Box>
@@ -365,25 +337,28 @@ const Project = () => {
             </Box>
 
 
-            <Button variant={"contained"} startIcon={<AddIcon/>} onClick={handlerAddNewBoard}
-                    sx={{
-                        alignSelf: "start",
-                        textTransform: "unset",
-                        color: "white",
-                        marginX: "1.5em",
-                        marginTop: "1em",
-                        padding:"0.7rem 1rem",
-                        borderRadius:"0.7rem",
-                        width: "fit-content",
-                        ":hover":{
-                            boxShadow: "rgba(0, 0, 0, 0.2) 0 8px 15px",
-                            backgroundColor:"primary.main"
-                        },
-                        boxShadow: "rgba(0, 0, 0, 0.02) 0 1px 3px 0",
-                        transition: "box-shadow 0.3s ease-in-out"
-                    }}>
-                <Typography sx={{fontSize: "0.8rem"}}>New Board</Typography>
-            </Button>
+            {boardList.length > 0 && (
+                <Fade in={true} timeout={700}><Button variant={"contained"} startIcon={<AddIcon/>}
+                                                      onClick={handlerAddNewBoard}
+                                                      sx={{
+                                                          alignSelf: "start",
+                                                          textTransform: "unset",
+                                                          color: "white",
+                                                          marginX: "1.5em",
+                                                          marginTop: "1em",
+                                                          padding: "0.7rem 1rem",
+                                                          borderRadius: "0.7rem",
+                                                          width: "fit-content",
+                                                          ":hover": {
+                                                              boxShadow: "rgba(0, 0, 0, 0.2) 0 8px 15px",
+                                                              backgroundColor: "primary.main"
+                                                          },
+                                                          boxShadow: "rgba(0, 0, 0, 0.02) 0 1px 3px 0",
+                                                          transition: "box-shadow 0.3s ease-in-out"
+                                                      }}>
+                    <Typography sx={{fontSize: "0.8rem"}}>New Board</Typography>
+                </Button></Fade>
+            )}
 
             <DragDropContext onDragStart={handlerDragStart} onDragEnd={handleDragEnd}>
                 <Box sx={{
@@ -416,17 +391,72 @@ const Project = () => {
                         })
                     )}
 
-                    {
-                        isBorderLoading && (
-                            <Box sx={{display: "flex", width: "100%", justifyContent: "center"}}>
-                                <Lottie style={{margin: "0"}}
-                                        options={defaultOptions}
-                                        height={150}
-                                        width={150}
-                                />
+                    {isBorderLoading && (
+                        <Fade in={true} timeout={700}><Box
+                            sx={{display: "flex", width: "100%", height: "60vh", justifyContent: "center"}}>
+                            <Box sx={{
+                                display: "flex",
+                                alignSelf: "center",
+                                justifyContent: "center",
+                                borderRadius: "1em",
+                                padding: "1.5em",
+                                boxShadow: "rgba(50, 50, 93, 0.25) 0px 30px 60px -12px, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px",
+                                backdropFilter: "blur(4px)",
+                                backgroundColor: "rgba(0,0,0,0.4)",
+                            }}>
+
+                                <CircularProgress disableShrink sx={{color: "#ffffff"}}/>
+
                             </Box>
-                        )
-                    }
+                        </Box></Fade>
+                    )}
+
+                    {!isBorderLoading && boardList && boardList.length == 0 && (
+                        <Fade in={true} timeout={700}>
+                            <Box sx={{
+                                width: "100%",
+                                height: "60vh",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                display: "flex",
+                                flexDirection: "column"
+                            }}>
+
+                                <Box sx={{maxWidth: {xs: "130px", md: "200px"}}}>
+                                    <img style={{width: "100%", height: "100%", objectFit: "contain"}} src={emptyIcon}
+                                         alt="empty Image"/>
+                                </Box>
+                                <Typography
+                                    sx={{marginTop: "1.5rem", color: "black", fontSize: {xs: "1rem", md: "1.2rem"}}}>Oops!
+                                    it`s
+                                    Empty</Typography>
+                                <Typography sx={{
+                                    marginTop: ".5rem",
+                                    color: "grey.400",
+                                    fontSize: {xs: "0.875rem", md: "1rem"}
+                                }}>looks
+                                    like you don`t have any Board in your project</Typography>
+                                <Button variant={"contained"} startIcon={<AddIcon/>} onClick={handlerAddNewBoard}
+                                        sx={{
+                                            textTransform: "unset",
+                                            color: "white",
+                                            fontSize: "1rem",
+                                            marginTop: {xs: "1.5rem", md: "2rem"},
+                                            padding: "0.7rem 1rem",
+                                            borderRadius: "0.7rem",
+                                            width: "fit-content",
+                                            ":hover": {
+                                                boxShadow: "rgba(0, 0, 0, 0.2) 0 8px 15px",
+                                                backgroundColor: "primary.main"
+                                            },
+                                            boxShadow: "rgba(0, 0, 0, 0.02) 0 1px 3px 0",
+                                            transition: "box-shadow 0.3s ease-in-out"
+                                        }}>
+                                    <Typography sx={{fontSize: "0.8rem"}}>New Board</Typography>
+                                </Button>
+                            </Box>
+                        </Fade>
+                    )}
                 </Box>
             </DragDropContext>
 
