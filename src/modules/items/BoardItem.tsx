@@ -10,6 +10,7 @@ import BoardItemMenuOptions from "../../components/menu/BoardItemMenuOptions";
 import DeleteTodoModal from "../../components/modals/DeleteBoardModal";
 import EditBoardModal from "../../components/modals/EditBoardModal";
 import {Draggable, Droppable} from 'react-beautiful-dnd';
+import {NotificationToast} from "../Notification/NotificationToast";
 
 
 interface propsT {
@@ -244,12 +245,18 @@ const BoardItem = ({boardId, borderName, projectId, onBoardChange, onChangeList,
                 {showDeleteBoardModal && (
                     <DeleteTodoModal openModal={showDeleteBoardModal} closeModal={() => {
                         setShowDeleteBoardModal(false)
-                    }} didUpdate={() => onBoardChange()} boardId={boardId} projectId={projectId}/>
+                    }} didUpdate={() => {
+                        NotificationToast("The Board was deleted","success")
+                        onBoardChange()
+                    }} boardId={boardId} projectId={projectId}/>
                 )}
 
                 {showEditBoardModal && (
                     <EditBoardModal openModal={showEditBoardModal} closeModal={() => setShowEditBoardModal(false)}
-                                    onUpdateBoard={() => onBoardChange()} projectId={projectId} boardName={borderName}
+                                    onUpdateBoard={() =>{
+                                        NotificationToast("The Board was edited","success")
+                                        onBoardChange()
+                                    }} projectId={projectId} boardName={borderName}
                                     boardId={boardId}/>
                 )}
 

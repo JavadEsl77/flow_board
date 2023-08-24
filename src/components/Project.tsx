@@ -19,6 +19,7 @@ import AddProjectMemberMenu from "./menu/AddProjectMemberMenu";
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import bannerImage from '../assets/img/banner.jpg'
 import emptyIcon from '../assets/img/add_notes.svg';
+import {NotificationToast} from "../modules/Notification/NotificationToast";
 
 const Project = () => {
     const {projectId} = useParams();
@@ -464,7 +465,10 @@ const Project = () => {
                         projectId={projectId}
                         openModal={showAddNewBoardModal}
                         closeModal={() => setShowAddNewBoardModal(false)}
-                        onAddBord={() => handlerGetBoard()}/>
+                        onAddBord={() => {
+                            NotificationToast("The Board was built","success")
+                            handlerGetBoard()
+                        }}/>
                 )
             }
 
@@ -473,7 +477,10 @@ const Project = () => {
                     <EditProjectModal
                         openModal={showEditProjectModal}
                         closeModal={() => setShowEditProjectModal(false)}
-                        onUpdateProject={() => handlerGetProject()}
+                        onUpdateProject={() => {
+                            NotificationToast("The project was edited", "success")
+                            handlerGetProject()
+                        }}
                         projectInfo={projectInfo}/>
                 )
             }
@@ -484,7 +491,7 @@ const Project = () => {
                         openModal={showDeleteProjectModal}
                         closeModal={() => setShowDeleteProjectModal(false)}
                         didUpdate={() => {
-                            //navigate to dashBoard
+                            NotificationToast("The project was deleted", "success")
                             navigate(`/dashboard`)
                         }}
                         projectId={projectId}/>

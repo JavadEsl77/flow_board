@@ -11,6 +11,8 @@ import bannerImage from '../assets/img/banner.jpg'
 import addProject from "../assets/img/add_project.svg";
 import notFound from "../assets/img/no_data.svg";
 import AddIcon from "@mui/icons-material/Add";
+import {NotificationToast} from "../modules/Notification/NotificationToast";
+
 
 const Dashboard = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -315,9 +317,12 @@ const Dashboard = () => {
             {showModalAddProject && (
                 <AddProjectModal openModal={showModalAddProject} closeModal={() => setShowModalAddProject(false)}
                                  onAddProject={(done) => {
+                                     NotificationToast("The project was built","success")
                                      handlerGetProjectList()
                                  }}/>
             )}
+
+
 
         </Box>
     );
