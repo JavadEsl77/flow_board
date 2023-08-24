@@ -10,8 +10,6 @@ import NewBorderItem from "../modules/items/NewBorderItem";
 import {getBorders, getProjectInfo} from "../config/fetchData";
 import AddIcon from '@mui/icons-material/Add';
 import AddBoardModal from "./modals/AddBoardModal";
-import emptyList from "../assets/lotties/empty_list.json";
-import loadingList from "../assets/lotties/loading.json";
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import EditIcon from '@mui/icons-material/Edit';
 import EditProjectModal from "./modals/EditProjectModal";
@@ -40,7 +38,7 @@ const Project = () => {
 
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [showAddMemberMenu, setShowAddMemberMenu] = useState<boolean>(false)
-    
+
     const requestGetProjectInfo = async () => {
         setInfoError('')
         setIsInfoLoading(true)
