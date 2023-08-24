@@ -364,6 +364,7 @@ const Project = () => {
 
             </Box>
 
+
             <Button variant={"contained"} startIcon={<AddIcon/>} onClick={handlerAddNewBoard}
                     sx={{
                         alignSelf: "start",
@@ -375,9 +376,10 @@ const Project = () => {
                         borderRadius:"0.7rem",
                         width: "fit-content",
                         ":hover":{
-                            boxShadow: "rgba(0, 0, 0, 0.1) 0px 8px 8px;",
+                            boxShadow: "rgba(0, 0, 0, 0.2) 0 8px 15px",
+                            backgroundColor:"primary.main"
                         },
-                        boxShadow: "rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px",
+                        boxShadow: "rgba(0, 0, 0, 0.02) 0 1px 3px 0",
                         transition: "box-shadow 0.3s ease-in-out"
                     }}>
                 <Typography sx={{fontSize: "0.8rem"}}>New Board</Typography>
