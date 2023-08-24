@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Box, Typography} from "@mui/material";
+import {Box, Fade, Typography} from "@mui/material";
 import AddBoxRoundedIcon from '@mui/icons-material/AddBoxRounded';
 import TasksItem from "./TasksItem";
 import {getTasks, updateOrderingTask, updateTask} from "../../config/fetchData";
@@ -149,104 +149,111 @@ const BoardItem = ({boardId, borderName, projectId, onBoardChange, onChangeList,
     }
 
     return (
-        <Box sx={{
-            width: "100%",
-            padding: "1em",
-            marginInline: "0.5rem",
-            marginBottom:"0.5rem",
-            display: "flex",
-            backgroundColor: "#f9f9f9",
-            flexDirection: "column",
-            borderRadius: "0.875em"
-        }}>
-
+        <Fade in={true} timeout={700}>
             <Box sx={{
-                minWidth: "400px",
-                display: "flex",
                 width: "100%",
-                backgroundColor: "white",
-                borderRadius: "0.8rem",
-                padding: "0.5rem 1rem"
+                minHeight: "58vh",
+                padding: "1em",
+                marginInline: "0.5rem",
+                marginBottom: "0.5rem",
+                display: "flex",
+                backgroundColor: "#f9f9f9",
+                flexDirection: "column",
+                borderRadius: "0.875em"
             }}>
-                <Typography
-                    sx={{fontSize: "1.2rem", flex: 1, fontWeight: "bold", color: "grey.600"}}>{borderName}</Typography>
-                <MoreHorizIcon onClick={handlerShowTaskMenu}
-                               sx={{cursor: "pointer", color: "primary.main", marginInlineEnd: "0.5rem"}}/>
-                <AddBoxRoundedIcon onClick={handlerShowAddTaskModal} sx={{cursor: "pointer", color: "primary.main"}}/>
-            </Box>
 
-
-            <Droppable droppableId={boardId.toString()}>
-                {(provided) => (
-                    <div style={{flex:1}} {...provided.droppableProps} ref={provided.innerRef}
-                         className="task-list">
-                        {taskList && taskList.map((item: any, index: number) => {
-                            return <Draggable key={item.id} draggableId={item.id.toString()} index={index}>
-                                {(provided) => (
-                                    <div
-                                        {...provided.draggableProps}
-                                        {...provided.dragHandleProps}
-                                        ref={provided.innerRef}
-                                        className="task"
-                                    >
-                                        <TasksItem item={item}/>
-                                    </div>
-                                )}
-                            </Draggable>
-                        })}
-                        {provided.placeholder}
-                    </div>
-                )}
-            </Droppable>
-
-
-            {taskIsLoading && (
-                <Box sx={{textAlign: "center", width: "100%", marginTop: "0.5rem"}}>
-                    <BorderLinearProgress sx={{marginX: "1.5rem"}}/>
+                <Box sx={{
+                    minWidth: "400px",
+                    display: "flex",
+                    width: "100%",
+                    backgroundColor: "white",
+                    borderRadius: "0.8rem",
+                    padding: "0.5rem 1rem"
+                }}>
+                    <Typography
+                        sx={{
+                            fontSize: "1.2rem",
+                            flex: 1,
+                            fontWeight: "bold",
+                            color: "grey.600"
+                        }}>{borderName}</Typography>
+                    <MoreHorizIcon onClick={handlerShowTaskMenu}
+                                   sx={{cursor: "pointer", color: "primary.main", marginInlineEnd: "0.5rem"}}/>
+                    <AddBoxRoundedIcon onClick={handlerShowAddTaskModal}
+                                       sx={{cursor: "pointer", color: "primary.main"}}/>
                 </Box>
-            )}
 
-            {showAddTaskModal && (
-                <AddTaskModal openModal={showAddTaskModal} closeModal={() => setShowAddTaskModal(false)}
-                              onAddTask={(done) => handlerGetTask()}
-                              projectId={projectId} boardId={boardId}/>
-            )}
+                <Droppable droppableId={boardId.toString()}>
+                    {(provided) => (
+                        <div style={{flex: 1}} {...provided.droppableProps} ref={provided.innerRef}
+                             className="task-list">
+                            {taskList && taskList.map((item: any, index: number) => {
+                                return <Draggable key={item.id} draggableId={item.id.toString()} index={index}>
+                                    {(provided) => (
+                                        <div
+                                            {...provided.draggableProps}
+                                            {...provided.dragHandleProps}
+                                            ref={provided.innerRef}
+                                            className="task"
+                                        >
+                                            <TasksItem item={item}/>
+                                        </div>
+                                    )}
+                                </Draggable>
+                            })}
+                            {provided.placeholder}
+                        </div>
+                    )}
+                </Droppable>
 
-            {showTaskMenu && (
-                <BoardItemMenuOptions
-                    projectId={projectId}
-                    boardId={boardId}
-                    handlerUpdateBoard={() => {
-                        setShowEditBoardModal(true)
-                        setShowTaskMenu(false)
-                    }}
-                    handlerDeleteBoard={() => {
-                        setShowDeleteBoardModal(true)
-                        setShowTaskMenu(false)
-                    }}
-                    color={"primary.main"}
-                    event={anchorEl}
-                    handleCloseMenu={() => {
-                        setAnchorEl(null)
-                        setShowTaskMenu(!showTaskMenu)
-                    }}
-                    showOption={showTaskMenu}/>
-            )}
+                {taskIsLoading && (
+                    <Box sx={{textAlign: "center", width: "100%", marginTop: "0.5rem"}}>
+                        <BorderLinearProgress sx={{marginX: "1.5rem"}}/>
+                    </Box>
+                )}
 
 
-            {showDeleteBoardModal && (
-                <DeleteTodoModal openModal={showDeleteBoardModal} closeModal={() => {
-                    setShowDeleteBoardModal(false)
-                }} didUpdate={() => onBoardChange()} boardId={boardId} projectId={projectId}/>
-            )}
+                {showAddTaskModal && (
+                    <AddTaskModal openModal={showAddTaskModal} closeModal={() => setShowAddTaskModal(false)}
+                                  onAddTask={(done) => handlerGetTask()}
+                                  projectId={projectId} boardId={boardId}/>
+                )}
 
-            {showEditBoardModal && (
-                <EditBoardModal openModal={showEditBoardModal} closeModal={() => setShowEditBoardModal(false)}
-                                onUpdateBoard={() => onBoardChange()} projectId={projectId} boardName={borderName}
-                                boardId={boardId}/>
-            )}
+                {showTaskMenu && (
+                    <BoardItemMenuOptions
+                        projectId={projectId}
+                        boardId={boardId}
+                        handlerUpdateBoard={() => {
+                            setShowEditBoardModal(true)
+                            setShowTaskMenu(false)
+                        }}
+                        handlerDeleteBoard={() => {
+                            setShowDeleteBoardModal(true)
+                            setShowTaskMenu(false)
+                        }}
+                        color={"primary.main"}
+                        event={anchorEl}
+                        handleCloseMenu={() => {
+                            setAnchorEl(null)
+                            setShowTaskMenu(!showTaskMenu)
+                        }}
+                        showOption={showTaskMenu}/>
+                )}
 
-        </Box>
+
+                {showDeleteBoardModal && (
+                    <DeleteTodoModal openModal={showDeleteBoardModal} closeModal={() => {
+                        setShowDeleteBoardModal(false)
+                    }} didUpdate={() => onBoardChange()} boardId={boardId} projectId={projectId}/>
+                )}
+
+                {showEditBoardModal && (
+                    <EditBoardModal openModal={showEditBoardModal} closeModal={() => setShowEditBoardModal(false)}
+                                    onUpdateBoard={() => onBoardChange()} projectId={projectId} boardName={borderName}
+                                    boardId={boardId}/>
+                )}
+
+            </Box></Fade>
     );
 };
 
