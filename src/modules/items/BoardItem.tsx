@@ -153,7 +153,8 @@ const BoardItem = ({boardId, borderName, projectId, onBoardChange, onChangeList,
         <Fade in={true} timeout={700}>
             <Box sx={{
                 width: "100%",
-                minHeight: "58vh",
+                minHeight: "66vh",
+                minWidth: "400px",
                 padding: "1em",
                 marginInline: "0.5rem",
                 marginBottom: "0.5rem",
@@ -164,7 +165,6 @@ const BoardItem = ({boardId, borderName, projectId, onBoardChange, onChangeList,
             }}>
 
                 <Box sx={{
-                    minWidth: "400px",
                     display: "flex",
                     width: "100%",
                     backgroundColor: "white",
