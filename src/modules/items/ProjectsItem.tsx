@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Box, Tooltip, Typography} from "@mui/material";
+import {Box, Fade, Tooltip, Typography} from "@mui/material";
 import {useNavigate} from "react-router-dom";
 import WorkspacePremiumIcon from '@mui/icons-material/WorkspacePremium';
 import Diversity2OutlinedIcon from "@mui/icons-material/Diversity2Outlined";
@@ -56,6 +56,7 @@ const ProjectsItem = ({itemValue}: propsT) => {
     const navigate = useNavigate()
 
     return (
+        <Fade in={true} timeout={700}>
             <Box sx={{
                 cursor: "pointer",
                 display: "flex",
@@ -169,7 +170,7 @@ const ProjectsItem = ({itemValue}: propsT) => {
 
                 </Box>
 
-            </Box>
+            </Box></Fade>
     );
 };
 
