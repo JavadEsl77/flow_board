@@ -8,6 +8,7 @@ export function NotificationToast(message: string, type: NotificationType) {
     switch (type) {
         case "success":
             return toast.success(message, {
+                pauseOnFocusLoss: false,
                 position: toast.POSITION.BOTTOM_LEFT
             });
         case "error":
