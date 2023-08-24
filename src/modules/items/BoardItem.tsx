@@ -216,7 +216,10 @@ const BoardItem = ({boardId, borderName, projectId, onBoardChange, onChangeList,
 
                 {showAddTaskModal && (
                     <AddTaskModal openModal={showAddTaskModal} closeModal={() => setShowAddTaskModal(false)}
-                                  onAddTask={(done) => handlerGetTask()}
+                                  onAddTask={(done) => {
+                                      NotificationToast("The new Task was Added","success")
+                                      handlerGetTask()
+                                  }}
                                   projectId={projectId} boardId={boardId}/>
                 )}
 
