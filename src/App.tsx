@@ -5,7 +5,7 @@ import {ThemeProvider} from "@mui/material";
 import {lightTheme} from "./theme";
 import Routs from "./routes/Routs";
 import store from "./redux/store/store";
-import {ToastContainer} from "react-toastify";
+import {Slide, ToastContainer} from "react-toastify";
 
 const App = () => {
     return (
@@ -13,7 +13,7 @@ const App = () => {
             <Provider store={store}>
                 <ThemeProvider theme={lightTheme}>
                     <Routs/>
-                    <ToastContainer/>
+                    <ToastContainer autoClose={2500} transition={Slide}/>
                 </ThemeProvider>
             </Provider>
         </div>
