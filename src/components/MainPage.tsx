@@ -10,6 +10,7 @@ import {useNavigate} from "react-router-dom";
 import AspectRatioOutlinedIcon from '@mui/icons-material/AspectRatioOutlined';
 import AccessibilityNewOutlinedIcon from '@mui/icons-material/AccessibilityNewOutlined';
 import AssessmentOutlinedIcon from '@mui/icons-material/AssessmentOutlined';
+import logo from '../assets/img/flow_board_logo.png';
 
 const MainPage = () => {
 
@@ -30,7 +31,7 @@ const MainPage = () => {
         {
             title: "Assessment",
             description: "We have the possibility to evaluate and calculate the performance of our team",
-            icon: <AssessmentOutlinedIcon />
+            icon: <AssessmentOutlinedIcon/>
         },
         {
             title: "easy to use",
@@ -64,7 +65,7 @@ const MainPage = () => {
                 padding: "0.5em 1.5em",
             }}>
                 <img style={{height: "50%", alignSelf: "center"}}
-                     src={"https://assets.ifttt.com/images/channels/1192573238/icons/monochrome_large.png"}
+                     src={logo}
                      alt={""}/>
 
                 <Typography sx={{
@@ -94,7 +95,8 @@ const MainPage = () => {
 
                     <MyButton onclick={() => {
                         auth.isAuthenticated ? handlerDashboard() : setLoginModal(true)
-                    }} title={auth.isAuthenticated ? "My Dashboard" : "Get Started - It's Free"} sx={{marginTop: "1em"}}/>
+                    }} title={auth.isAuthenticated ? "My Dashboard" : "Get Started - It's Free"}
+                              sx={{marginTop: "1em"}}/>
                 </Box>
 
                 <Box sx={{alignSelf: "center"}}>
