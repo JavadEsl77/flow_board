@@ -4,7 +4,7 @@ import { Button} from "@mui/material";
 interface propsT {
     title: string
     myVariant?: 'contained' | 'outlined' | 'text';
-    sx?: React.CSSProperties
+    sx?: any
     onclick?:()=>void
 }
 
@@ -16,7 +16,7 @@ const MyButton = ({sx,onclick, title,  myVariant = 'contained'}: propsT) => {
         width: "fit-content",
         borderRadius: "0.8rem",
         padding: '0.5em 0.8rem',
-        fontSize: '1rem',
+        fontSize: '1.1rem',
     };
     return (
         <Button

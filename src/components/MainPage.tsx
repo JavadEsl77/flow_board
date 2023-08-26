@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Box, Grid, Typography} from "@mui/material";
+import {Box, Fade, Grid, Typography} from "@mui/material";
 import Lottie from "react-lottie";
 import mainAnimation from "../assets/lotties/mainAnimation.json";
 import MyButton from "../modules/buttons/MyButton";
@@ -76,38 +76,56 @@ const MainPage = () => {
                     color: "white"
                 }}>FlowBoard</Typography>
             </Box>
-            <Box sx={{
-                display: "flex",
-                width: {xs: "100%", lg: "80%"},
-                height: {xs: "unset", md: "60%"},
-                padding: "2.5em",
-                flexDirection: {xs: "column", sm: "row"}
-            }}>
 
-                <Box sx={{display: "flex", flexDirection: "column", flex: 2, justifyContent: "center", height: "100%"}}>
-                    <Typography sx={{fontSize: "2.5rem", fontWeight: "bold"}}>
-                        Task Management Service
-                    </Typography>
-                    <Typography sx={{fontSize: "1.2rem", marginTop: "0.5em"}}>
-                        Assign tasks to staff members who have different set of skills, or are in different locations.
-                        Schedule tasks so they are either done one after another
-                    </Typography>
+            <Fade in={true} timeout={700}>
+                <Box sx={{
+                    display: "flex",
+                    width: {xs: "100%", lg: "80%"},
+                    height: {xs: "unset", md: "60%"},
+                    padding: "2.5em",
+                    flexDirection: {xs: "column", sm: "row"}
+                }}>
 
-                    <MyButton onclick={() => {
-                        auth.isAuthenticated ? handlerDashboard() : setLoginModal(true)
-                    }} title={auth.isAuthenticated ? "My Dashboard" : "Get Started - It's Free"}
-                              sx={{marginTop: "1em"}}/>
+                    <Box sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        flex: 2,
+                        justifyContent: "center",
+                        height: "100%"
+                    }}>
+                        <Typography sx={{fontSize: "2.5rem", fontWeight: "bold"}}>
+                            Task Management Service
+                        </Typography>
+                        <Typography sx={{fontSize: "1.2rem", marginTop: "0.5em"}}>
+                            Assign tasks to staff members who have different set of skills, or are in different
+                            locations.
+                            Schedule tasks so they are either done one after another
+                        </Typography>
+
+                        <MyButton onclick={() => {
+                            auth.isAuthenticated ? handlerDashboard() : setLoginModal(true)
+                        }} title={auth.isAuthenticated ? "My Dashboard" : "Get Started - It's Free"}
+                                  sx={{
+                                      marginTop: "1em",
+                                      ":hover": {
+                                          boxShadow: "rgba(0, 0, 0, 0.2) 0 8px 15px",
+                                          backgroundColor: "primary.main",
+                                      },
+                                      boxShadow: "rgba(0, 0, 0, 0.02) 0 1px 3px 0",
+                                      transition: "box-shadow 0.3s ease-in-out"
+                                  }}/>
+                    </Box>
+
+                    <Box sx={{alignSelf: "center"}}>
+                        <Lottie style={{marginRight: "0em"}}
+                                options={defaultOptions}
+                                height={280}
+                                width={280}
+                        />
+                    </Box>
+
                 </Box>
-
-                <Box sx={{alignSelf: "center"}}>
-                    <Lottie style={{marginRight: "0em"}}
-                            options={defaultOptions}
-                            height={280}
-                            width={280}
-                    />
-                </Box>
-
-            </Box>
+            </Fade>
             <Box sx={{
                 width: "100%",
                 padding: "2.5em",
@@ -117,8 +135,10 @@ const MainPage = () => {
                 justifyContent: "center"
             }}>
 
-                <Typography sx={{width: "100%", textAlign: "center", fontSize: "1.5rem", marginBottom: "1em"}}>why
-                    customers trust us?</Typography>
+                <Fade in={true} timeout={700}>
+                    <Typography sx={{width: "100%", textAlign: "center", fontSize: "1.5rem", marginBottom: "1em"}}>why
+                        customers trust us?</Typography>
+                </Fade>
 
                 <Box sx={{margin: {xs: "0 0em", sm: "0 7em", md: "0 7em", lg: "0 10em"},}}>
                     <Grid container direction={{xs: 'column', md: 'row'}} spacing={2}>
