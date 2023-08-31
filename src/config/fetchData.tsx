@@ -1,6 +1,6 @@
 import axios, {AxiosInstance, AxiosRequestConfig, AxiosResponse} from 'axios';
 
-const baseURL = 'http://185.208.79.133:6070/api';
+const BaseUrl = process.env.FLOW_BOARD_BASE_URL || '';
 
 
 function axiosInstanceConfig(url: string, method: string, data?: any) {
@@ -10,7 +10,7 @@ function axiosInstanceConfig(url: string, method: string, data?: any) {
         method: method,
         data: data,
         validateStatus: (status: number) => {
-                if (status == 401) {
+                if (status === 401) {
                     localStorage.setItem('access_token', '')
                     window.location.assign('/')
                 }
@@ -19,7 +19,7 @@ function axiosInstanceConfig(url: string, method: string, data?: any) {
 
     }
     const axiosInstanceRequest: AxiosInstance = axios.create({
-        baseURL,
+        baseURL: BaseUrl,
         timeout: 5000,
         headers: {
             'Content-Type': 'application/json',
@@ -37,7 +37,7 @@ function axiosInstanceConfig(url: string, method: string, data?: any) {
 export const login = async (username: string, password: string): Promise<AxiosResponse> => {
 
     const axiosLoginInstance: AxiosInstance = axios.create({
-        baseURL,
+        baseURL: BaseUrl,
         timeout: 5000,
         headers: {
             'Content-Type': 'application/json',
