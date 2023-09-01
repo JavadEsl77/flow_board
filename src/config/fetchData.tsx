@@ -1,6 +1,6 @@
 import axios, {AxiosInstance, AxiosRequestConfig, AxiosResponse} from 'axios';
 
-const BaseUrl = process.env.FLOW_BOARD_BASE_URL || '';
+const baseURL = "https://sm-api.hotelaa.ir/api";
 
 
 function axiosInstanceConfig(url: string, method: string, data?: any) {
@@ -37,7 +37,7 @@ function axiosInstanceConfig(url: string, method: string, data?: any) {
 export const login = async (username: string, password: string): Promise<AxiosResponse> => {
 
     const axiosLoginInstance: AxiosInstance = axios.create({
-        baseURL: BaseUrl,
+        baseURL,
         timeout: 5000,
         headers: {
             'Content-Type': 'application/json',
