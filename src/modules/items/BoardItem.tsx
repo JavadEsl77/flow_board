@@ -154,7 +154,7 @@ const BoardItem = ({boardId, borderName, projectId, onBoardChange, onChangeList,
             <Box sx={{
                 width: "100%",
                 minHeight: "66vh",
-                minWidth: "400px",
+                minWidth: "300px",
                 padding: "1em",
                 marginInline: "0.5rem",
                 marginBottom: "0.5rem",

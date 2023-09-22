@@ -1,12 +1,18 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {Box, Fade, Typography} from "@mui/material";
+import {NotificationToast} from "../Notification/NotificationToast";
+import ShowTaskDetailModal from "../../components/modals/ShowTaskDetailModal";
 
 interface propsT {
     item: any
 }
 
 const TasksItem = ({item}: propsT) => {
+    const [showDetailTaskModal, setShowDetailTaskModal] = useState<boolean>(false)
 
+    useEffect(()=>{
+        console.log(showDetailTaskModal)
+    },[showDetailTaskModal])
     return (
         <Fade in={true} timeout={700}>
             <Box sx={{
@@ -22,7 +28,7 @@ const TasksItem = ({item}: propsT) => {
                 },
                 boxShadow: "rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px",
                 transition: "box-shadow 0.3s ease-in-out"
-            }}>
+            }} onClick={() => setShowDetailTaskModal(true)}>
                 <Typography
                     sx={{
                         fontWeight: "bold",
@@ -47,6 +53,19 @@ const TasksItem = ({item}: propsT) => {
 
                 <Typography
                     sx={{fontSize: "0.8rem", color: "grey.500", marginTop: "1.5rem"}}>{item.created_at}</Typography>
+
+                {showDetailTaskModal && (
+                    <ShowTaskDetailModal
+                        members={item.assign_user}
+                        projectId={item.project.id} taskDetail={item}
+                        openModal={showDetailTaskModal}
+                        closeModal={() => setShowDetailTaskModal(false)}
+                        onEditTask={(done) => {
+                            NotificationToast("The new Task was Added", "success")
+                        }}
+                    />
+                )}
+
             </Box>
         </Fade>
     );
