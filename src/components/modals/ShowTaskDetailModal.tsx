@@ -6,6 +6,7 @@ import BorderLinearProgress from "../../modules/progressBar/BorderLinearProgress
 import {searchAssignUser, taskAssignUser, taskUnAssignUser, updateTask} from "../../config/fetchData";
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 import DoneRoundedIcon from '@mui/icons-material/DoneRounded';
+import CloseIcon from '@mui/icons-material/Close';
 
 interface props {
     openModal: boolean,
@@ -218,6 +219,10 @@ const ShowTaskDetailModal = ({projectId, boarderId, openModal, closeModal, taskD
                                 </Typography>
                             </Box>
                         </Box>
+
+                        <IconButton onClick={()=>closeModal(didUpdate)}>
+                            <CloseIcon/>
+                        </IconButton>
                     </Box>
 
                     <Divider sx={{marginTop: "0.75rem"}}/>
