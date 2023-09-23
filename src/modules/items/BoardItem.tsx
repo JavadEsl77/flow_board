@@ -148,7 +148,6 @@ const BoardItem = ({boardId, borderName, projectId, onBoardChange, onChangeList,
         setShowTaskMenu(!showTaskMenu)
         setAnchorEl(event.currentTarget)
     }
-
     return (
         <Fade in={true} timeout={700}>
             <Box sx={{
@@ -197,7 +196,9 @@ const BoardItem = ({boardId, borderName, projectId, onBoardChange, onChangeList,
                                             ref={provided.innerRef}
                                             className="task"
                                         >
-                                            <TasksItem item={item}/>
+                                            <TasksItem item={item} updateTask={(didUpdate) => {
+                                                if (didUpdate) handlerGetTask()
+                                            }}/>
                                         </div>
                                     )}
                                 </Draggable>
@@ -217,7 +218,7 @@ const BoardItem = ({boardId, borderName, projectId, onBoardChange, onChangeList,
                 {showAddTaskModal && (
                     <AddTaskModal openModal={showAddTaskModal} closeModal={() => setShowAddTaskModal(false)}
                                   onAddTask={(done) => {
-                                      NotificationToast("The new Task was Added","success")
+                                      NotificationToast("The new Task was Added", "success")
                                       handlerGetTask()
                                   }}
                                   projectId={projectId} boardId={boardId}/>
@@ -249,15 +250,15 @@ const BoardItem = ({boardId, borderName, projectId, onBoardChange, onChangeList,
                     <DeleteTodoModal openModal={showDeleteBoardModal} closeModal={() => {
                         setShowDeleteBoardModal(false)
                     }} didUpdate={() => {
-                        NotificationToast("The Board was deleted","success")
+                        NotificationToast("The Board was deleted", "success")
                         onBoardChange()
                     }} boardId={boardId} projectId={projectId}/>
                 )}
 
                 {showEditBoardModal && (
                     <EditBoardModal openModal={showEditBoardModal} closeModal={() => setShowEditBoardModal(false)}
-                                    onUpdateBoard={() =>{
-                                        NotificationToast("The Board was edited","success")
+                                    onUpdateBoard={() => {
+                                        NotificationToast("The Board was edited", "success")
                                         onBoardChange()
                                     }} projectId={projectId} boardName={borderName}
                                     boardId={boardId}/>

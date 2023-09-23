@@ -1,35 +1,22 @@
 import React, {useEffect, useState} from 'react';
-import {
-    Avatar,
-    Box,
-    Button,
-    Chip,
-    CircularProgress,
-    Divider,
-    Grid,
-    IconButton,
-    InputBase,
-    Modal,
-    Tooltip,
-    Typography
-} from "@mui/material";
+import {Avatar, Box, Chip, Divider, Grid, IconButton, InputBase, Modal, Tooltip, Typography} from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import EditNoteIcon from '@mui/icons-material/EditNote';
 import BorderLinearProgress from "../../modules/progressBar/BorderLinearProgress";
-import {projectMemberAttach, projectMemberDetach, searchUser} from "../../config/fetchData";
+import {searchAssignUser, taskAssignUser, taskUnAssignUser, updateTask} from "../../config/fetchData";
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 import DoneRoundedIcon from '@mui/icons-material/DoneRounded';
 
 interface props {
     openModal: boolean,
-    closeModal: () => void,
+    closeModal: (updateStatus:boolean) => void,
     projectId: any;
-    onEditTask: (done: boolean) => void,
+    boarderId: any;
     taskDetail: any
     members: any[];
 }
 
-const ShowTaskDetailModal = ({projectId, openModal, closeModal, onEditTask, taskDetail, members}: props) => {
+const ShowTaskDetailModal = ({projectId, boarderId, openModal, closeModal, taskDetail, members}: props) => {
     const style = {
         position: 'absolute' as 'absolute',
         top: '50%',
@@ -43,8 +30,6 @@ const ShowTaskDetailModal = ({projectId, openModal, closeModal, onEditTask, task
         boxShadow: 10,
         p: 3,
     };
-    console.log(taskDetail)
-
 
     const [searchValue, setSearchValue] = useState<string>("");
     const [searchLoading, setSearchLoading] = useState<boolean>(false);
@@ -55,7 +40,7 @@ const ShowTaskDetailModal = ({projectId, openModal, closeModal, onEditTask, task
     const [isLoading, setIsLoading] = useState(false)
 
     const requestSearchUser = async (searchValue: string) => {
-        return await searchUser(searchValue)
+        return await searchAssignUser(searchValue, projectId)
     }
 
     useEffect(() => {
@@ -81,8 +66,8 @@ const ShowTaskDetailModal = ({projectId, openModal, closeModal, onEditTask, task
         setSearchValue(value)
     };
 
-    const requestAttachUser = async (userId: any) => {
-        return await projectMemberAttach(projectId, userId)
+    const requestAssignUser = async (userId: any) => {
+        return await taskAssignUser(projectId, boarderId, taskDetail.id, userId)
     }
 
     const handlerAttachUser = (userId: any, username: any) => {
@@ -90,68 +75,81 @@ const ShowTaskDetailModal = ({projectId, openModal, closeModal, onEditTask, task
         if (userExists) {
             setAddUserError(`User "${username}" has already been added`)
         } else {
-            setIsLoading(true)
-            requestAttachUser(userId).then((response) => {
+            setSearchLoading(true)
+            requestAssignUser(userId).then((response) => {
                 if (response.status === 201) {
                     const updatedUserList = [...memberList, {id: userId, username: username}];
                     setMemberList(updatedUserList);
                     setAddUserError('')
                     setDidUpdate(true)
-                    setIsLoading(false)
+                    setSearchLoading(false)
                 }
-
             })
-
         }
     }
 
-    const requestDetachUser = async (userId: any) => {
-        return await projectMemberDetach(projectId, userId)
+    const requestUnAssignUser = async (userId: any) => {
+        return await taskUnAssignUser(projectId, boarderId, taskDetail.id, userId)
     }
 
-    const handlerDeleteAttachUser = (userId: any) => {
-        setIsLoading(true)
-        requestDetachUser(userId).then((response) => {
-            if (response.status === 204) {
+    const handlerUnAssignUser = (userId: any) => {
+        setSearchLoading(true)
+        requestUnAssignUser(userId).then((response) => {
+            if (response.status === 201) {
                 const updatedUserList = memberList.filter(user => user.id !== userId);
                 setMemberList(updatedUserList);
                 setAddUserError('')
                 setDidUpdate(true)
-                setIsLoading(false)
+
+                setSearchLoading(false)
             }
         })
     }
 
 
     const [title, setTitle] = useState(taskDetail.name)
+    const [defaultTitle, setDefaultTitle] = useState("")
     const [editTitle, setEditTitle] = useState(false)
-
     const handlerEditTitle = (event: any) => {
+
         setTitle(event.target.value)
     }
-
     const [description, setDescription] = useState(taskDetail.description)
+
+    const [defaultDescription, setDefaultDescription] = useState("")
     const [editDescription, setEditDescription] = useState(false)
 
     const handlerEdtDescription = (event: any) => {
         setDescription(event.target.value)
     }
 
-    const [showAssigned,setShowAssigned] = useState(false)
+    const [showAssigned, setShowAssigned] = useState(false)
 
     const handlerShowAssignedUser = () => {
         setShowAssigned(!showAssigned)
+        setAddUserError('')
+        setSearchValue('')
+        setNewUserList([])
+    }
+
+
+    const UpdateTask = async (taskId: any, name: string, description: string, status: string) => {
+        return await updateTask(boarderId, taskId, projectId, name, description, status, "")
     }
 
     const handlerUpdateTask = () => {
-        closeModal()
+        setIsLoading(true)
+        UpdateTask(taskDetail.id, title, description, taskDetail.status).then(() => {
+            setIsLoading(false)
+            setDidUpdate(true)
+        })
     }
 
     return (
-        <Box>
+        <div>
             <Modal
                 open={openModal}
-                onClose={closeModal}
+                onClose={()=>closeModal(didUpdate)}
             >
                 <Box sx={style}>
 
@@ -181,7 +179,17 @@ const ShowTaskDetailModal = ({projectId, openModal, closeModal, onEditTask, task
                                 <Tooltip title={editTitle ? "done" : "change title"} placement="right" arrow>
 
                                     <IconButton sx={{width: "1.8rem", height: "1.8rem", marginInlineStart: "0.25rem"}}
-                                                onClick={() => setEditTitle(!editTitle)}>
+                                                onClick={() => {
+                                                    if (editTitle) {
+                                                        setEditTitle(!editTitle)
+                                                        if (title !== defaultTitle)
+                                                            handlerUpdateTask()
+                                                    } else {
+                                                        setDefaultTitle(title)
+                                                        setEditTitle(!editTitle)
+                                                    }
+
+                                                }}>
                                         {!editTitle && (
                                             <EditNoteIcon sx={{fontSize: "20px", color: "grey.500"}}/>
                                         )}
@@ -229,7 +237,16 @@ const ShowTaskDetailModal = ({projectId, openModal, closeModal, onEditTask, task
 
                         <Tooltip title={editDescription ? "done" : "edit description"} placement="right" arrow>
                             <IconButton sx={{width: "1.8rem", height: "1.8rem", marginInlineStart: "0.25rem"}}
-                                        onClick={() => setEditDescription(!editDescription)}>
+                                        onClick={() => {
+                                            if (editDescription) {
+                                                setEditDescription(!editDescription)
+                                                if (description !== defaultDescription)
+                                                    handlerUpdateTask()
+                                            } else {
+                                                setDefaultDescription(description)
+                                                setEditDescription(!editDescription)
+                                            }
+                                        }}>
                                 {!editDescription && (
                                     <EditNoteIcon sx={{fontSize: "20px", color: "grey.500"}}/>
                                 )}
@@ -282,7 +299,7 @@ const ShowTaskDetailModal = ({projectId, openModal, closeModal, onEditTask, task
 
                     </Box>
 
-                    <Box sx={{display:"flex",   marginTop: "1.5rem"}}>
+                    <Box sx={{display: "flex", marginTop: "1.5rem"}}>
                         <Typography sx={{
                             fontSize: "0.875rem",
                             color: "grey.500",
@@ -295,12 +312,14 @@ const ShowTaskDetailModal = ({projectId, openModal, closeModal, onEditTask, task
                             marginInlineStart: "0.5rem"
                         }}
                                     onClick={handlerShowAssignedUser}>
-                            {!showAssigned &&( <AddIcon fontSize={"small"} sx={{color:"gray.50"}} />)}
-                            {showAssigned &&( <DoneRoundedIcon fontSize={"small"} sx={{color:"gray.50"}} />)}
+                            {!showAssigned && (<AddIcon fontSize={"small"} sx={{color: "gray.50"}}/>)}
+                            {showAssigned && (<DoneRoundedIcon fontSize={"small"} sx={{color: "gray.50"}}/>)}
                         </IconButton>
                     </Box>
 
                     <Box sx={{marginTop: "0.5rem", marginBottom: addUserError !== '' ? "unset" : "1rem"}}>
+
+
 
                         <Grid sx={{
                             overflowY: "auto",
@@ -312,7 +331,7 @@ const ShowTaskDetailModal = ({projectId, openModal, closeModal, onEditTask, task
                                             sx={{fontSize: "0.875rem"}}
                                             avatar={<Avatar/>}
                                             label={item.username}
-                                            onDelete={() => handlerDeleteAttachUser(item.id)}
+                                            onDelete={() => handlerUnAssignUser(item.id)}
                                         />
                                     </Grid>
                                 })
@@ -328,9 +347,8 @@ const ShowTaskDetailModal = ({projectId, openModal, closeModal, onEditTask, task
                                 justifyContent: "start",
                                 alignItems: "center"
                             }}>
-                                <Typography sx={{textAlign: "center", color: "grey.400" , fontSize:"0.75rem"}}>User not
+                                <Typography sx={{textAlign: "center", color: "grey.400", fontSize: "0.75rem"}}>User not
                                     Assigned!</Typography>
-
                             </Box>
                         )}
 
@@ -384,39 +402,26 @@ const ShowTaskDetailModal = ({projectId, openModal, closeModal, onEditTask, task
                         </Grid>
                     </Box>)}
 
+                    {addUserError !== '' && (<Typography sx={{
+                        marginBottom: ".5rem",
+                        marginTop: "0.5rem",
+                        fontSize: "0.75rem",
+                        marginInlineStart: "0.5rem",
+                        color: "red",
+                        fontWeight: "bold"
+                    }}>- {addUserError}</Typography>)}
+
                     {searchLoading && (
                         <BorderLinearProgress sx={{marginX: "0.5rem", marginBottom: "0.5rem"}}/>
                     )}
 
-                    <Box sx={{display: "flex", marginTop: "2em"}}>
-                        <Button sx={{
-                            textTransform: "unset",
-                            fontSize: "0.8rem",
-                            backgroundColor: "grey.300",
-                            boxShadow: 0,
-                            '&:hover': {backgroundColor: 'grey.400', boxShadow: 0}
-                        }} variant="contained" onClick={closeModal}> cancel</Button>
-
-                        <Box sx={{display: "flex", alignItems: "center"}}>
-                            <Button sx={{
-                                textTransform: "unset",
-                                fontSize: "0.8rem",
-                                backgroundColor: "primary.main",
-                                marginLeft: "1em",
-                                color: "white",
-                                marginRight: "0.5em",
-                                boxShadow: 0,
-                                '&:hover': {
-                                    boxShadow: 0
-                                }
-                            }} variant="contained" onClick={handlerUpdateTask}>Update Task</Button>
-                            {isLoading && <CircularProgress size={20}/>}
-                        </Box>
-                    </Box>
+                    {isLoading && (
+                        <BorderLinearProgress sx={{marginX: "0.5rem", marginBottom: "0.5rem"}}/>
+                    )}
 
                 </Box>
             </Modal>
-        </Box>
+        </div>
     );
 };
 

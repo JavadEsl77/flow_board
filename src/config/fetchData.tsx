@@ -147,6 +147,17 @@ export const projectMemberDetach = async (projectId: any, user_id: any): Promise
     return axiosInstanceConfig(`/project/${projectId}/member/detach`, 'POST', {user_id})
 }
 
+export const taskAssignUser = async (projectId: any,boardId: any,taskId:any, user_id: any): Promise<AxiosResponse> => {
+    return axiosInstanceConfig(`/project/${projectId}/board/${boardId}/task/${taskId}/user/assign`, 'POST', {user_id})
+}
+
+export const taskUnAssignUser = async (projectId: any,boardId: any,taskId:any, user_id: any): Promise<AxiosResponse> => {
+    return axiosInstanceConfig(`/project/${projectId}/board/${boardId}/task/${taskId}/user/unassign`, 'POST', {user_id})
+}
+
+export const searchAssignUser = async (search: string , project_id:number): Promise<AxiosResponse> => {
+    return axiosInstanceConfig(`/user?sort=id:asc&search=${search}&project_id=${project_id}`, 'GET')
+}
 
 
 
