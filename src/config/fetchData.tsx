@@ -1,6 +1,6 @@
 import axios, {AxiosInstance, AxiosRequestConfig, AxiosResponse} from 'axios';
 
-const BaseUrl = "http://185.208.79.133:6070/api";
+const BaseUrl = "https://sm-api.hotelaa.ir/api";
 
 
 function axiosInstanceConfig(url: string, method: string, data?: any) {
