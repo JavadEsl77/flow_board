@@ -9,7 +9,8 @@ export const lightTheme  = createTheme({
         },
         secondary: {
             main: '#ffb633', // Green
-            dark:'#e39e1d'
+            dark:'#e39e1d',
+            light:'#eab66d'
         },
 
     },

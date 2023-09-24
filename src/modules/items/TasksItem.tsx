@@ -54,9 +54,9 @@ const TasksItem = ({item, updateTask}: propsT) => {
                     <Box sx={{display: "flex", alignItems: "center", marginTop: "1rem"}}>
                         <Typography
                             sx={{fontSize: "0.8rem", color: "grey.500", flex: 1}}>{item.created_at}</Typography>
-                        {item.assign_user.length > 0 && (<AvatarGroup max={4}>
+                        {item.assign_user.length > 0 && (<AvatarGroup max={5}>
                                 {item.assign_user.map((users: any) => {
-                                    return <Avatar sx={{cursor: "auto", width: 30, height: 30}} alt="Remy Sharp" src=""
+                                    return <Avatar sx={{cursor: "auto", width: 30, height: 30 ,backgroundColor: "secondary.light"}} alt="Remy Sharp" src=""
                                                    title={users.username}>
                                         <p style={{fontSize: ".875rem"}}> {users.username.charAt(0) + users.username.charAt(1)}</p>
                                     </Avatar>

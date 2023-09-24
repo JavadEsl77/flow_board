@@ -10,7 +10,7 @@ import CloseIcon from '@mui/icons-material/Close';
 
 interface props {
     openModal: boolean,
-    closeModal: (updateStatus:boolean) => void,
+    closeModal: (updateStatus: boolean) => void,
     projectId: any;
     boarderId: any;
     taskDetail: any
@@ -26,7 +26,7 @@ const ShowTaskDetailModal = ({projectId, boarderId, openModal, closeModal, taskD
         display: "flex",
         flexDirection: "column",
         borderRadius: "1em",
-        width: {xs: "90%", md: 500},
+        width: {xs: "90%", md: 1000},
         bgcolor: 'background.paper',
         boxShadow: 10,
         p: 3,
@@ -48,7 +48,6 @@ const ShowTaskDetailModal = ({projectId, boarderId, openModal, closeModal, taskD
         const delayTimeout = setTimeout(() => {
             if (searchValue.trim() !== '') {
                 setSearchLoading(true)
-                // ارسال درخواست به سرور
                 requestSearchUser(searchValue).then((response) => {
                     setNewUserList(response.data)
                     setSearchLoading(false)
@@ -150,12 +149,16 @@ const ShowTaskDetailModal = ({projectId, boarderId, openModal, closeModal, taskD
         <div>
             <Modal
                 open={openModal}
-                onClose={()=>closeModal(didUpdate)}
+                onClose={() => closeModal(didUpdate)}
             >
                 <Box sx={style}>
 
                     <Box sx={{display: "flex", marginLeft: "0.5em", alignItems: "center"}}>
-                        <Box sx={{flex: 1,}}>
+                        <Box sx={{flex:1}}>
+                            <Typography sx={{
+                                fontSize: "0.875rem",
+                                color: "grey.600",
+                            }}>Title</Typography>
                             <Box sx={{display: "flex"}}>
 
                                 {!editTitle && (
@@ -203,24 +206,9 @@ const ShowTaskDetailModal = ({projectId, boarderId, openModal, closeModal, taskD
                                 </Tooltip>
 
                             </Box>
-
-                            <Box sx={{display: "flex"}}>
-                                <Typography sx={{fontSize: ".875rem", color: "grey.500"}}>
-                                    {"in board "}
-                                </Typography>
-                                <Typography
-                                    sx={{
-                                        marginInlineStart: "0.25rem",
-                                        fontSize: ".875rem",
-                                        fontWeight: "bold",
-                                        color: "primary.main"
-                                    }}>
-                                    {taskDetail.board.name}
-                                </Typography>
-                            </Box>
                         </Box>
 
-                        <IconButton onClick={()=>closeModal(didUpdate)}>
+                        <IconButton onClick={() => closeModal(didUpdate)}>
                             <CloseIcon/>
                         </IconButton>
                     </Box>
@@ -237,7 +225,7 @@ const ShowTaskDetailModal = ({projectId, boarderId, openModal, closeModal, taskD
 
                         <Typography sx={{
                             fontSize: "0.875rem",
-                            color: "grey.500",
+                            color: "grey.600",
                         }}>Description</Typography>
 
                         <Tooltip title={editDescription ? "done" : "edit description"} placement="right" arrow>
@@ -274,7 +262,6 @@ const ShowTaskDetailModal = ({projectId, boarderId, openModal, closeModal, taskD
                             <Typography sx={{
                                 width: "100%",
                                 fontSize: "0.875rem",
-                                color: "grey.500",
 
                                 direction: "rtl",
                                 backgroundColor: "grey.50",
@@ -304,26 +291,26 @@ const ShowTaskDetailModal = ({projectId, boarderId, openModal, closeModal, taskD
 
                     </Box>
 
-                    <Box sx={{display: "flex", marginTop: "1.5rem"}}>
+                    <Box sx={{display: "flex", marginTop: "1.5rem" , marginInlineStart:"0.5rem"}}>
                         <Typography sx={{
                             fontSize: "0.875rem",
                             color: "grey.500",
 
-                        }}>Assigned :</Typography>
+                        }}>Assigned</Typography>
                         <IconButton sx={{
                             width: "1.8rem",
                             height: "1.8rem",
-                            backgroundColor: "grey.100",
+                            backgroundColor: "secondary.light",
+                            ":hover":{backgroundColor:"secondary.light"},
                             marginInlineStart: "0.5rem"
                         }}
                                     onClick={handlerShowAssignedUser}>
-                            {!showAssigned && (<AddIcon fontSize={"small"} sx={{color: "gray.50"}}/>)}
-                            {showAssigned && (<DoneRoundedIcon fontSize={"small"} sx={{color: "gray.50"}}/>)}
+                            {!showAssigned && (<AddIcon fontSize={"small"} sx={{color: "white"}}/>)}
+                            {showAssigned && (<DoneRoundedIcon fontSize={"small"} sx={{color: "white"}}/>)}
                         </IconButton>
                     </Box>
 
-                    <Box sx={{marginTop: "0.5rem", marginBottom: addUserError !== '' ? "unset" : "1rem"}}>
-
+                    <Box sx={{marginTop: "0.5rem",marginInlineStart:"0.5rem", marginBottom: addUserError !== '' ? "unset" : "1rem"}}>
 
 
                         <Grid sx={{
@@ -360,11 +347,12 @@ const ShowTaskDetailModal = ({projectId, boarderId, openModal, closeModal, taskD
 
                     </Box>
 
-                    {showAssigned && (<Box>
+                    {showAssigned && (<Box sx={{marginInlineStart:"0.5rem"}}>
                         <Typography sx={{
                             fontSize: ".875rem",
                             fontWeight: "bold",
                             marginInlineStart: "0.5rem",
+
                         }}>Add new member</Typography>
                         <Box sx={{
                             height: "35px",
