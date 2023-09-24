@@ -11,7 +11,6 @@ interface propsT {
 
 const TasksItem = ({item, updateTask}: propsT) => {
     const [showDetailTaskModal, setShowDetailTaskModal] = useState<boolean>(false)
-    console.log(item)
     return (
         <div>
             <Fade in={true} timeout={700}>
