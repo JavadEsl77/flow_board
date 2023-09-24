@@ -298,8 +298,8 @@ const ShowTaskDetailModal = ({projectId, boarderId, openModal, closeModal, taskD
 
                         }}>Assigned</Typography>
                         <IconButton sx={{
-                            width: "1.8rem",
-                            height: "1.8rem",
+                            width: "1.6rem",
+                            height: "1.6rem",
                             backgroundColor: "secondary.light",
                             ":hover":{backgroundColor:"secondary.light"},
                             marginInlineStart: "0.5rem"
