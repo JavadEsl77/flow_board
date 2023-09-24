@@ -1,15 +1,17 @@
 import React, {useState} from 'react';
-import {Box, Fade, Typography} from "@mui/material";
+import {Avatar, Box, Fade, Typography} from "@mui/material";
 import {NotificationToast} from "../Notification/NotificationToast";
 import ShowTaskDetailModal from "../../components/modals/ShowTaskDetailModal";
+import {AvatarGroup} from "@mui/lab";
 
 interface propsT {
     item: any
-    updateTask:(didUpdate:boolean)=>void
+    updateTask: (didUpdate: boolean) => void
 }
 
-const TasksItem = ({item , updateTask}: propsT) => {
+const TasksItem = ({item, updateTask}: propsT) => {
     const [showDetailTaskModal, setShowDetailTaskModal] = useState<boolean>(false)
+    console.log(item)
     return (
         <div>
             <Fade in={true} timeout={700}>
@@ -49,8 +51,21 @@ const TasksItem = ({item , updateTask}: propsT) => {
                             textOverflow: 'ellipsis',
                         }}>{item.description}</Typography>
 
-                    <Typography
-                        sx={{fontSize: "0.8rem", color: "grey.500", marginTop: "1.5rem"}}>{item.created_at}</Typography>
+
+                    <Box sx={{display: "flex", alignItems: "center", marginTop: "1rem"}}>
+                        <Typography
+                            sx={{fontSize: "0.8rem", color: "grey.500", flex: 1}}>{item.created_at}</Typography>
+                        {item.assign_user.length > 0 && (<AvatarGroup max={4}>
+                                {item.assign_user.map((users: any) => {
+                                    return <Avatar sx={{cursor: "auto", width: 30, height: 30}} alt="Remy Sharp" src=""
+                                                   title={users.username}>
+                                        <p style={{fontSize: ".875rem"}}> {users.username.charAt(0) + users.username.charAt(1)}</p>
+                                    </Avatar>
+                                })}
+                            </AvatarGroup>
+                        )}
+                    </Box>
+
 
                 </Box>
             </Fade>
@@ -61,7 +76,7 @@ const TasksItem = ({item , updateTask}: propsT) => {
                     boarderId={item.board.id}
                     openModal={showDetailTaskModal}
                     closeModal={(updateStatus) => {
-                        if (updateStatus){
+                        if (updateStatus) {
                             updateTask(updateStatus)
                             NotificationToast("The Task was Update", "success")
                         }
