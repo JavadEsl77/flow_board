@@ -97,13 +97,15 @@ const BoardItem = ({boardId, borderName, projectId, onBoardChange, onChangeList,
                 const task = localStorage.getItem('task_info')
                 if (task && taskList) {
                     const newItem = JSON.parse(task);
+                    newItem.board.id = onChangeList.destination.droppableId
                     const existingItemIndex = taskList.findIndex((item: { id: any; }) => item.id === newItem.id);
                     if (existingItemIndex === -1) {
                         const updatedTaskList = [...taskList];
+
                         updatedTaskList.splice(onChangeList.destination.index, 0, newItem);
                         setTaskList(updatedTaskList);
                         handlerChangeTask(boardId, newItem.id)
-
+                        
                         let sortArray: any[] = []
                         updatedTaskList.forEach((item: any) => {
                             sortArray.push(item.id)
