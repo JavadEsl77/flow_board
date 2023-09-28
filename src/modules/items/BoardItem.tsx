@@ -155,7 +155,7 @@ const BoardItem = ({boardId, borderName, projectId, onBoardChange, onChangeList,
             <Box sx={{
                 width: "100%",
                 minHeight: "66vh",
-                minWidth: "300px",
+                minWidth: "350px",
                 padding: "1em",
                 marginInline: "0.5rem",
                 marginBottom: "0.5rem",
@@ -198,7 +198,7 @@ const BoardItem = ({boardId, borderName, projectId, onBoardChange, onChangeList,
                                             ref={provided.innerRef}
                                             className="task"
                                         >
-                                            <TasksItem item={item} updateTask={(didUpdate) => {
+                                            <TasksItem boardId={boardId} projectId={projectId} item={item} updateTask={(didUpdate) => {
                                                 if (didUpdate) handlerGetTask()
                                             }}/>
                                         </div>
