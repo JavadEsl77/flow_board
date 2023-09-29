@@ -6,6 +6,7 @@ import {AvatarGroup} from "@mui/lab";
 import MoreVertRoundedIcon from '@mui/icons-material/MoreVertRounded';
 import TaskItemMenuOptions from "../../components/menu/TaskItemMenuOptions";
 import DeleteTaskModal from "../../components/modals/DeleteTaskModal";
+import {franc} from 'franc'
 
 interface propsT {
     item: any
@@ -14,12 +15,13 @@ interface propsT {
     updateTask: (didUpdate: boolean) => void
 }
 
-const TasksItem = ({item, updateTask , boardId , projectId}: propsT) => {
+const TasksItem = ({item, updateTask, boardId, projectId}: propsT) => {
     const [showDetailTaskModal, setShowDetailTaskModal] = useState<boolean>(false)
     const [showDeleteTaskModal, setShowDeleteTaskModal] = useState<boolean>(false)
     const [showTaskMenu, setShowTaskMenu] = useState<boolean>(false)
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
+    let detectedLanguage = franc(item.description);
 
     const handlerShowTaskMenu = (event: any) => {
         setShowTaskMenu(!showTaskMenu)
@@ -29,7 +31,7 @@ const TasksItem = ({item, updateTask , boardId , projectId}: propsT) => {
     return (
         <div>
             <Fade in={true} timeout={700}>
-                <Box sx={{position:"relative"}}>
+                <Box sx={{position: "relative"}}>
                     <Box sx={{
                         display: "flex",
                         flexDirection: "column",
@@ -59,8 +61,7 @@ const TasksItem = ({item, updateTask , boardId , projectId}: propsT) => {
                                 sx={{
                                     fontSize: "0.8rem",
                                     color: "grey.600",
-                                    direction: "rtl",
-                                    textAlign: "end",
+                                    direction: detectedLanguage === "eng" ? "ltr":"rtl",
                                     display: '-webkit-box',
                                     '-webkit-line-clamp': '3',
                                     '-webkit-box-orient': 'vertical',
@@ -76,7 +77,12 @@ const TasksItem = ({item, updateTask , boardId , projectId}: propsT) => {
                             {item.assign_user.length > 0 && (<AvatarGroup max={5}>
                                     {item.assign_user.map((users: any) => {
                                         return <Avatar
-                                            sx={{cursor: "auto", width: 30, height: 30, backgroundColor: "secondary.light"}}
+                                            sx={{
+                                                cursor: "auto",
+                                                width: 30,
+                                                height: 30,
+                                                backgroundColor: "secondary.light"
+                                            }}
                                             alt="Remy Sharp" src=""
                                             title={users.username}>
                                             <p style={{fontSize: ".875rem"}}> {users.username.charAt(0) + users.username.charAt(1)}</p>
@@ -86,14 +92,14 @@ const TasksItem = ({item, updateTask , boardId , projectId}: propsT) => {
                             )}
                         </Box>
                     </Box>
-                    <Box sx={{position:"absolute",  margin: ".45em .5rem" , top:0 , right:0}}>
-                                <IconButton sx={{
-                                    width: "1.9rem",
-                                    height: "1.9rem",
-                                    ":hover":{backgroundColor:"grey.100"}
-                                }} onClick={handlerShowTaskMenu}>
-                                    <MoreVertRoundedIcon sx={{color: "grey.500", fontSize: "16px"}}/>
-                                </IconButton>
+                    <Box sx={{position: "absolute", margin: ".45em .5rem", top: 0, right: 0}}>
+                        <IconButton sx={{
+                            width: "1.9rem",
+                            height: "1.9rem",
+                            ":hover": {backgroundColor: "grey.100"}
+                        }} onClick={handlerShowTaskMenu}>
+                            <MoreVertRoundedIcon sx={{color: "grey.500", fontSize: "16px"}}/>
+                        </IconButton>
                     </Box>
                 </Box>
 
