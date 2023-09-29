@@ -9,6 +9,12 @@
     font-weight: 700;
 }
 
+@font-face {
+    font-family: yekan;
+    src: url(./../fonts/yekan/Far_Yekan.ttf) format("truetype");
+    font-weight: 400;
+}
+
 html {
     line-height: 1.15;
 
@@ -166,17 +172,9 @@ body {
 }
 
 
-
 .gradient-overlay {
     background: linear-gradient(to right, rgba(85, 164, 161, 0.6) 0%, rgba(211, 137, 108, 0.2) 50%);
 }
-
-
-
-
-
-
-
 
 ::-webkit-scrollbar {
     height: 2px;              /* height of horizontal scrollbar ← You're missing this */

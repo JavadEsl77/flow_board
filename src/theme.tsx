@@ -15,7 +15,7 @@ export const lightTheme  = createTheme({
 
     },
     typography: {
-        fontFamily: ["Arboria-Book", "sans-serif"].join(","),
+        fontFamily: ["Arboria-Book","yekan", "sans-serif"].join(","),
         fontSize: 14,
     },
 
