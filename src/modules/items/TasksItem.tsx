@@ -5,6 +5,7 @@ import ShowTaskDetailModal from "../../components/modals/ShowTaskDetailModal";
 import {AvatarGroup} from "@mui/lab";
 import MoreVertRoundedIcon from '@mui/icons-material/MoreVertRounded';
 import TaskItemMenuOptions from "../../components/menu/TaskItemMenuOptions";
+import DeleteTaskModal from "../../components/modals/DeleteTaskModal";
 
 interface propsT {
     item: any
@@ -15,6 +16,7 @@ interface propsT {
 
 const TasksItem = ({item, updateTask , boardId , projectId}: propsT) => {
     const [showDetailTaskModal, setShowDetailTaskModal] = useState<boolean>(false)
+    const [showDeleteTaskModal, setShowDeleteTaskModal] = useState<boolean>(false)
     const [showTaskMenu, setShowTaskMenu] = useState<boolean>(false)
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
@@ -106,7 +108,7 @@ const TasksItem = ({item, updateTask , boardId , projectId}: propsT) => {
                         setShowTaskMenu(false)
                     }}
                     handlerDeleteTask={() => {
-                        // setShowDeleteBoardModal(true)
+                        setShowDeleteTaskModal(true)
                         setShowTaskMenu(false)
                     }}
                     color={"grey.500"}
@@ -116,6 +118,15 @@ const TasksItem = ({item, updateTask , boardId , projectId}: propsT) => {
                         setShowTaskMenu(!showTaskMenu)
                     }}
                     showOption={showTaskMenu}/>
+            )}
+
+            {showDeleteTaskModal && (
+                <DeleteTaskModal openModal={showDeleteTaskModal} closeModal={() => {
+                    setShowDeleteTaskModal(false)
+                }} didUpdate={() => {
+                    NotificationToast("The Task was deleted", "success")
+                    updateTask(true)
+                }} boardId={boardId} projectId={projectId} taskId={item.id}/>
             )}
 
             {showDetailTaskModal && (

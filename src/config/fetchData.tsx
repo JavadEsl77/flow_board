@@ -159,6 +159,10 @@ export const searchAssignUser = async (search: string , project_id:number): Prom
     return axiosInstanceConfig(`/user?sort=id:asc&search=${search}&project_id=${project_id}`, 'GET')
 }
 
+export const deleteTask = async (projectId: any, boardId: any , taskId:any): Promise<AxiosResponse> => {
+    return axiosInstanceConfig(`/project/${projectId}/board/${boardId}/task/${taskId}`, 'DELETE')
+}
+
 
 
 

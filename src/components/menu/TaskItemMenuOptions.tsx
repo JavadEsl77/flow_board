@@ -88,27 +88,27 @@ const TaskItemMenuOptions = ({
                             fontSize: "0.8em",
                         }}>Edit</Typography>
                     </Box>
-                    {/*<Box sx={{*/}
-                    {/*    width: "100%",*/}
-                    {/*    display: "flex",*/}
-                    {/*    alignItems: "center",*/}
-                    {/*    justifyContent: "center",*/}
-                    {/*    cursor: "pointer",*/}
-                    {/*    padding: "0.5em",*/}
-                    {/*    ':hover': {backgroundColor: "#eeeeee"},*/}
-                    {/*    borderRadius: "0.4em",*/}
-                    {/*}} onClick={handlerDeleteTask}>*/}
-                    {/*    <Box sx={{*/}
-                    {/*        display: "flex"*/}
-                    {/*    }}>*/}
-                    {/*        <DeleteSweepIcon sx={{fontSize: "medium", color: "grey.500", marginRight: "0.5em"}}/>*/}
-                    {/*        <Typography sx={{*/}
-                    {/*            color: "grey.600",*/}
-                    {/*            fontSize: "0.8em",*/}
-                    {/*        }}>Delete</Typography>*/}
-                    {/*    </Box>*/}
+                    <Box sx={{
+                        width: "100%",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        cursor: "pointer",
+                        padding: "0.5em",
+                        ':hover': {backgroundColor: "#eeeeee"},
+                        borderRadius: "0.4em",
+                    }} onClick={handlerDeleteTask}>
+                        <Box sx={{
+                            display: "flex"
+                        }}>
+                            <DeleteSweepIcon sx={{fontSize: "medium", color: "grey.500", marginRight: "0.5em"}}/>
+                            <Typography sx={{
+                                color: "grey.600",
+                                fontSize: "0.8em",
+                            }}>Delete</Typography>
+                        </Box>
 
-                    {/*</Box>*/}
+                    </Box>
 
                 </Box>
 
