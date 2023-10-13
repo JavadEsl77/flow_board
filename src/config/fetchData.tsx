@@ -162,8 +162,13 @@ export const searchAssignUser = async (search: string , project_id:number): Prom
 export const deleteTask = async (projectId: any, boardId: any , taskId:any): Promise<AxiosResponse> => {
     return axiosInstanceConfig(`/project/${projectId}/board/${boardId}/task/${taskId}`, 'DELETE')
 }
+export const setWorkLog = async (projectId: any,  boardId: any , taskId:any , data:any): Promise<AxiosResponse> => {
+    return axiosInstanceConfig(`/project/${projectId}/board/${boardId}/task/${taskId}/work-log`, 'POST', data)
+}
 
-
+export const getWorkLogs = async (projectId: any,  boardId: any , taskId:any ): Promise<AxiosResponse> => {
+    return axiosInstanceConfig(`/project/${projectId}/board/${boardId}/task/${taskId}/work-log?sort=updated_at:asc`, 'GET')
+}
 
 
 
