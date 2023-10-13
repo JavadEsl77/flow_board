@@ -1,12 +1,12 @@
-import React, {useEffect, useState} from 'react';
-import {Avatar, Box, Chip, Divider, Grid, IconButton, InputBase, Modal, Tooltip, Typography} from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
+import React, {useState} from 'react';
+import {Box, Divider, IconButton, InputBase, Modal, Tab, Tooltip, Typography} from "@mui/material";
 import EditNoteIcon from '@mui/icons-material/EditNote';
-import BorderLinearProgress from "../../modules/progressBar/BorderLinearProgress";
-import {searchAssignUser, taskAssignUser, taskUnAssignUser, updateTask} from "../../config/fetchData";
-import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
+import {updateTask} from "../../config/fetchData";
 import DoneRoundedIcon from '@mui/icons-material/DoneRounded';
 import CloseIcon from '@mui/icons-material/Close';
+import {TabContext, TabList, TabPanel} from "@mui/lab";
+import WorkLogTab from "../tabs/WorkLogTab";
+import AssignedUserTab from "../tabs/AssignedUserTab";
 
 interface props {
     openModal: boolean,
@@ -25,6 +25,8 @@ const ShowTaskDetailModal = ({projectId, boarderId, openModal, closeModal, taskD
         transform: 'translate(-50%, -50%)',
         display: "flex",
         flexDirection: "column",
+        minHeight:"95vh",
+        maxHeight:"95vh",
         borderRadius: "1em",
         width: {xs: "90%", md: 1000},
         bgcolor: 'background.paper',
@@ -32,80 +34,7 @@ const ShowTaskDetailModal = ({projectId, boarderId, openModal, closeModal, taskD
         p: 3,
     };
 
-    const [searchValue, setSearchValue] = useState<string>("");
-    const [searchLoading, setSearchLoading] = useState<boolean>(false);
-    const [newUserList, setNewUserList] = useState<any>([]);
-    const [addUserError, setAddUserError] = useState<any>('');
-    const [memberList, setMemberList] = useState(members)
     const [didUpdate, setDidUpdate] = useState(false)
-    const [isLoading, setIsLoading] = useState(false)
-
-    const requestSearchUser = async (searchValue: string) => {
-        return await searchAssignUser(searchValue, projectId)
-    }
-
-    useEffect(() => {
-        const delayTimeout = setTimeout(() => {
-            if (searchValue.trim() !== '') {
-                setSearchLoading(true)
-                requestSearchUser(searchValue).then((response) => {
-                    setNewUserList(response.data)
-                    setSearchLoading(false)
-                })
-
-            }
-        }, 700);
-
-        return () => {
-            clearTimeout(delayTimeout);
-        };
-    }, [searchValue]);
-
-    const handlerChangeSearchInput = (event: any) => {
-        const value = event.target.value;
-        setSearchValue(value)
-    };
-
-    const requestAssignUser = async (userId: any) => {
-        return await taskAssignUser(projectId, boarderId, taskDetail.id, userId)
-    }
-
-    const handlerAttachUser = (userId: any, username: any) => {
-        const userExists = memberList.some(user => user.id === userId && user.username === username);
-        if (userExists) {
-            setAddUserError(`User "${username}" has already been added`)
-        } else {
-            setSearchLoading(true)
-            requestAssignUser(userId).then((response) => {
-                if (response.status === 201) {
-                    const updatedUserList = [...memberList, {id: userId, username: username}];
-                    setMemberList(updatedUserList);
-                    setAddUserError('')
-                    setDidUpdate(true)
-                    setSearchLoading(false)
-                }
-            })
-        }
-    }
-
-    const requestUnAssignUser = async (userId: any) => {
-        return await taskUnAssignUser(projectId, boarderId, taskDetail.id, userId)
-    }
-
-    const handlerUnAssignUser = (userId: any) => {
-        setSearchLoading(true)
-        requestUnAssignUser(userId).then((response) => {
-            if (response.status === 201) {
-                const updatedUserList = memberList.filter(user => user.id !== userId);
-                setMemberList(updatedUserList);
-                setAddUserError('')
-                setDidUpdate(true)
-
-                setSearchLoading(false)
-            }
-        })
-    }
-
 
     const [title, setTitle] = useState(taskDetail.name)
     const [defaultTitle, setDefaultTitle] = useState("")
@@ -123,27 +52,22 @@ const ShowTaskDetailModal = ({projectId, boarderId, openModal, closeModal, taskD
         setDescription(event.target.value)
     }
 
-    const [showAssigned, setShowAssigned] = useState(false)
-
-    const handlerShowAssignedUser = () => {
-        setShowAssigned(!showAssigned)
-        setAddUserError('')
-        setSearchValue('')
-        setNewUserList([])
-    }
-
 
     const UpdateTask = async (taskId: any, name: string, description: string, status: string) => {
         return await updateTask(boarderId, taskId, projectId, name, description, status, "")
     }
 
     const handlerUpdateTask = () => {
-        setIsLoading(true)
         UpdateTask(taskDetail.id, title, description, taskDetail.status).then(() => {
-            setIsLoading(false)
             setDidUpdate(true)
         })
     }
+
+    const [value, setValue] = React.useState('1');
+
+    const handleChange = (event: React.SyntheticEvent, newValue: string) => {
+        setValue(newValue);
+    };
 
     return (
         <div>
@@ -154,7 +78,7 @@ const ShowTaskDetailModal = ({projectId, boarderId, openModal, closeModal, taskD
                 <Box sx={style}>
 
                     <Box sx={{display: "flex", marginLeft: "0.5em", alignItems: "center"}}>
-                        <Box sx={{flex:1}}>
+                        <Box sx={{flex: 1}}>
                             <Typography sx={{
                                 fontSize: "0.875rem",
                                 color: "grey.600",
@@ -291,126 +215,19 @@ const ShowTaskDetailModal = ({projectId, boarderId, openModal, closeModal, taskD
 
                     </Box>
 
-                    <Box sx={{display: "flex", marginTop: "1.5rem" , marginInlineStart:"0.5rem"}}>
-                        <Typography sx={{
-                            fontSize: "0.875rem",
-                            color: "grey.500",
 
-                        }}>Assigned</Typography>
-                        <IconButton sx={{
-                            width: "1.6rem",
-                            height: "1.6rem",
-                            backgroundColor: "secondary.light",
-                            ":hover":{backgroundColor:"secondary.light"},
-                            marginInlineStart: "0.5rem"
-                        }}
-                                    onClick={handlerShowAssignedUser}>
-                            {!showAssigned && (<AddIcon fontSize={"small"} sx={{color: "white"}}/>)}
-                            {showAssigned && (<DoneRoundedIcon fontSize={"small"} sx={{color: "white"}}/>)}
-                        </IconButton>
-                    </Box>
-
-                    <Box sx={{marginTop: "0.5rem",marginInlineStart:"0.5rem", marginBottom: addUserError !== '' ? "unset" : "1rem"}}>
-
-
-                        <Grid sx={{
-                            overflowY: "auto",
-                        }} container spacing={0.5}>
-                            {memberList.length > 0 && (
-                                memberList.map((item: any) => {
-                                    return <Grid item>
-                                        <Chip
-                                            sx={{fontSize: "0.875rem"}}
-                                            avatar={<Avatar/>}
-                                            label={item.username}
-                                            onDelete={() => handlerUnAssignUser(item.id)}
-                                        />
-                                    </Grid>
-                                })
-                            )}
-                        </Grid>
-
-
-                        {memberList.length == 0 && (
-                            <Box sx={{
-                                width: "100%",
-                                display: "flex",
-                                borderRadius: "0.3rem",
-                                justifyContent: "start",
-                                alignItems: "center"
-                            }}>
-                                <Typography sx={{textAlign: "center", color: "grey.400", fontSize: "0.75rem"}}>User not
-                                    Assigned!</Typography>
+                    <Box sx={{marginX:"0.5rem" , marginY:"1rem"}}>
+                        <TabContext value={value}>
+                            <Box sx={{borderBottom: 1, borderColor: 'divider'}}>
+                                <TabList variant="scrollable" onChange={handleChange} aria-label="lab API tabs example">
+                                    <Tab sx={{fontSize: "small", textTransform: "unset",}} label="work log" value="1"/>
+                                    <Tab sx={{fontSize: "small", textTransform: "unset",}} label="assigned member" value="2"/>
+                                </TabList>
                             </Box>
-                        )}
-
-
+                            <TabPanel value="1"><WorkLogTab didUpdate={(update)=>setDidUpdate(update)}  projectId={projectId} boarderId={boarderId} taskId={taskDetail.id}/></TabPanel>
+                            <TabPanel value="2"><AssignedUserTab didUpdate={(update)=>setDidUpdate(update)}  projectId={projectId} boarderId={boarderId} taskId={taskDetail.id} members={members}/></TabPanel>
+                        </TabContext>
                     </Box>
-
-                    {showAssigned && (<Box sx={{marginInlineStart:"0.5rem"}}>
-                        <Typography sx={{
-                            fontSize: ".875rem",
-                            fontWeight: "bold",
-                            marginInlineStart: "0.5rem",
-
-                        }}>Add new member</Typography>
-                        <Box sx={{
-                            height: "35px",
-                            display: "flex",
-                            marginBottom: ".5rem",
-                            backgroundColor: "grey.100",
-                            borderRadius: "0.3rem",
-                            marginTop: "0.5rem",
-                            paddingInline: "1rem"
-                        }}>
-
-                            <InputBase sx={{
-                                width: "100%",
-                                fontSize: ".8em"
-                            }}
-                                       onChange={handlerChangeSearchInput}
-                                       value={searchValue}
-                                       placeholder={"searching username ..."}
-                                       size="small"></InputBase>
-
-                        </Box>
-                        <Grid sx={{
-                            overflowY: "auto",
-                            maxHeight: {xs: "250px", md: "500px"},
-                        }} container spacing={0.5}>
-                            {!searchLoading && newUserList.length > 0 && (
-                                newUserList.map((item: any) => {
-                                    return <Grid item>
-                                        <Chip
-                                            sx={{fontSize: "0.875rem"}}
-                                            avatar={<Avatar/>}
-                                            label={item.username}
-                                            deleteIcon={<AddCircleRoundedIcon sx={{color: "primary.main"}}/>}
-                                            onDelete={() => handlerAttachUser(item.id, item.username)}
-                                        />
-
-                                    </Grid>
-                                })
-                            )}
-                        </Grid>
-                    </Box>)}
-
-                    {addUserError !== '' && (<Typography sx={{
-                        marginBottom: ".5rem",
-                        marginTop: "0.5rem",
-                        fontSize: "0.75rem",
-                        marginInlineStart: "0.5rem",
-                        color: "red",
-                        fontWeight: "bold"
-                    }}>- {addUserError}</Typography>)}
-
-                    {searchLoading && (
-                        <BorderLinearProgress sx={{marginX: "0.5rem", marginBottom: "0.5rem"}}/>
-                    )}
-
-                    {isLoading && (
-                        <BorderLinearProgress sx={{marginX: "0.5rem", marginBottom: "0.5rem"}}/>
-                    )}
 
                 </Box>
             </Modal>
