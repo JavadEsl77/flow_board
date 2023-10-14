@@ -5,6 +5,7 @@ import {
     Button,
     CircularProgress,
     Divider,
+    IconButton,
     MenuItem,
     Select,
     SelectChangeEvent,
@@ -12,9 +13,10 @@ import {
     Typography
 } from "@mui/material";
 import {DatePicker} from '@mui/x-date-pickers/DatePicker';
-import {getWorkLogs, setWorkLog} from "../../config/fetchData";
+import {deleteWorkLog, getWorkLogs, setWorkLog} from "../../config/fetchData";
 import workLogLost from "../../assets/img/workLogLost.svg"
 import BorderLinearProgress from "../../modules/progressBar/BorderLinearProgress";
+import DeleteOutlineRoundedIcon from '@mui/icons-material/DeleteOutlineRounded';
 
 interface props {
     projectId: any;
@@ -27,10 +29,11 @@ const WorkLogTab = ({projectId, boarderId, taskId, didUpdate}: props) => {
 
     const [unit, setUnit] = React.useState('hour');
     const [description, setDescription] = React.useState('');
-    const [duration, setDuration] = React.useState('');
+    const [duration, setDuration] = React.useState('1');
     const [date, setDate] = React.useState('');
     const [workLogList, setWorkLogList] = React.useState([]);
     const [workLogListIsLoading, setWorkLogListIsLoading] = React.useState(false);
+    const [workLogDeleteIsLoading, setWorkLogDeleteIsLoading] = React.useState(false);
 
 
     const [isLoading, setIsLoading] = React.useState(false);
@@ -41,7 +44,9 @@ const WorkLogTab = ({projectId, boarderId, taskId, didUpdate}: props) => {
 
     const handlerChangeDuration = (event: any) => {
         const duration = event.target.value
-        setDuration(duration)
+        if (duration > 0  &&  duration <= 24){
+            setDuration(duration)
+        }
     }
 
     const handlerChangeDescription = (event: any) => {
@@ -69,7 +74,8 @@ const WorkLogTab = ({projectId, boarderId, taskId, didUpdate}: props) => {
         return await setWorkLog(projectId, boarderId, taskId, dataValue)
     }
     const handlerSetWorkLog = () => {
-        requestSetWorkLog().then((response) => {
+        requestSetWorkLog().then(() => {
+            handlerGetWorkLogs()
             setIsLoading(false)
             setDuration('')
             setDescription('')
@@ -77,12 +83,18 @@ const WorkLogTab = ({projectId, boarderId, taskId, didUpdate}: props) => {
         })
     }
 
-    const requestDeleteWorkLog = () => {
-
+    const requestDeleteWorkLog = async (logId: any) => {
+        setWorkLogDeleteIsLoading(true)
+        return await deleteWorkLog(projectId, boarderId, taskId, logId)
     }
 
-    const handlerDeleteWorkLog = () => {
-
+    const handlerDeleteWorkLog = (logId:any) => {
+        requestDeleteWorkLog(logId).then(()=>{
+            const updatedWorkLogList = [...workLogList];
+            const newWorkLogList = updatedWorkLogList.filter((item:{ id: any; }) => item.id !== logId);
+            setWorkLogList(newWorkLogList)
+            setWorkLogDeleteIsLoading(false)
+        })
     }
 
 
@@ -190,99 +202,99 @@ const WorkLogTab = ({projectId, boarderId, taskId, didUpdate}: props) => {
                 <Divider sx={{marginY: "1rem", fontSize: "0.75rem", color: "grey.500", fontWeight: "bold"}}>work log -
                     list</Divider>}
 
-            <Box>
-                <Box sx={{display: "flex", flexDirection: "column"}}>
+            {!workLogListIsLoading && workLogList.length > 0 && (
+                workLogList.map((item: any) => {
+                    return <Box sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        backgroundColor: "grey.50",
+                        borderRadius: "0.5rem",
+                        padding: "0.5rem",
+                        marginTop: "0.5rem"
+                    }}>
+                        <Avatar
+                            sx={{
+                                cursor: "auto",
+                                alignSelf: "start",
+                                width: 30,
+                                height: 30,
+                                marginInlineEnd: "0.5rem",
+                                marginTop: "0.5rem",
+                                backgroundColor: "secondary.light"
+                            }}
+                            alt="Remy Sharp" src=""
+                            title={"aref"}>
+                            <p style={{fontSize: ".875rem"}}> {item.user.username.charAt(0) + item.user.username.charAt(1)}</p>
+                        </Avatar>
 
-                    {!workLogListIsLoading && workLogList.length > 0 && (
-                        workLogList.map((item: any) => {
-                            return <Box sx={{
-                                display: "flex",
-                                alignItems: "center",
-                                backgroundColor: "grey.50",
-                                borderRadius: "0.5rem",
-                                padding: "0.5rem",
-                                marginTop: "0.5rem"
-                            }}>
-                                <Avatar
-                                    sx={{
-                                        cursor: "auto",
-                                        alignSelf: "start",
-                                        width: 30,
-                                        height: 30,
-                                        marginInlineEnd: "0.5rem",
-                                        marginTop: "0.5rem",
-                                        backgroundColor: "secondary.light"
-                                    }}
-                                    alt="Remy Sharp" src=""
-                                    title={"aref"}>
-                                    <p style={{fontSize: ".875rem"}}> {item.user.username.charAt(0) + item.user.username.charAt(1)}</p>
-                                </Avatar>
+                        <Box sx={{flex: 1}}>
+                            <Typography
+                                sx={{fontSize: "0.75rem", color: "grey.500"}}>{item.user.username}</Typography>
+                            <Box sx={{display: "flex"}}>
+                                <Typography sx={{
+                                    fontSize: "0.75rem",
+                                    color: "grey.500",
+                                }}>{item.date}</Typography>
 
-                                <Box sx={{flex: 1}}>
-                                    <Typography
-                                        sx={{fontSize: "0.75rem", color: "grey.500"}}>{item.user.username}</Typography>
-                                    <Box sx={{display: "flex"}}>
-                                        <Typography sx={{
-                                            fontSize: "0.75rem",
-                                            color: "grey.500",
-                                        }}>{item.date}</Typography>
-
-                                        <Typography sx={{
-                                            fontSize: "0.75rem",
-                                            color: "primary.main",
-                                            marginInlineStart: "0.5rem",
-                                            fontWeight: "bold"
-                                        }}>{item.duration + " " + item.unit}</Typography>
-                                    </Box>
-
-
-                                    <Typography sx={{
-                                        fontSize: "0.875rem",
-                                        color: "grey.500",
-                                        // direction: detectedLanguage === "eng" ? "ltr":"rtl",
-                                        display: '-webkit-box',
-                                        '-webkit-line-clamp': '3',
-                                        '-webkit-box-orient': 'vertical',
-                                        overflow: 'hidden',
-                                        textOverflow: 'ellipsis',
-                                    }}>{item.description}</Typography>
-                                </Box>
-
-                                {/*<IconButton sx={{width: "2rem", height: "2rem", alignSelf: "start"}} onClick={() => {*/}
-                                {/*}}>*/}
-                                {/*    <DeleteOutlineRoundedIcon*/}
-                                {/*        sx={{width: "1.2rem", height: "1.2rem", color: "grey.500"}}/>*/}
-                                {/*</IconButton>*/}
-
+                                <Typography sx={{
+                                    fontSize: "0.75rem",
+                                    color: "primary.main",
+                                    marginInlineStart: "0.5rem",
+                                    fontWeight: "bold"
+                                }}>{item.duration + " " + item.unit}</Typography>
                             </Box>
-                        })
-                    )}
 
-                    {!workLogListIsLoading && workLogList.length === 0 && (
-                        <Box sx={{
-                            display: "flex",
-                            flexDirection: "column",
-                            width: "100%",
-                            height: "100%",
-                            alignItems: "center",
-                            marginTop: "2rem"
-                        }}>
-                            <Box sx={{maxWidth: {xs: "160px", md: "160px"}}}>
-                                <img style={{width: "100%", height: "100%", objectFit: "contain"}} src={workLogLost}
-                                     alt="empty Image"/>
-                            </Box>
-                            <Typography sx={{fontSize: "0.875rem", color: "grey.300", marginTop: "1rem"}}>Work log has
-                                not been registered yet</Typography>
+
+                            <Typography sx={{
+                                fontSize: "0.875rem",
+                                color: "grey.500",
+                                // direction: detectedLanguage === "eng" ? "ltr":"rtl",
+                                display: '-webkit-box',
+                                '-webkit-line-clamp': '3',
+                                '-webkit-box-orient': 'vertical',
+                                overflow: 'hidden',
+                                textOverflow: 'ellipsis',
+                            }}>{item.description}</Typography>
                         </Box>
-                    )}
 
-                    {workLogListIsLoading && (
-                        <BorderLinearProgress sx={{marginTop: "2rem"}}/>
-                    )}
+                        <IconButton sx={{width: "2rem", height: "2rem", alignSelf: "start"}} onClick={()=>handlerDeleteWorkLog(item.id)}
+                        >
+                            <DeleteOutlineRoundedIcon
+                                sx={{width: "1.2rem", height: "1.2rem", color: "grey.500"}}/>
+                        </IconButton>
 
+                    </Box>
+                })
+            )}
 
-                </Box>
+            <Box>
+                {!workLogListIsLoading && workLogList.length === 0 && (
+                    <Box sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        width: "100%",
+                        height: "100%",
+                        alignItems: "center",
+                        marginTop: "2rem"
+                    }}>
+                        <Box sx={{maxWidth: {xs: "160px", md: "160px"}}}>
+                            <img style={{width: "100%", height: "100%", objectFit: "contain"}} src={workLogLost}
+                                 alt="empty Image"/>
+                        </Box>
+                        <Typography sx={{fontSize: "0.875rem", color: "grey.300", marginTop: "1rem"}}>Work log has
+                            not been registered yet</Typography>
+                    </Box>
+                )}
             </Box>
+
+            {workLogListIsLoading && (
+                <BorderLinearProgress sx={{marginTop: "2rem"}}/>
+            )}
+
+            {workLogDeleteIsLoading && (
+                <BorderLinearProgress sx={{marginTop: "0.5rem"}}/>
+            )}
+
 
         </Box>
     );
