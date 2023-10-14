@@ -1,8 +1,5 @@
 import axios, {AxiosInstance, AxiosRequestConfig, AxiosResponse} from 'axios';
-
-const BaseUrl = "https://sm-api.hotelaa.ir/api";
-
-
+const BaseUrl = process.env.REACT_APP_API_BASE_URL || '';
 function axiosInstanceConfig(url: string, method: string, data?: any) {
 
     const config: AxiosRequestConfig = {
