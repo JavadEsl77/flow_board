@@ -1,10 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import {Avatar, Box, Chip, Grid, IconButton, InputBase, Typography} from "@mui/material";
+import {Box, Button, Divider, Grid, IconButton, InputBase, Typography} from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import DoneRoundedIcon from "@mui/icons-material/DoneRounded";
-import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 import BorderLinearProgress from "../../modules/progressBar/BorderLinearProgress";
 import {searchAssignUser, taskAssignUser, taskUnAssignUser} from "../../config/fetchData";
+import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
+import addUser from "../../assets/img/addUser.svg";
 
 interface props{
     projectId: any;
@@ -15,9 +16,7 @@ interface props{
 }
 
 const AssignedUserTab = ({projectId, boarderId, taskId , members , didUpdate}:props) => {
-    const [showAssigned, setShowAssigned] = useState(false)
     const [addUserError, setAddUserError] = useState<any>('');
-    const [searchValue, setSearchValue] = useState<string>("");
     const [newUserList, setNewUserList] = useState<any>([]);
     const [searchLoading, setSearchLoading] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState(false)
@@ -29,22 +28,17 @@ const AssignedUserTab = ({projectId, boarderId, taskId , members , didUpdate}:pr
 
     useEffect(() => {
         const delayTimeout = setTimeout(() => {
-            if (searchValue.trim() !== '') {
                 setSearchLoading(true)
-                requestSearchUser(searchValue).then((response) => {
+                requestSearchUser("").then((response) => {
                     setNewUserList(response.data)
                     setSearchLoading(false)
                 })
-
-            }
         }, 700);
 
         return () => {
             clearTimeout(delayTimeout);
         };
-    }, [searchValue]);
-
-
+    }, []);
 
     const requestAssignUser = async (userId: any) => {
         return await taskAssignUser(projectId, boarderId, taskId, userId)
@@ -86,37 +80,13 @@ const AssignedUserTab = ({projectId, boarderId, taskId , members , didUpdate}:pr
         })
     }
 
-    const handlerChangeSearchInput = (event: any) => {
-        const value = event.target.value;
-        setSearchValue(value)
-    };
 
-    const handlerShowAssignedUser = () => {
-        setShowAssigned(!showAssigned)
-        setAddUserError('')
-        setSearchValue('')
-        setNewUserList([])
+    const checkUsersList = (userId:number) => {
+        return memberList.some(user => user.id === userId);
     }
+
     return (
         <Box sx={{marginTop: "-24px", marginX: "-20px"}}>
-            <Box sx={{display: "flex", marginTop: "1.5rem", marginInlineStart: "0.5rem"}}>
-                <Typography sx={{
-                    fontSize: "0.875rem",
-                    color: "grey.500",
-
-                }}>Assigned</Typography>
-                <IconButton sx={{
-                    width: "1.6rem",
-                    height: "1.6rem",
-                    backgroundColor: "secondary.light",
-                    ":hover": {backgroundColor: "secondary.light"},
-                    marginInlineStart: "0.5rem"
-                }}
-                            onClick={handlerShowAssignedUser}>
-                    {!showAssigned && (<AddIcon fontSize={"small"} sx={{color: "white"}}/>)}
-                    {showAssigned && (<DoneRoundedIcon fontSize={"small"} sx={{color: "white"}}/>)}
-                </IconButton>
-            </Box>
 
             <Box sx={{
                 marginTop: "0.5rem",
@@ -127,85 +97,137 @@ const AssignedUserTab = ({projectId, boarderId, taskId , members , didUpdate}:pr
 
                 <Grid sx={{
                     overflowY: "auto",
-                }} container spacing={0.5}>
+                }} container spacing={1}>
                     {memberList.length > 0 && (
                         memberList.map((item: any) => {
-                            return <Grid item>
-                                <Chip
-                                    sx={{fontSize: "0.875rem"}}
-                                    avatar={<Avatar/>}
-                                    label={item.username}
-                                    onDelete={() => handlerUnAssignUser(item.id)}
-                                />
+                            return <Grid item xs={6} >
+                                <Box sx={{display:"flex", width:"100%" , padding:"0.5rem" , alignItems:"center" , backgroundColor:"grey.50" , borderRadius:"0.8rem"}}>
+
+                                    <Box sx={{
+                                        width: '40px',
+                                        height: '40px',
+                                        borderRadius: '50%',
+                                        background: "#d6d6d6",
+                                        marginInlineEnd:"0.75rem",
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        color: 'white',
+                                        fontWeight: 'bold',
+                                        textTransform: 'uppercase',
+                                    }}><p> {item.username.charAt(0)}</p></Box>
+                                    <Typography sx={{flex:1}}>{item.username}</Typography>
+
+                                    <Button variant={"contained"}
+                                            onClick={() => handlerUnAssignUser(item.id)}
+                                            startIcon={<CloseRoundedIcon/>}
+                                            sx={{
+                                                textTransform: "unset",
+                                                color: "white",
+                                                height:"2rem",
+                                                padding: "0.7rem 1rem",
+                                                marginInlineEnd:"0.5rem",
+                                                borderRadius: "0.5rem",
+                                                backgroundColor: "secondary.main",
+                                                width: "fit-content",
+                                                ":hover": {
+                                                    boxShadow: "rgba(0, 0, 0, 0.2) 0 2px 5px",
+                                                    backgroundColor: "secondary.main"
+                                                },
+                                                boxShadow: "rgba(0, 0, 0, 0.02) 0 1px 3px 0",
+                                                transition: "box-shadow 0.3s ease-in-out"
+                                            }}>
+                                        <Typography sx={{  fontSize: "0.75rem"}}>remove</Typography>
+                                    </Button>
+                                </Box>
                             </Grid>
                         })
                     )}
                 </Grid>
 
-
                 {memberList.length == 0 && (
                     <Box sx={{
-                        width: "100%",
                         display: "flex",
-                        borderRadius: "0.3rem",
-                        justifyContent: "start",
-                        alignItems: "center"
+                        flexDirection: "column",
+                        width: "100%",
+                        height: "100%",
+                        alignItems: "center",
+                        marginTop: "2rem"
                     }}>
-                        <Typography sx={{textAlign: "center", color: "grey.400", fontSize: "0.75rem"}}>User not
-                            Assigned!</Typography>
+                        <Box sx={{maxWidth: {xs: "160px", md: "160px"}}}>
+                            <img style={{width: "100%", height: "100%", objectFit: "contain"}} src={addUser}
+                                 alt="empty Image"/>
+                        </Box>
+                        <Typography sx={{fontSize: "0.875rem", color: "grey.300", marginTop: "1rem"}}>
+                            No users have signed in to this task yet</Typography>
                     </Box>
                 )}
 
+                <Divider sx={{marginY: "1.5rem", fontSize: "0.75rem", color: "grey.500", fontWeight: "bold"}}>Project members - list</Divider>
 
-            </Box>
-
-            {showAssigned && (<Box sx={{marginInlineStart: "0.5rem"}}>
-                <Typography sx={{
-                    fontSize: ".875rem",
-                    fontWeight: "bold",
-                    marginInlineStart: "0.5rem",
-
-                }}>Add new member</Typography>
-                <Box sx={{
-                    height: "35px",
-                    display: "flex",
-                    marginBottom: ".5rem",
-                    backgroundColor: "grey.100",
-                    borderRadius: "0.3rem",
-                    marginTop: "0.5rem",
-                    paddingInline: "1rem"
-                }}>
-
-                    <InputBase sx={{
-                        width: "100%",
-                        fontSize: ".8em"
-                    }}
-                               onChange={handlerChangeSearchInput}
-                               value={searchValue}
-                               placeholder={"searching username ..."}
-                               size="small"></InputBase>
-
-                </Box>
                 <Grid sx={{
                     overflowY: "auto",
                     maxHeight: {xs: "250px", md: "500px"},
                 }} container spacing={0.5}>
                     {!searchLoading && newUserList.length > 0 && (
                         newUserList.map((item: any) => {
-                            return <Grid item>
-                                <Chip
-                                    sx={{fontSize: "0.875rem"}}
-                                    avatar={<Avatar/>}
-                                    label={item.username}
-                                    deleteIcon={<AddCircleRoundedIcon sx={{color: "primary.main"}}/>}
-                                    onDelete={() => handlerAttachUser(item.id, item.username)}
-                                />
+                            return <Grid item  xs={6}>
+
+                                <Box sx={{display:"flex", width:"100%" , padding:"0.5rem" , alignItems:"center" , backgroundColor:"grey.50" , borderRadius:"0.8rem"}}>
+
+                                    <Box sx={{
+                                        width: '40px',
+                                        height: '40px',
+                                        borderRadius: '50%',
+                                        background: "#d6d6d6",
+                                        marginInlineEnd:"0.75rem",
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        color: 'white',
+                                        fontWeight: 'bold',
+                                        textTransform: 'uppercase',
+                                    }}><p> {item.username.charAt(0)}</p></Box>
+                                    <Typography sx={{flex:1}}>{item.username}</Typography>
+
+                                    <Button variant={"contained"}
+                                            disabled={checkUsersList(item.id)}
+                                            onClick={() => handlerAttachUser(item.id, item.username)}
+                                            startIcon={<AddIcon/>}
+                                            sx={{
+                                                textTransform: "unset",
+                                                color: "white",
+                                                height:"2rem",
+                                                padding: "0.7rem 1rem",
+                                                marginInlineEnd:"0.5rem",
+                                                borderRadius: "0.5rem",
+                                                backgroundColor: "primary.main",
+                                                width: "fit-content",
+                                                ":hover": {
+                                                    boxShadow: "rgba(0, 0, 0, 0.2) 0 2px 5px",
+                                                    backgroundColor: "primary.main"
+                                                },
+                                                boxShadow: "rgba(0, 0, 0, 0.02) 0 1px 3px 0",
+                                                transition: "box-shadow 0.3s ease-in-out"
+                                            }}>
+                                        <Typography sx={{  fontSize: "0.75rem"}}>Assigned</Typography>
+                                    </Button>
+                                </Box>
+
+                                {/*<Chip*/}
+                                {/*    sx={{fontSize: "0.875rem"}}*/}
+                                {/*    avatar={<Avatar/>}*/}
+                                {/*    label={item.username}*/}
+                                {/*    deleteIcon={<AddCircleRoundedIcon sx={{color: "primary.main"}}/>}*/}
+                                {/*    onDelete={() => handlerAttachUser(item.id, item.username)}*/}
+                                {/*/>*/}
 
                             </Grid>
                         })
                     )}
                 </Grid>
-            </Box>)}
+
+            </Box>
 
             {addUserError !== '' && (<Typography sx={{
                 marginBottom: ".5rem",
