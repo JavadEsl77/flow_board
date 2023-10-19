@@ -71,9 +71,20 @@ const TasksItem = ({item, updateTask, boardId, projectId}: propsT) => {
 
                         </Box>
                         <Box sx={{display: "flex", alignItems: "center", marginTop: "1rem"}}>
-                            <Typography
-                                sx={{fontSize: "0.8rem", color: "grey.500", flex: 1}}>{item.created_at}
-                            </Typography>
+                            <Box sx={{flex:1}}>
+                                <Typography
+                                    sx={{fontSize: "0.8rem", color: "grey.500"}}>{item.created_at}
+                                </Typography>
+                                {item.total_work_log > 0 && (
+                                    <Box sx={{display:"flex"}}>
+                                        <Typography sx={{fontSize: "0.8rem", color: "grey.500" , marginInlineEnd:"0.25rem"}}>time spent</Typography>
+                                        <Typography sx={{fontSize: "0.8rem", color: "primary.main" , fontWeight:"bold"}}>{item.total_work_log}h</Typography>
+                                    </Box>
+
+                                )}
+
+                            </Box>
+
                             {item.assign_user.length > 0 && (<AvatarGroup max={5}>
                                     {item.assign_user.map((users: any) => {
                                         return <Avatar
