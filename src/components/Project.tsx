@@ -125,13 +125,8 @@ const Project = () => {
                 <img style={{width: "100%", height: "100%", objectFit: "cover", position: "absolute"}}
                      src={bannerImage}
                      alt={"banner"}/>
-                <Box sx={{
-                    height: "100%", width: "100%", position: "absolute", top: "0",
-                    left: "0"
-                }}/>
 
                 <ToolBar toolbarTitle={"Project"}/>
-
 
                 <Box sx={{position: "relative"}}>
                     <Box sx={{
@@ -151,7 +146,7 @@ const Project = () => {
                                 width: '40px',
                                 height: '40px',
                                 borderRadius: '50%',
-                                background: "rgba(122,122,122,0.39)",
+                                background: "rgba(0,0,0,0.2)",
                                 display: 'flex',
                                 justifyContent: 'center',
                                 alignItems: 'center',
@@ -162,19 +157,20 @@ const Project = () => {
                             <Box sx={{display: "flex", flexDirection: "column", marginLeft: "0.8em", flex: 1}}>
                                 <Typography sx={{
                                     fontSize: "1.5rem",
-                                    color: "rgba(255,255,255,0.8)",
+                                    color: "rgba(0,0,0,0.8)",
                                     fontWeight: "bold"
                                 }}>{projectInfo ? projectInfo.name : "Loading name ..."}</Typography>
                                 <Typography sx={{
                                     fontSize: "1rem",
                                     width: "80%",
-                                    color: "rgba(255,255,255,0.6)",
+                                    color: "rgba(0,0,0,0.8)",
                                 }}>{projectInfo ? projectInfo.description : "Loading description ..."}</Typography>
                                 <Box sx={{display: "flex", marginTop: "1.5rem"}}>
                                     <Box sx={{
                                         display: "flex",
                                         cursor: "pointer",
                                         backdropFilter: "blur(8px)",
+                                        backgroundColor:"rgba(0,0,0,0.2)",
                                         borderRadius: "0.5em",
                                         justifyContent: "center",
                                         width: "30px",
@@ -198,6 +194,7 @@ const Project = () => {
                                         cursor: "pointer",
                                         backdropFilter: "blur(8px)",
                                         borderRadius: "0.5em",
+                                        backgroundColor:"rgba(0,0,0,0.2)",
                                         justifyContent: "center",
                                         width: "30px",
                                         height: "30px",
@@ -228,44 +225,46 @@ const Project = () => {
                         }}>
 
                             <Box sx={{display: "flex", alignItems: "center", marginBottom: "1em"}}>
-                                <AccessTimeIcon sx={{color: "rgba(255,255,255,0.5)"}}/>
+                                <AccessTimeIcon sx={{color: "rgba(0,0,0,0.5)"}}/>
                                 <Box sx={{display: "flex", flex: 1, flexDirection: "row", marginLeft: "0.8rem"}}>
                                     <Typography sx={{
                                         flex: 0.5,
                                         fontSize: "1rem",
-                                        color: "rgb(255,255,255)",
+                                        color: "rgba(0,0,0,0.8)",
                                     }}>Created at</Typography>
                                     <Typography sx={{
                                         flex: 1,
                                         fontSize: "0.9rem",
-                                        color: "rgba(255,255,255,0.5)",
+                                        fontWeight:"bold",
+                                        color: "rgba(0,0,0,0.8)",
                                     }}>{projectInfo ? projectInfo.created_at : " Loading ..."}</Typography>
 
                                 </Box>
                             </Box>
                             <Box sx={{display: "flex", alignItems: "center", marginBottom: "1em"}}>
-                                <TroubleshootOutlinedIcon sx={{color: "rgba(255,255,255,0.5)"}}/>
+                                <TroubleshootOutlinedIcon sx={{color: "rgba(0,0,0,0.5)"}}/>
                                 <Box sx={{display: "flex", flex: 1, flexDirection: "row", marginLeft: "0.8rem"}}>
                                     <Typography sx={{
                                         flex: 0.5,
                                         fontSize: "1rem",
-                                        color: "rgb(255,255,255)",
+                                        color: "rgba(0,0,0,0.8)",
                                     }}>status</Typography>
                                     <Typography sx={{
                                         flex: 1,
                                         fontSize: "0.9rem",
-                                        color: "rgba(255,255,255,0.5)",
+                                        fontWeight:"bold",
+                                        color: "rgba(0,0,0,0.8)",
                                     }}>{projectInfo ? projectInfo.status : "Loading ..."}</Typography>
 
                                 </Box>
                             </Box>
                             <Box sx={{display: "flex", alignItems: "center", marginBottom: "0em"}}>
-                                <Diversity2OutlinedIcon sx={{color: "rgba(255,255,255,0.5)"}}/>
+                                <Diversity2OutlinedIcon sx={{color: "rgba(0,0,0,0.5)"}}/>
                                 <Box sx={{display: "flex", flex: 1, flexDirection: "row", marginLeft: "0.8rem"}}>
                                     <Typography sx={{
                                         flex: 0.5,
                                         fontSize: "1rem",
-                                        color: "rgb(255,255,255)",
+                                        color: "rgba(0,0,0,0.8)",
                                     }}>Members</Typography>
                                     {!isInfoLoading && projectInfo && (
                                         <Box sx={{display: "flex", flex: 1, alignItems: "center"}}>
@@ -277,18 +276,19 @@ const Project = () => {
                                                     display: 'flex',
                                                     backgroundColor: "rgba(94,94,94,0.2)",
                                                     justifyContent: 'center',
-                                                    alignItems: 'center',
-                                                    color: 'white',
-                                                    fontSize: "0.9em",
-                                                }}><p> @{item.username}</p></Box>
+                                                    color: "rgba(0,0,0,0.8)",
+                                                    textAlign: 'center',
+                                                    fontSize: "0.875em",
+                                                }}><p style={{   marginBottom:"0.1rem",}}> @{item.username}</p></Box>
                                             })}
 
                                             {projectInfo.member_count === 0 && (
                                                 <Box sx={{borderRadius: "0.5em"}}>
                                                     <Typography sx={{
                                                         fontWeight: "bold",
-                                                        fontSize: "1rem",
-                                                        color: "rgba(255,255,255,0.5)",
+                                                        fontSize: "0.875rem",
+                                                        marginBottom:"0.2rem",
+                                                        color: "rgba(0,0,0,0.8)",
                                                         alignSelf: "center"
                                                     }}>No
                                                         member</Typography>
@@ -299,18 +299,18 @@ const Project = () => {
                                                      title={projectInfo.member_count <= 2 ? "add member" : "show more"}>
                                                 <Box sx={{
                                                     cursor: "pointer",
-                                                    marginInlineStart: "0.5em",
+                                                    marginInlineStart: "0.2em",
                                                     textAlign: "center",
                                                     backdropFilter: "blur(4px)",
                                                     padding: "0.25em",
-                                                    borderRadius: "0.3em",
+                                                    borderRadius: "0.4em",
                                                     width: "24px",
                                                     transition: "background-color 0.3s ease-in-out",
                                                     ":hover": {backgroundColor: "rgba(0,0,0,0.25)"}
                                                 }} onClick={handlerShowAddMemberMenu}>
                                                     {projectInfo.member_count <= 2 ?
-                                                        <AddIcon sx={{fontSize: "0.8rem", color: "white"}}/> :
-                                                        <MoreHorizIcon sx={{fontSize: "0.8rem", color: "white"}}/>}
+                                                        <AddIcon sx={{fontSize: "0.8rem",  color: "rgba(0,0,0,0.8)",}}/> :
+                                                        <MoreHorizIcon sx={{fontSize: "0.8rem", color: "rgba(0,0,0,0.8)"}}/>}
 
                                                 </Box>
                                             </Tooltip>
