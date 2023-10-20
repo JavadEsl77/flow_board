@@ -3,6 +3,7 @@ import {Box, CircularProgress, Divider, IconButton, Typography} from "@mui/mater
 import {getUserInfo} from "../../config/fetchData";
 import ShowProfileModal from "../../components/modals/ShowProfileModal";
 import {useNavigate} from "react-router-dom";
+import PersonRoundedIcon from '@mui/icons-material/PersonRounded';
 
 interface propsT {
     toolbarTitle: string
@@ -119,20 +120,14 @@ const ToolBar = ({toolbarTitle}: propsT) => {
 
                 </Box>
 
-                <Box sx={{display: "flex", flexDirection: "column", alignItems: "center"}}>
-
-                    <Typography sx={{
-                        color: "rgba(255,255,255,0.6)",
-                        fontSize: {xs: "0.8rem", md: "1rem"},
-                        marginBottom: "0.5em"
-                    }}>Welcome Back</Typography>
-
-                    <Box sx={{display: "flex", alignItems: "center"}}>
+                <Box sx={{display: "flex", alignItems: "center"}}>
                         <IconButton
                             sx={{
+                                height:"2rem",
                                 borderRadius: "2em",
-                                backgroundColor: "rgba(255,255,255,0.6)",
-                                padding: {xs: "0.1em 0.5em", sm: ".2em 1em"}
+                                backgroundColor: "rgba(237,237,237,0.9)",
+                                padding: {xs: "0.1em 0.5em", sm: ".2em 1em"},
+                                ":hover":{   backgroundColor: "rgba(255,255,255,0.6)"}
                             }}
                             onClick={handlerLoadProfile}>
                             {isUserLoading && (
@@ -140,13 +135,16 @@ const ToolBar = ({toolbarTitle}: propsT) => {
                             )}
 
                             {!isUserLoading && (
-                                <Typography
-                                    sx={{fontSize: "0.5em"}}>{!isUserLoading && userInfo !== null ? userInfo.username : ''}</Typography>
+                                <Box sx={{display:"flex" , alignItems:"center"}}>
+                                    <Typography
+                                        sx={{fontSize: "0.875rem", marginBottom:"0.2rem" }}>{!isUserLoading && userInfo !== null ? userInfo.username : ''}</Typography>
+                                    <PersonRoundedIcon fontSize={"small"} sx={{color:"primary.main" , marginInlineStart:"0.25rem"}}/>
+                                </Box>
+
                             )}
 
                         </IconButton>
                         {isLoading && <CircularProgress size={20}/>}
-                    </Box>
                 </Box>
 
 
