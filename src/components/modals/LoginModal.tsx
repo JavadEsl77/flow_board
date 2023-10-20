@@ -12,7 +12,7 @@ interface propsT {
 
 const LoginModal = ({onClose}: propsT) => {
     const style = {
-        width: {xs: "90%", md: "60%", lg: "50%"},
+        width: {xs: "90%", md: "60%", lg: "40%"},
         position: 'absolute' as 'absolute',
         top: '50%',
         left: '50%',
@@ -75,9 +75,9 @@ const LoginModal = ({onClose}: propsT) => {
             >
                 <Fade in={true} timeout={700}>
                     <Box sx={style}>
-
                         <Box sx={{
                             display: "flex",
+                            flexDirection:{xs:"column" , sm:"row"},
                             padding: ".8em",
                             width: "100%",
                             borderRadius: "1em",
@@ -85,54 +85,23 @@ const LoginModal = ({onClose}: propsT) => {
                         }}>
 
                             <Box sx={{
-                                display: {xs: "none", sm: "flex"},
+                                display:"flex",
                                 flexDirection: "column",
                                 backgroundColor: "primary.main",
                                 padding: "1em",
                                 alignItems: "center",
-                                justifyContent: "space-between",
+                                textAlign: "center",
+                                justifyContent: "center",
                                 borderRadius: "1em",
-                                width: "40%"
+                                width: {xs:"100%" , sm:"40%"}
                             }}>
 
-                                <Typography sx={{color: "rgba(255,255,255,0.8)", fontSize: ".8em"}}>Empower</Typography>
-
-                                <img style={{height: "25%"}}
+                                <img style={{height: "6rem"}}
                                      src={logo}
                                      alt={""}/>
 
-
-                                <Box sx={{
-                                    display: "flex",
-                                    flexDirection: "column",
-                                    width: "100%",
-                                    padding: "1em",
-                                    borderRadius: "1em",
-                                    backgroundColor: "rgba(0,0,0,0.3)"
-                                }}>
-                                    <Typography sx={{color: "rgba(255,255,255,0.8)", fontSize: ".8em"}}>Empower your
-                                        productivity
-                                        journey by logging in to our FlowBoard platform and unleash the potential of
-                                        efficient task
-                                        management.</Typography>
-
-                                    <Box sx={{display: "flex", marginTop: "1em", alignItems: "center"}}>
-
-                                        <Avatar sx={{width: "35px", height: "35px"}} src={developerImage}/>
-                                        <Box sx={{
-                                            display: "flex",
-                                            flexDirection: "column",
-                                            alignItems: "left",
-                                            marginLeft: "0.5em"
-                                        }}>
-                                            <Typography
-                                                sx={{color: "white", fontSize: "0.8em"}}>JavadEslamian</Typography>
-                                            <Typography sx={{color: "white", fontSize: "0.6em"}}>developer</Typography>
-                                        </Box>
-
-                                    </Box>
-                                </Box>
-
+                                <Typography sx={{fontSize:"1.2rem" , color:"white" , fontWeight:"bold"}}>Welcome Back</Typography>
+                                <Typography sx={{fontSize:"0.75rem" , color:"white"}}>Sign in to Continue</Typography>
 
                             </Box>
 
@@ -140,29 +109,20 @@ const LoginModal = ({onClose}: propsT) => {
                                 width: {xs: "100%", sm: "60%"},
                                 display: "flex",
                                 flexDirection: "column",
-                                padding: "2.5em",
+                                padding: {xs:"1rem",sm:"2.5em"},
                             }}>
 
                                 <Typography
-                                    sx={{fontSize: "1.6em", fontWeight: 'bold', color: "black"}}>Login</Typography>
-                                <Box sx={{display: "flex", flexDirection: "column", alignItems: "left"}}>
-                                    <Typography sx={{fontSize: "1rem", color: "black"}}>Don't have an
-                                        account?</Typography>
-                                    <Typography sx={{
-                                        fontSize: "1rem",
-                                        fontWeight: 'bold',
-                                        color: "primary.main",
-                                    }}>No problem, we will make it for you baby</Typography>
-                                </Box>
+                                    sx={{fontSize: {xs:"1.35rem",sm:"1.5em"}, fontWeight: 'bold', color: "black"}}>Login | Register</Typography>
 
                                 <Box sx={{
                                     display: "flex",
                                     flexDirection: "column",
-                                    marginTop: "3em",
+                                    marginTop: {xs:"1.75rem",sm:"2em"},
                                 }}>
-                                    <TextField sx={{width: "100%"}} label="username" variant="outlined" type={"text"}
+                                    <TextField size={"small"} sx={{ width: "100%"}} label="username" variant="outlined" type={"text"}
                                                value={userName} onChange={handlerChangeUserName}/>
-                                    <TextField sx={{marginTop: "1.5em", width: "100%"}} label="password"
+                                    <TextField size={"small"} sx={{marginTop: "1.5em", width: "100%"}} label="password"
                                                variant="outlined"
                                                type={"password"} value={password} onChange={handlerChangePassword}/>
 
@@ -182,7 +142,7 @@ const LoginModal = ({onClose}: propsT) => {
                                         }}>
                                         <Button onClick={handleLogin} variant={"contained"} sx={{
                                             textTransform: "unset",
-                                            fontSize: "0.875rem",
+                                            fontSize: "0.75rem",
                                             width: "13em",
                                             padding: "0.5rem",
                                             color: "white",
@@ -196,7 +156,7 @@ const LoginModal = ({onClose}: propsT) => {
                                             transition: "box-shadow 0.3s ease-in-out",
                                             borderRadius: "0.5em"
 
-                                        }}>Create account</Button>
+                                        }}>Create account OR Login</Button>
                                         {isLoading && <CircularProgress size={20}/>}
                                     </Box>
 
