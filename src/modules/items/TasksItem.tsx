@@ -27,7 +27,16 @@ const TasksItem = ({item, updateTask, boardId, projectId}: propsT) => {
         setShowTaskMenu(!showTaskMenu)
         setAnchorEl(event.currentTarget)
     }
-
+    const descriptionParagraphs = item.description.split("\n").map((line:any, index:number) => <Typography  sx={{
+        fontSize: "0.8rem",
+        color: "grey.600",
+        direction: detectedLanguage === "eng" ? "ltr":"rtl",
+        display: '-webkit-box',
+        '-webkit-line-clamp': '3',
+        '-webkit-box-orient': 'vertical',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+    }} key={index}>{line}</Typography>);
     return (
         <div>
             <Fade in={true} timeout={700}>
@@ -57,17 +66,7 @@ const TasksItem = ({item, updateTask, boardId, projectId}: propsT) => {
                                     color: "grey.600"
                                 }}>{item.name}</Typography>
 
-                            <Typography
-                                sx={{
-                                    fontSize: "0.8rem",
-                                    color: "grey.600",
-                                    direction: detectedLanguage === "eng" ? "ltr":"rtl",
-                                    display: '-webkit-box',
-                                    '-webkit-line-clamp': '3',
-                                    '-webkit-box-orient': 'vertical',
-                                    overflow: 'hidden',
-                                    textOverflow: 'ellipsis',
-                                }}>{item.description}</Typography>
+                            <Typography>{descriptionParagraphs}</Typography>
 
                         </Box>
                         <Box sx={{display: "flex", alignItems: "center", marginTop: "1rem"}}>
