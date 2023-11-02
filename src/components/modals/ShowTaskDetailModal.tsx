@@ -7,6 +7,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import {TabContext, TabList, TabPanel} from "@mui/lab";
 import WorkLogTab from "../tabs/WorkLogTab";
 import AssignedUserTab from "../tabs/AssignedUserTab";
+import {franc} from "franc";
 
 interface props {
     openModal: boolean,
@@ -68,6 +69,15 @@ const ShowTaskDetailModal = ({projectId, boarderId, openModal, closeModal, taskD
     const handleChange = (event: React.SyntheticEvent, newValue: string) => {
         setValue(newValue);
     };
+
+    let detectedLanguage = franc(description);
+    const descriptionParagraphs = description.split("\n").map((line: any) =>
+        <Typography sx={{
+            width: "100%",
+            fontSize: "0.875rem",
+            textAlign: "end",
+            overflowWrap: "break-word",
+        }}>{line}</Typography>);
 
     return (
         <div>
@@ -186,14 +196,12 @@ const ShowTaskDetailModal = ({projectId, boarderId, openModal, closeModal, taskD
                             <Typography sx={{
                                 width: "100%",
                                 fontSize: "0.875rem",
-
-                                direction: "rtl",
                                 backgroundColor: "grey.50",
                                 borderRadius: "0.5rem",
                                 textAlign: "end",
                                 overflowWrap: "break-word",
                                 padding: "0.5rem"
-                            }}>{description}</Typography>
+                            }}> {descriptionParagraphs}</Typography>
                         )}
 
 
@@ -201,6 +209,7 @@ const ShowTaskDetailModal = ({projectId, boarderId, openModal, closeModal, taskD
                             <InputBase
                                 sx={{
                                     border: 1,
+                                    direction: detectedLanguage === "eng" ? "ltr" : "rtl",
                                     borderColor: "primary.main",
                                     width: "100%",
                                     fontSize: "0.875rem",
@@ -216,16 +225,21 @@ const ShowTaskDetailModal = ({projectId, boarderId, openModal, closeModal, taskD
                     </Box>
 
 
-                    <Box sx={{marginX:"0.5rem" , marginY:"1rem"}}>
+                    <Box sx={{marginX: "0.5rem", marginY: "1rem"}}>
                         <TabContext value={value}>
                             <Box sx={{borderBottom: 1, borderColor: 'divider'}}>
                                 <TabList variant="scrollable" onChange={handleChange} aria-label="lab API tabs example">
                                     <Tab sx={{fontSize: "small", textTransform: "unset",}} label="work log" value="1"/>
-                                    <Tab sx={{fontSize: "small", textTransform: "unset",}} label="assigned member" value="2"/>
+                                    <Tab sx={{fontSize: "small", textTransform: "unset",}} label="assigned member"
+                                         value="2"/>
                                 </TabList>
                             </Box>
-                            <TabPanel value="1"><WorkLogTab didUpdate={(update)=>setDidUpdate(update)}  projectId={projectId} boarderId={boarderId} taskId={taskDetail.id}/></TabPanel>
-                            <TabPanel value="2"><AssignedUserTab didUpdate={(update)=>setDidUpdate(update)}  projectId={projectId} boarderId={boarderId} taskId={taskDetail.id} members={members}/></TabPanel>
+                            <TabPanel value="1"><WorkLogTab didUpdate={(update) => setDidUpdate(update)}
+                                                            projectId={projectId} boarderId={boarderId}
+                                                            taskId={taskDetail.id}/></TabPanel>
+                            <TabPanel value="2"><AssignedUserTab didUpdate={(update) => setDidUpdate(update)}
+                                                                 projectId={projectId} boarderId={boarderId}
+                                                                 taskId={taskDetail.id} members={members}/></TabPanel>
                         </TabContext>
                     </Box>
 
