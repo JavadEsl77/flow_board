@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {Box, Button, CircularProgress, Modal, TextField, Typography} from "@mui/material";
 import PlaylistAddCheckCircleRoundedIcon from "@mui/icons-material/PlaylistAddCheckCircleRounded";
 import {setTask} from "../../config/fetchData";
+import {franc} from "franc";
 
 
 interface props {
@@ -33,6 +34,7 @@ const AddTaskModal = ({onAddTask, openModal, closeModal, projectId, boardId}: pr
         p: 3,
     };
 
+    let detectedLanguage = franc(description);
 
     const handlerChangeTitle = (event: any) => {
         setTitle(event.target.value)
@@ -100,7 +102,8 @@ const AddTaskModal = ({onAddTask, openModal, closeModal, projectId, boardId}: pr
                         size="small"/>
 
                     <TextField sx={{
-                        marginTop: "1rem", fontSize: ".8rem", maxLines: "3", direction: "rtl",
+                        direction: detectedLanguage === "eng" ? "ltr":"rtl",
+                        marginTop: "1rem", fontSize: ".8rem", maxLines: "3",
                         textAlignLast: "end",
                     }} rows={9} maxRows={9}
                                size="small"
