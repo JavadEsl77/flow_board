@@ -214,7 +214,7 @@ const Dashboard = () => {
                     <Grid container spacing={2}>
                         {projectList.map((item: any, index: number) => {
                             return <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
-                                <ProjectsItem itemValue={item}/>
+                                <ProjectsItem id={`item-${index}`} itemValue={item}/>
                             </Grid>
                         })}
                     </Grid>
@@ -244,7 +244,7 @@ const Dashboard = () => {
                                 fontSize: {xs: "0.875rem", md: "1rem"}
                             }}>looks
                                 like you don`t have any Project in your account</Typography>
-                            <Button variant={"contained"} startIcon={<AddIcon/>}
+                            <Button id={'create-project-button'} variant={"contained"} startIcon={<AddIcon/>}
                                     onClick={() => setShowModalAddProject(true)}
                                     sx={{
                                         textTransform: "unset",
@@ -315,7 +315,7 @@ const Dashboard = () => {
 
 
             {showModalAddProject && (
-                <AddProjectModal openModal={showModalAddProject} closeModal={() => setShowModalAddProject(false)}
+                <AddProjectModal id={'add-project-modal'} openModal={showModalAddProject} closeModal={() => setShowModalAddProject(false)}
                                  onAddProject={(done) => {
                                      NotificationToast("The project was built","success")
                                      handlerGetProjectList()

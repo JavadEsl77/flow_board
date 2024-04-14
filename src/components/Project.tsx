@@ -337,7 +337,7 @@ const Project = () => {
 
 
             {boardList.length > 0 && (
-                <Fade in={true} timeout={700}><Button variant={"contained"} startIcon={<AddIcon/>}
+                <Fade in={true} timeout={700}><Button id={'add-new-board-header-button'} variant={"contained"} startIcon={<AddIcon/>}
                                                       onClick={handlerAddNewBoard}
                                                       sx={{
                                                           alignSelf: "start",
@@ -371,11 +371,12 @@ const Project = () => {
                 }}>
 
                     {!isBorderLoading && boardList && boardList.length > 0 && (
-                        boardList.map((item: any) => {
+                        boardList.map((item: any,index) => {
                             if (item === 'new') {
                                 return <NewBorderItem/>
                             } else {
                                 return <BoardItem
+                                    id={`boardItem-${index}`}
                                     onTaskInfo={(info: any) => {
                                         localStorage.setItem('taskInfo', info);
                                     }}
@@ -435,7 +436,7 @@ const Project = () => {
                                     fontSize: {xs: "0.875rem", md: "1rem"}
                                 }}>looks
                                     like you don`t have any Board in your project</Typography>
-                                <Button variant={"contained"} startIcon={<AddIcon/>} onClick={handlerAddNewBoard}
+                                <Button id={'add-new-board-button'} variant={"contained"} startIcon={<AddIcon/>} onClick={handlerAddNewBoard}
                                         sx={{
                                             textTransform: "unset",
                                             color: "white",
@@ -462,6 +463,7 @@ const Project = () => {
             {
                 showAddNewBoardModal && (
                     <AddBoardModal
+                        id={'add-board-modal'}
                         projectId={projectId}
                         openModal={showAddNewBoardModal}
                         closeModal={() => setShowAddNewBoardModal(false)}

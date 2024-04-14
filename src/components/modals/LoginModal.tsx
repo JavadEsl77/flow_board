@@ -8,9 +8,10 @@ import logo from '../../assets/img/flow_board_logo.png'
 
 interface propsT {
     onClose: () => void
+    id?:string
 }
 
-const LoginModal = ({onClose}: propsT) => {
+const LoginModal = ({onClose , id}: propsT) => {
     const style = {
         width: {xs: "90%", md: "60%", lg: "40%"},
         position: 'absolute' as 'absolute',
@@ -64,6 +65,7 @@ const LoginModal = ({onClose}: propsT) => {
     return (
         <div>
             <Modal
+                id={id}
                 open={true}
                 onClose={onClose}
                 slots={{backdrop: Backdrop}}
@@ -140,7 +142,7 @@ const LoginModal = ({onClose}: propsT) => {
                                             alignItems: "center",
                                             marginTop: error ? "0.2em" : "1.5em",
                                         }}>
-                                        <Button onClick={handleLogin} variant={"contained"} sx={{
+                                        <Button id={'login-register-button'} onClick={handleLogin} variant={"contained"} sx={{
                                             textTransform: "unset",
                                             fontSize: "0.75rem",
                                             width: "13em",

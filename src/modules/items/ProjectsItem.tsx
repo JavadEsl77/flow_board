@@ -34,10 +34,11 @@ interface projectItemType {
 }
 
 interface propsT {
+    id?:string
     itemValue: projectItemType
 }
 
-const ProjectsItem = ({itemValue}: propsT) => {
+const ProjectsItem = ({id,itemValue}: propsT) => {
     const [bgColor, setBgColor] = useState('')
 
     useEffect(() => {
@@ -57,7 +58,7 @@ const ProjectsItem = ({itemValue}: propsT) => {
 
     return (
         <Fade in={true} timeout={700}>
-            <Box sx={{
+            <Box id={id} sx={{
                 cursor: "pointer",
                 display: "flex",
                 flexDirection: "column",

@@ -2,13 +2,14 @@ import React from 'react';
 import { Button} from "@mui/material";
 
 interface propsT {
+    id?:string;
     title: string
     myVariant?: 'contained' | 'outlined' | 'text';
     sx?: any
     onclick?:()=>void
 }
 
-const MyButton = ({sx,onclick, title,  myVariant = 'contained'}: propsT) => {
+const MyButton = ({id , sx,onclick, title,  myVariant = 'contained'}: propsT) => {
     const defaultStyles: React.CSSProperties = {
         textTransform: "unset",
         backgroundColor: "primary.main",
@@ -20,6 +21,7 @@ const MyButton = ({sx,onclick, title,  myVariant = 'contained'}: propsT) => {
     };
     return (
         <Button
+            id={id}
             onClick={onclick}
             variant={myVariant}
             sx={{

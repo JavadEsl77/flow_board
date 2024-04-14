@@ -4,12 +4,13 @@ import PlaylistAddCheckCircleRoundedIcon from '@mui/icons-material/PlaylistAddCh
 import {setProject} from "../../config/fetchData";
 
 interface props {
+    id?:string;
     openModal: boolean,
     closeModal: () => void,
     onAddProject: (done: boolean) => void,
 }
 
-const AddProjectModal = ({openModal, closeModal, onAddProject}: props) => {
+const AddProjectModal = ({id,openModal, closeModal, onAddProject}: props) => {
     const [title, setTitle] = useState<string>("")
     const [description, setDescription] = useState<string>("")
 
@@ -72,6 +73,7 @@ const AddProjectModal = ({openModal, closeModal, onAddProject}: props) => {
     return (
         <div>
             <Modal
+                id={id}
                 open={openModal}
                 onClose={closeModal}
             >
@@ -110,7 +112,7 @@ const AddProjectModal = ({openModal, closeModal, onAddProject}: props) => {
                         }} variant="contained" onClick={closeModal}> cancel</Button>
 
                         <Box sx={{display: "flex", alignItems: "center"}}>
-                            <Button sx={{
+                            <Button id={'modal-submit-create-project-button'} sx={{
                                 textTransform: "unset",
                                 fontSize: "0.8rem",
                                 backgroundColor: "secondary.main",

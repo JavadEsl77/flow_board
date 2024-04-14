@@ -6,6 +6,7 @@ import {franc} from "franc";
 
 
 interface props {
+    id?:string;
     openModal: boolean,
     closeModal: () => void,
     onAddTask: (done: boolean) => void,
@@ -13,7 +14,7 @@ interface props {
     boardId: any
 }
 
-const AddTaskModal = ({onAddTask, openModal, closeModal, projectId, boardId}: props) => {
+const AddTaskModal = ({id,onAddTask, openModal, closeModal, projectId, boardId}: props) => {
     const [title, setTitle] = useState<string>("")
     const [description, setDescription] = useState<string>("")
 
@@ -81,6 +82,7 @@ const AddTaskModal = ({onAddTask, openModal, closeModal, projectId, boardId}: pr
     return (
         <Box>
             <Modal
+                id={id}
                 open={openModal}
                 onClose={closeModal}
             >
@@ -129,7 +131,7 @@ const AddTaskModal = ({onAddTask, openModal, closeModal, projectId, boardId}: pr
                         }} variant="contained" onClick={closeModal}> cancel</Button>
 
                         <Box sx={{display: "flex", alignItems: "center"}}>
-                            <Button sx={{
+                            <Button id={'modal-submit-add-task-button'} sx={{
                                 textTransform: "unset",
                                 fontSize: "0.8rem",
                                 backgroundColor: "secondary.main",

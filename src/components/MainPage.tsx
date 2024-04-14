@@ -102,7 +102,7 @@ const MainPage = () => {
                             Schedule tasks so they are either done one after another
                         </Typography>
 
-                        <MyButton onclick={() => {
+                        <MyButton id={"login-button"} onclick={() => {
                             auth.isAuthenticated ? handlerDashboard() : setLoginModal(true)
                         }} title={auth.isAuthenticated ? "My Dashboard" : "Get Started - It's Free"}
                                   sx={{
@@ -154,7 +154,7 @@ const MainPage = () => {
 
             </Box>
             {loginModal && (
-                <LoginModal onClose={() => setLoginModal(false)}/>
+                <LoginModal id={"login-modal"} onClose={() => setLoginModal(false)}/>
             )}
         </Box>
     );

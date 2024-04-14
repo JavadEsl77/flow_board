@@ -14,6 +14,7 @@ import {NotificationToast} from "../Notification/NotificationToast";
 
 
 interface propsT {
+    id?:string
     borderName: string
     boardId: number
     projectId: any,
@@ -23,7 +24,7 @@ interface propsT {
     taskId: string | null
 }
 
-const BoardItem = ({boardId, borderName, projectId, onBoardChange, onChangeList, taskId, onTaskInfo}: propsT) => {
+const BoardItem = ({id,boardId, borderName, projectId, onBoardChange, onChangeList, taskId, onTaskInfo}: propsT) => {
 
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [taskList, setTaskList] = useState<any>(null)
@@ -181,7 +182,7 @@ const BoardItem = ({boardId, borderName, projectId, onBoardChange, onChangeList,
                         }}>{borderName}</Typography>
                     <MoreHorizIcon onClick={handlerShowTaskMenu}
                                    sx={{cursor: "pointer", color: "primary.main", marginInlineEnd: "0.5rem"}}/>
-                    <AddBoxRoundedIcon onClick={handlerShowAddTaskModal}
+                    <AddBoxRoundedIcon id={`add-box-icon-button-${id}`} onClick={handlerShowAddTaskModal}
                                        sx={{cursor: "pointer", color: "primary.main"}}/>
                 </Box>
 
@@ -218,7 +219,7 @@ const BoardItem = ({boardId, borderName, projectId, onBoardChange, onChangeList,
 
 
                 {showAddTaskModal && (
-                    <AddTaskModal openModal={showAddTaskModal} closeModal={() => setShowAddTaskModal(false)}
+                    <AddTaskModal id={'add-task-modal'} openModal={showAddTaskModal} closeModal={() => setShowAddTaskModal(false)}
                                   onAddTask={(done) => {
                                       NotificationToast("The new Task was Added", "success")
                                       handlerGetTask()

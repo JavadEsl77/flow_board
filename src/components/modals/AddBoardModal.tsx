@@ -4,13 +4,14 @@ import PlaylistAddCheckCircleRoundedIcon from "@mui/icons-material/PlaylistAddCh
 import {setBoard} from "../../config/fetchData";
 
 interface props {
+    id?:string;
     openModal: boolean,
     closeModal: () => void,
     onAddBord: (done: boolean) => void,
     projectId: any
 }
 
-const AddBoardModal = ({openModal, closeModal, onAddBord, projectId}: props) => {
+const AddBoardModal = ({id,openModal, closeModal, onAddBord, projectId}: props) => {
     const [title, setTitle] = useState<string>("")
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -60,6 +61,7 @@ const AddBoardModal = ({openModal, closeModal, onAddBord, projectId}: props) => 
     return (
         <Box>
             <Modal
+                id={id}
                 open={openModal}
                 onClose={closeModal}
             >
@@ -94,7 +96,7 @@ const AddBoardModal = ({openModal, closeModal, onAddBord, projectId}: props) => 
                         }} variant="contained" onClick={closeModal}> cancel</Button>
 
                         <Box sx={{display: "flex", alignItems: "center"}}>
-                            <Button sx={{
+                            <Button id={'modal-submit-add-board-button'} sx={{
                                 textTransform: "unset",
                                 fontSize: "0.8rem",
                                 backgroundColor: "secondary.main",
