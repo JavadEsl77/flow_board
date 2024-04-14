@@ -28,6 +28,9 @@ describe('template spec', () => {
 
     cy.get('#item-0').click();
 
+    cy.wait(2000)
+
+
     cy.get('body').then(($body)=>{
       const $button= $body.find('#add-new-board-button')
       if ($button.length > 0){
