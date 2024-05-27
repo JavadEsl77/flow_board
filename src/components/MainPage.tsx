@@ -25,17 +25,17 @@ const MainPage = () => {
     const aboutUs = [
         {
             title: "scalability",
-            description: "We have designed the system so that you can use it at any scale",
+            description: "We have designed the system so that you can use it at any scale.",
             icon: <AspectRatioOutlinedIcon/>
         },
         {
             title: "Assessment",
-            description: "We have the possibility to evaluate and calculate the performance of our team",
+            description: "We have the possibility to evaluate and calculate the performance of our team.",
             icon: <AssessmentOutlinedIcon/>
         },
         {
             title: "easy to use",
-            description: "You can use us with any level of knowledge",
+            description: "You can use us with any level of knowledge.",
             icon: <AccessibilityNewOutlinedIcon/>
         }]
     const [loginModal, setLoginModal] = useState<boolean>(false)
