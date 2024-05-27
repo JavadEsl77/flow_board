@@ -19,7 +19,6 @@ jobs:
         key: ${{ secrets.DEPLOY_KEY }}
         port: ${{ secrets.DEPLOY_PORT }}
         script: |
-          mkdir javad.tx
           cd projects/flow_board
           git pull origin master
-          dc up -d --build
+          docker-compose up -d --build
