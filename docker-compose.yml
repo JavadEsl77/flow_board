@@ -1,13 +1,22 @@
-version: "3.8"
 services:
   todo:
+    container_name: "react_sm"
+    image: "frontend_todo"
     tty: true
     build:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "8080:3000"
+      - "5052:3000"
     volumes:
       - .:/app
       - /app/node_modules
+
+
+
+
+
+
+
+
 
